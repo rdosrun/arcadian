@@ -33,6 +33,7 @@ router.post('/callback', function (req, res, next) {
     // You can add your logic here to process the callback and set session variables
     
     const token = req.query.token; // Assuming the token is passed as a query parameter
+    console.log('token', token);
     res.render('callback', { token });
 });
 
