@@ -28,7 +28,7 @@ router.get('/signout', authProvider.logout({
     postLogoutRedirectUri: POST_LOGOUT_REDIRECT_URI
 }));
 
-router.get('/callback', function (req, res, next) {
+router.post('/callback', function (req, res, next) {
     // Handle the authentication callback
     // You can add your logic here to process the callback and set session variables
     
