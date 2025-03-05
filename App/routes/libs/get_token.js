@@ -3,6 +3,13 @@ var window = {}; // necessary as part of "eval" on jsrsasign lib
 eval(pm.globals.get("jsrsasign-js")); // grabbing jsrsasign lib, loaded in separate GET 
 
 const cryptojs = require('crypto-js'); // using crypto js for base64 encoding
+const fs = require('fs');
+const path = require('path');
+
+// Read the Postman environment file and parse it into a JSON object
+const postmanEnvPath = path.join(__dirname, '../Arcadian Outfitters LLC.postman_environment.json');
+const postmanEnv = JSON.parse(fs.readFileSync(postmanEnvPath, 'utf8'));
+console.log('Postman Environment:', postmanEnv);
 
 // Create JWT header
 var jwtHeader = {
@@ -15,7 +22,7 @@ let stringifiedJwtHeader = JSON.stringify(jwtHeader);
 
 // Create JWT payload
 let jwtPayload = {
-    iss: pm.environment.get('CONSUMER_KEY'), // consumer key of integration record
+    iss: postmanEnv.values.find(v => v.key === 'CONSUMER_KEY').value, // consumer key of integration record
     scope: ['restlets','rest_webservices', 'suite_analytics'], // scopes specified on integration record
     iat: (new Date() / 1000),               // timestamp in seconds
     exp: (new Date() / 1000) + 3600,        // timestamp in seconds, 1 hour later, which is max for expiration
@@ -25,7 +32,7 @@ let jwtPayload = {
 var stringifiedJwtPayload = JSON.stringify(jwtPayload);
 
 // The secret is the private key of the certificate loaded into the client credentials mapping in NetSuite
-let secret = pm.environment.get('CERTIFICATE_PRIVATE_KEY');
+let secret = postmanEnv.values.find(v => v.key === 'CERTIFICATE_PRIVATE_KEY').value;
 let encodedSecret = cryptojs.enc.Base64.stringify(cryptojs.enc.Utf8.parse(secret)); // we need to base64 encode the key
 
 // Sign the JWT with the PS256 algorithm (algorithm must match what is specified in JWT header).
