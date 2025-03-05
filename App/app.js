@@ -43,9 +43,21 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Serve static files
+app.use('/style', express.static(path.join(__dirname, 'style')));
+app.use('/script', express.static(path.join(__dirname, 'script')));
+app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'favicon.ico')));
+app.use('/views', express.static(path.join(__dirname, 'views')));
+
+// Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+
+app.get('/views/:page', function (req, res, next) {
+    const page = req.params.page + '.html';
+    res.sendFile(path.join(__dirname, 'views', page));
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
