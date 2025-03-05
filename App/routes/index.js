@@ -19,7 +19,7 @@ router.post('/', function (req, res, next) {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
-        token: req.body,
+        token: req.body.client_info,
     });
 });
 
