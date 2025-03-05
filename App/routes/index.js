@@ -16,9 +16,7 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
     console.log('Client Info:', req.body.client_info);
-    const base64Url = req.body.client_info.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const decodedToken = JSON.parse(Buffer.from(base64, 'base64').toString('utf8'));
+    const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
     console.log('Decoded Token:', decodedToken);
     res.render('index', {
         title: 'MSAL Node & Express Web App',
