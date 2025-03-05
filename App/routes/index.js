@@ -17,7 +17,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-
+    console.log('Client Info:', req);
     const decodedToken = jwt.decode(req.body.client_info);
 
     if (decodedToken) {
