@@ -1,0 +1,29 @@
+<div class="page-container">
+<div class="sidebar" id="checkbox-sidebar">
+    <button class="toggle-checkbox-btn" onclick="toggleCheckboxContainer()">Toggle Filters</button>
+        <h2>Filter by State</h2>
+        <form id="checkbox-container">
+            <label><input type="radio" name="state" id="state-ID" value="ID" onClick="console.log('clicked');update_hats();console.log('clicked2')"> ID</label>
+            <label><input type="radio" name="state" id="state-MT" value="MT" onClick="update_hats()" > MT</label>
+            <label><input type="radio" name="state" id="state-ND" value="ND" onClick="update_hats()" > ND</label>
+            <label><input type="radio" name="state" id="state-NM" value="NM" onClick="update_hats()" > NM</label>
+            <label><input type="radio" name="state" id="state-OR" value="OR" onClick="update_hats()" > OR</label>
+            <label><input type="radio" name="state" id="state-SD" value="SD" onClick="update_hats()" > SD</label>
+            <label><input type="radio" name="state" id="state-TX" value="TX" onClick="update_hats()" > TX</label>
+            <label><input type="radio" name="state" id="state-UT" value="UT" onClick="update_hats()" > UT</label>
+            <label><input type="radio" name="state" id="state-WA" value="WA" onClick="update_hats()" > WA</label>
+            <label><input type="radio" name="state" id="state-WY" value="WY" onClick="update_hats()" > WY</label>
+        </form>
+        <button onclick="make_pdf()">Make PDF</button>
+    </div>
+    <div class="main-content">
+        <div class="store-items" id="store-items">
+
+	    <button class="item" onClick="addToCart(this)" id="1">
+                <img src="" alt="Item 1" >
+                <div class="price">$10.50</div>
+            </button>
+
+	</div>
+    </div>
+</div>
