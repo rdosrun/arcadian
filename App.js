@@ -24,9 +24,18 @@ app.use(session({
 app.use('/style', express.static(path.join(__dirname, 'style')));
 app.use('/script', express.static(path.join(__dirname, 'script')));
 
+
 // Routes
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
+
+app.use('/views/:page', function (req, res, next) {
+    const page = req.params.page + '.html';
+    res.render(page, {
+        isAuthenticated: req.session.isAuthenticated,
+        username: req.session.account?.username,
+    });
+});
 
 module.exports = app;
