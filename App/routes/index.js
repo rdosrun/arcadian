@@ -14,28 +14,23 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.post('/', function (req, res, next) {
+
+router.post('/auth/callback', function (req, res, next) {
+    //1 get the token deal with long in 
     console.log('Client Info:', req.body.client_info);
     const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
     console.log('Decoded Token:', decodedToken);
     console.log('Username:', decodedToken.preferred_username);
-    res.render('index', {
-        title: 'MSAL Node & Express Web App',
-        isAuthenticated: req.session.isAuthenticated,
-        username: req.session.account?.username,
-    });
-});
 
-router.post('/auth/callback', function (req, res, next) {
-    //1 get the token deal with long in 
-    print(req.body);
+    //check if username exists
+
     //2 redirect to default page (index.hbs)
-
+    res.redirect('/');
     // Handle the authentication callback
     // You can add your logic here to process the callback and set session variables
+
+    // Redirect to the default page
     
-    const token = req.query.token; // Assuming the token is passed as a query parameter
-    res.render('callback', { token });
 });
 
 router.get('/views/:page', function (req, res, next) {
