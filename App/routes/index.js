@@ -15,7 +15,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-    print(req.body)
+    print(req.body);
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
@@ -25,7 +25,7 @@ router.post('/', function (req, res, next) {
 
 router.post('/auth/callback', function (req, res, next) {
     //1 get the token deal with long in 
-    print(req.body)
+    print(req.body);
     //2 redirect to default page (index.hbs)
 
     // Handle the authentication callback
