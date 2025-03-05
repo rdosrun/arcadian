@@ -15,6 +15,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
+    print(req.body)
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
