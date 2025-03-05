@@ -4,8 +4,6 @@
  */
 
 var express = require('express');
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
 var router = express.Router();
 
 router.get('/', function (req, res, next) {
@@ -18,15 +16,10 @@ router.get('/', function (req, res, next) {
 
 router.post('/', function (req, res, next) {
     console.log('Client Info:', req.body.client_info);
-    var tmp = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjFMVE16YWtpaGlSbGFfOHoyQkVKVlhlV01xbyJ9.";
-    const decodedToken = jwt.decode(tmp+req.body.client_info);
-
-    if (decodedToken) {
-        const userEmail = decodedToken.preferred_username || decodedToken.email;
-        console.log('User Email:', userEmail);
-    } else {
-        console.log('Invalid token');
-    }
+    const base64Url = req.body.client_info.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const decodedToken = JSON.parse(Buffer.from(base64, 'base64').toString('utf8'));
+    console.log('Decoded Token:', decodedToken);
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
