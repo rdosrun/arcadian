@@ -4,6 +4,8 @@
  */
 
 var express = require('express');
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
 var router = express.Router();
 
 router.get('/', function (req, res, next) {
@@ -15,7 +17,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-    //print(req.body);
+
+    const decodedToken = jwt.decode(req.body.client_info);
+
+    if (decodedToken) {
+        const userEmail = decodedToken.preferred_username || decodedToken.email;
+        console.log('User Email:', userEmail);
+    } else {
+        console.log('Invalid token');
+    }
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
