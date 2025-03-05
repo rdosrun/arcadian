@@ -22,7 +22,11 @@ router.post('/', function (req, res, next) {
     });
 });
 
-router.get('/auth/callback', function (req, res, next) {
+router.post('/auth/callback', function (req, res, next) {
+    //1 get the token deal with long in 
+    print(req.body)
+    //2 redirect to default page (index.hbs)
+
     // Handle the authentication callback
     // You can add your logic here to process the callback and set session variables
     
