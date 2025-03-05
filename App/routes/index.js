@@ -14,6 +14,15 @@ router.get('/', function (req, res, next) {
     });
 });
 
+router.post('/', function (req, res, next) {
+    console.log(req.client_info);
+    res.render('index', {
+        title: 'MSAL Node & Express Web App',
+        isAuthenticated: req.session.isAuthenticated,
+        username: req.session.account?.username,
+    });
+});
+
 router.get('/auth/callback', function (req, res, next) {
     // Handle the authentication callback
     // You can add your logic here to process the callback and set session variables
