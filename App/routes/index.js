@@ -17,8 +17,9 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-    console.log('Client Info:', req.body);
-    const decodedToken = jwt.decode(req.body.client_info);
+    console.log('Client Info:', req.body.client_info);
+    var tmp = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjFMVE16YWtpaGlSbGFfOHoyQkVKVlhlV01xbyJ9.";
+    const decodedToken = jwt.decode(tmp+req.body.client_info);
 
     if (decodedToken) {
         const userEmail = decodedToken.preferred_username || decodedToken.email;
