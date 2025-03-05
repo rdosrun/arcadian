@@ -2,7 +2,7 @@
 //
 function loadPage(route) {
     console.log("Loading page: " + route);
-    fetch(route)
+    fetch(route+".html")
         .then((response) => response.text())
         .then((html) => {
             document.getElementById("main-page").innerHTML = html
