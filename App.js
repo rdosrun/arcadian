@@ -32,6 +32,7 @@ app.use('/users', usersRouter);
 
 app.use('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
+    console.log("line 35");
     res.render(page, {
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
