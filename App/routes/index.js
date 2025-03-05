@@ -18,6 +18,7 @@ router.post('/', function (req, res, next) {
     console.log('Client Info:', req.body.client_info);
     const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
     console.log('Decoded Token:', decodedToken);
+    console.log('Username:', decodedToken.preferred_username);
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
