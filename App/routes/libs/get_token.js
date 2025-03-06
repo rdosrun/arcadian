@@ -7,7 +7,7 @@ function get_token() {
     console.log("Getting token");
 
     // Read the Postman environment file and parse it into a JSON object
-    const postmanEnvPath = path.join(__dirname, '../Arcadian Outfitters LLC.postman_environment.json');
+    const postmanEnvPath = path.join(__dirname, '../../Arcadian Outfitters LLC.postman_environment.json');
     const postmanEnv = JSON.parse(fs.readFileSync(postmanEnvPath, 'utf8'));
     console.log('Postman Environment:', postmanEnv);
 
