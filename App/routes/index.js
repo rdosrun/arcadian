@@ -5,7 +5,7 @@
 
 var express = require('express');
 var router = express.Router();
-var token = require('./libs/get_token')
+var { get_token } = require('./libs/get_token');
 
 router.get('/', function (req, res, next) {
     res.render('index', {
@@ -25,7 +25,7 @@ router.post('/auth/callback', function (req, res, next) {
 
     // Check if username exists and get access token
     try {
-        const accessToken = token.get_token();
+        const accessToken = get_token();
         console.log('Access Token:', accessToken);
     } catch (err) {
         console.log(err);

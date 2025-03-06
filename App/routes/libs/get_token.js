@@ -39,3 +39,4 @@ const clientAssertion = signedJWT;
 console.log("Client Assertion:", clientAssertion);
 return clientAssertion;
 }
+exports.get_token = get_token;
