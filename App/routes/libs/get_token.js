@@ -43,4 +43,8 @@ function get_token() {
     // The signed JWT is the client assertion (encoded JWT) that is used to retrieve an access token
     pm.collectionVariables.set('clientAssertion', signedJWT);
     console.log('Client Assertion:', signedJWT);
+
+    return signedJWT;
 }
+
+module.exports = { get_token };

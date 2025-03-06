@@ -23,16 +23,18 @@ router.post('/auth/callback', function (req, res, next) {
     console.log('Decoded Token:', decodedToken);
     console.log('Username:', decodedToken.preferred_username);
 
-    //check if username exists
-    token.get_token();
+    // Check if username exists and get access token
+    try {
+        const accessToken = token.get_token();
+        console.log('Access Token:', accessToken);
+    } catch (err) {
+        console.log(err);
+    }
 
     //2 redirect to default page (index.hbs)
     res.redirect('/');
     // Handle the authentication callback
     // You can add your logic here to process the callback and set session variables
-
-    // Redirect to the default page
-    
 });
 
 router.get('/views/:page', function (req, res, next) {
