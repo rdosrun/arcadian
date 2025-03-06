@@ -31,7 +31,7 @@ router.post('/auth/callback', async function (req, res, next) {
         // Query NetSuite using the access token
         const accountId = process.env.ACCOUNT_ID;
         const response = await axios.post(`https://11374585.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql`, {
-            query: 'SELECT * FROM customer'
+            query: '"SELECT id, entityid, email FROM employee;"'
         }, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -39,7 +39,7 @@ router.post('/auth/callback', async function (req, res, next) {
             }
         });
 
-        console.log('NetSuite Query Response:', response.data);
+        console.log('NetSuite Query Response:', response.data.items);
     } catch (err) {
         console.log(err);
     }
