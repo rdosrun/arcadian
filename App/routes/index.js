@@ -6,6 +6,7 @@
 var express = require('express');
 var router = express.Router();
 var { get_token } = require('./libs/get_token');
+const axios = require('axios');
 
 router.get('/', function (req, res, next) {
     res.render('index', {
@@ -15,8 +16,7 @@ router.get('/', function (req, res, next) {
     });
 });
 
-
-router.post('/auth/callback', function (req, res, next) {
+router.post('/auth/callback', async function (req, res, next) {
     //1 get the token deal with long in 
     console.log('Client Info:', req.body.client_info);
     const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
@@ -27,6 +27,19 @@ router.post('/auth/callback', function (req, res, next) {
     try {
         const accessToken = get_token();
         console.log('Access Token:', accessToken);
+
+        // Query NetSuite using the access token
+        const accountId = process.env.ACCOUNT_ID;
+        const response = await axios.post(`https://11374585.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql`, {
+            query: 'SELECT * FROM customer'
+        }, {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        console.log('NetSuite Query Response:', response.data);
     } catch (err) {
         console.log(err);
     }
