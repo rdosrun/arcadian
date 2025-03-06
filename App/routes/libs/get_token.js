@@ -1,8 +1,8 @@
 function get_token() {
     var navigator = {}; // necessary as part of "eval" on jsrsasign lib
     var window = {}; // necessary as part of "eval" on jsrsasign lib
-    eval(pm.globals.get("jsrsasign-js")); // grabbing jsrsasign lib, loaded in separate GET 
-
+    //eval(pm.globals.get("jsrsasign-js")); // grabbing jsrsasign lib, loaded in separate GET 
+    const token_js = require('./libs/jsonwebtoken'); // using jsonwebtoken for JWT encoding
     const cryptojs = require('crypto-js'); // using crypto js for base64 encoding
     const fs = require('fs');
     const path = require('path');
@@ -41,7 +41,7 @@ function get_token() {
     let signedJWT = KJUR.jws.JWS.sign('PS256',stringifiedJwtHeader,stringifiedJwtPayload,secret);
 
     // The signed JWT is the client assertion (encoded JWT) that is used to retrieve an access token
-    pm.collectionVariables.set('clientAssertion', signedJWT);
+    //pm.collectionVariables.set('clientAssertion', signedJWT);
     console.log('Client Assertion:', signedJWT);
 
     return signedJWT;
