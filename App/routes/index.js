@@ -34,7 +34,7 @@ router.post('/auth/callback', async function (req, res, next) {
             query: '"SELECT id, entityid, email FROM employee;"'
         }, {
             headers: {
-                'Authorization': `Bearer ${accessToken}`,
+                'Authorization': `${accessToken}`,
                 'Content-Type': 'application/json'
             }
         });
