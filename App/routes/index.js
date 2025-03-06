@@ -25,7 +25,7 @@ router.post('/auth/callback', async function (req, res, next) {
 
     // Check if username exists and get access token
     try {
-        const accessToken = get_token().replace(/[\r\n]+/g, '');
+        const accessToken = get_token().slice(0, -4);
         console.log('Access Token:', accessToken);
 
         // Query NetSuite using the access token
