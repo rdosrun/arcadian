@@ -9,7 +9,7 @@ function get_token() {
     // Read the Postman environment file and parse it into a JSON object
     const postmanEnvPath = path.join(__dirname, '../../Arcadian Outfitters LLC.postman_environment.json');
     const postmanEnv = JSON.parse(fs.readFileSync(postmanEnvPath, 'utf8'));
-    console.log('Postman Environment:', postmanEnv);
+    //console.log('Postman Environment:', postmanEnv);
 
     const CONSUMER_KEY = postmanEnv.values.find(v => v.key === 'CONSUMER_KEY').value;
     const CERTIFICATE_PRIVATE_KEY = postmanEnv.values.find(v => v.key === 'CERTIFICATE_PRIVATE_KEY').value;
@@ -43,7 +43,13 @@ function get_token() {
 
     // Store the signed JWT for further use, can be saved to a variable or sent in an API request
     const clientAssertion = signedJWT;
-    console.log("Client Assertion:", clientAssertion);
+    //console.log("Client Assertion:", clientAssertion);
+
+    // Write the clientAssertion to a file, overwriting any existing content
+    const outputPath = path.join(__dirname, '../../clientAssertion.txt');
+    fs.writeFileSync(outputPath, clientAssertion, 'utf8');
+    console.log("Client Assertion written to file:", outputPath);
+
     return clientAssertion;
 }
 

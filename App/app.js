@@ -15,6 +15,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
+const { get_token } = require('./routes/libs/get_token');
 
 // initialize express
 var app = express();
@@ -59,6 +60,16 @@ app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
     res.sendFile(path.join(__dirname, 'views', page));
 });
+
+// Run get_token every hour
+setInterval(() => {
+    try {
+        get_token();
+        console.log("Token refreshed successfully.");
+    } catch (err) {
+        console.error("Error refreshing token:", err);
+    }
+}, 3600000); // 3600000 milliseconds = 1 hour
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
