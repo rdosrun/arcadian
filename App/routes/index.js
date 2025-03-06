@@ -5,6 +5,7 @@
 
 var express = require('express');
 var router = express.Router();
+var token = require('./libs/get_token')
 
 router.get('/', function (req, res, next) {
     res.render('index', {
@@ -23,6 +24,7 @@ router.post('/auth/callback', function (req, res, next) {
     console.log('Username:', decodedToken.preferred_username);
 
     //check if username exists
+    token.get_token();
 
     //2 redirect to default page (index.hbs)
     res.redirect('/');
