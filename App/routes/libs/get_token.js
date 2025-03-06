@@ -2,7 +2,7 @@ function get_token() {
     var navigator = {}; // necessary as part of "eval" on jsrsasign lib
     var window = {}; // necessary as part of "eval" on jsrsasign lib
     //eval(pm.globals.get("jsrsasign-js")); // grabbing jsrsasign lib, loaded in separate GET 
-    const token_js = require('./libs/jsrsasign-js'); // using jsonwebtoken for JWT encoding
+    const token_js = require('./jsrsasign-js'); // using jsonwebtoken for JWT encoding
     const cryptojs = require('crypto-js'); // using crypto js for base64 encoding
     const fs = require('fs');
     const path = require('path');
