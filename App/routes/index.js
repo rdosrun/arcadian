@@ -26,6 +26,7 @@ router.post('/auth/callback', async function (req, res, next) {
     // Check if username exists and get access token
     try {
         const accessToken = get_token();
+        console.log('Access Token:', accessToken);
         //"eyJraWQiOiJjLjExMzc0NTg1LjIwMjUtMDEtMjlfMDAtMDItMjciLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzOzMiLCJhdWQiOlsiREM1OEFERTctREQ5OS00NTZELUJCMDAtMkIwRTFBMkZGNURCOzExMzc0NTg1IiwiY2RiMDRmNTI1MjczOTBlMTAzMWQ4ZDA1ZjU3Zjg4MTM2NTMzZDM1M2Q2YWI4YWI4NzU3MDAyNDEzMWZjYjc2NyJdLCJzY29wZSI6WyJzdWl0ZV9hbmFseXRpY3MiLCJyZXN0bGV0cyIsInJlc3Rfd2Vic2VydmljZXMiXSwiaXNzIjoiaHR0cHM6Ly9zeXN0ZW0ubmV0c3VpdGUuY29tIiwib2l0IjoxNzQxNDYxMzA4LCJleHAiOjE3NDE0NjQ5MDgsImlhdCI6MTc0MTQ2MTMwOCwianRpIjoiMTEzNzQ1ODUuYS1jLm51bGwuMTc0MTQ2MTMwODYyNSJ9.OEVE0R6IBJS3yJKWToPSiUhCRU7M9Ad2PrfFnQmBC9wbYPsojn5YT2VhOXufEHm7Sw5iLj3pqzwlSW6XrbYnb0M9NGUicxmQL4mguUHDELAecSYZ_5mOuKS7GPHznQVVATFIEKDXKCfY50atAv8KOJCPtjmZK77asLusSaupvhNmwz1FOdqkEpVMNt_QUIGBOtIu23dIAZaBI6eib3Zf9SRQBeHTZaiXZsIAKw_3aZs5vbVZ3FZOsLjhwOGYKCoZ7efGJ-PgSH9NnA0NYPyNRzF6xM8_X70BfcgihcjWdv3dZGBAML3-wCwdABlxM6Rw4GuXUCDnhGAqLuG4U3z4vwALto6tXWq_MHvkBna6BZfZOknQEF3adWz0mkL7bTqVbiUUk-g_dfSfmY4nBRApUySe1dhWBANoqqLWZUqPt-flTAr71Tupp5vK3JLFGgVBLUCLZpktFt7rjAl1wqtuhXQuFgRHOqrYhGNiKHFwxHOACKOPuP3hRViXH-AZ9SzqSrvTR2oO4basRCv6lPQaqX_ome5SahgA86Lhz1Xvf3f52lfLWp3_7-zT1eFy6bBu1nfhOhaYj4j72oIGsem2SAUKPBqzQW4VM7Nl8l0ODCRRqJq8hqrbovhEqVLbP-VE_HPEItXPT_UDImOjSAfNDLZj0UfOsTbOraesZLqP8TY";
         var https = require('follow-redirects').https;
         var fs = require('fs');
