@@ -42,3 +42,6 @@ function get_token() {
 
     req.end();
 }
+module.exports = {
+    get_token
+};
