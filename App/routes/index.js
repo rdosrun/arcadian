@@ -36,7 +36,7 @@ router.post('/auth/callback', async function (req, res, next) {
         'headers': {
             'Prefer': 'transient',
             'Content-Type': 'application/json',
-            'Authorization': '${accessToken}',
+            'Authorization': `Bearer ${accessToken}`,
         },
         'maxRedirects': 20
         };
