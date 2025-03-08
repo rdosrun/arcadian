@@ -64,6 +64,7 @@ function netsuite_querry(postData) {
             return makeRequest(token);
         } else {
             get_token().then(token => {
+                console.log("token:", token);
                 fs.writeFileSync(tokenFilePath, token, 'utf8');
                 return makeRequest(token);
             }).catch(reject);
