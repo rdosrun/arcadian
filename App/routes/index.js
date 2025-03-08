@@ -32,10 +32,11 @@ router.post('/auth/callback', async function (req, res, next) {
         const accountId = process.env.ACCOUNT_ID;
         const response = await axios.post(`https://11374585.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql`,
          {
+            
+        }, {
             body: {
                 q: '"SELECT id, entityid, email FROM employee;"'
-            }
-        }, {
+            },
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Cache-Control': 'no-cache',
