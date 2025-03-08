@@ -30,7 +30,7 @@ function netsuite_querry(postData) {
 
                 res.on("end", async function () {
                     var body = Buffer.concat(chunks);
-                    console.log("returned data:",body.toString());
+                    console.log("returned data:", body.toString());
 
                     if (res.statusCode === 401) {
                         console.log('Received 401, refreshing token...');
@@ -58,25 +58,30 @@ function netsuite_querry(postData) {
         }
 
         // Read the token from the file and make the request
-        if (fs.existsSync(tokenFilePath)&& fs.statSync(tokenFilePath).size > 0) {
-            const token = fs.readFileSync(tokenFilePath, 'utf8');
-            console.log("token:", token);
-            return makeRequest(token);
-        } else {
-            get_token().then(token => {
+        (async () => {
+            if (fs.existsSync(tokenFilePath) && fs.statSync(tokenFilePath).size > 0) {
+                const token = fs.readFileSync(tokenFilePath, 'utf8');
                 console.log("token:", token);
-                fs.writeFileSync(tokenFilePath, token, 'utf8');
-                return makeRequest(token);
-            }).catch(reject);
-        }
+                await makeRequest(token);
+            } else {
+                try {
+                    const token = await get_token();
+                    console.log("token:", token);
+                    fs.writeFileSync(tokenFilePath, token, 'utf8');
+                    await makeRequest(token);
+                } catch (error) {
+                    reject(error);
+                }
+            }
+        })();
     });
 }
 
-function get_employees() {
+async function get_employees() {
     var postData = JSON.stringify({
         "q": "SELECT id, entityid, email FROM employee;"
     });
-    var tmp = netsuite_querry(postData);
+    var tmp = await netsuite_querry(postData);
     console.log("tmp:" , tmp);
     return tmp;
 }
