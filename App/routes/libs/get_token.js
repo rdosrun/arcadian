@@ -1,52 +1,54 @@
 var https = require('follow-redirects').https;
 var fs = require('fs');
-
 var qs = require('querystring');
+var path = require('path');
+
+// Load environment variables from the Postman environment file
+const envFilePath = path.join(__dirname, '../../Arcadian Outfitters LLC.postman_environment.json');
+const envData = JSON.parse(fs.readFileSync(envFilePath, 'utf8'));
+const CONSUMER_KEY = envData.values.find(v => v.key === 'CONSUMER_KEY').value;
+const CERTIFICATE_PRIVATE_KEY = envData.values.find(v => v.key === 'CERTIFICATE_PRIVATE_KEY').value;
+
 function get_token() {
     return new Promise((resolve, reject) => {
-        var options = {
-            'method': 'POST',
-            'hostname': '11374585.suitetalk.api.netsuite.com',
-            'path': '/services/rest/auth/oauth2/v1/token',
-            'headers': {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            'maxRedirects': 20
+        var navigator = {}; // necessary as part of "eval" on jsrsasign lib
+        var window = {}; // necessary as part of "eval" on jsrsasign lib
+        eval(pm.globals.get("jsrsasign-js")); // grabbing jsrsasign lib, loaded in separate GET 
+
+        const cryptojs = require('crypto-js'); // using crypto js for base64 encoding
+
+        // Create JWT header
+        var jwtHeader = {
+            alg: 'PS256', // Using PS256, which is one of the algorithms NetSuite supports for client credentials
+            typ: 'JWT',
+            kid: 'uJl5bqUo1I0wH5LlbyUbXJ_DLK1quxhGVbjl2Oo0WOM' // Certificate Id on the client credentials mapping
         };
 
-        var req = https.request(options, function (res) {
-            var chunks = [];
+        let stringifiedJwtHeader = JSON.stringify(jwtHeader);
 
-            res.on("data", function (chunk) {
-                chunks.push(chunk);
-            });
+        // Create JWT payload
+        let jwtPayload = {
+            iss: pm.environment.get(CONSUMER_KEY), // consumer key of integration record
+            scope: ['restlets','rest_webservices', 'suite_analytics'], // scopes specified on integration record
+            iat: (new Date() / 1000),               // timestamp in seconds
+            exp: (new Date() / 1000) + 3600,        // timestamp in seconds, 1 hour later, which is max for expiration
+            aud: 'https://11374585.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token'
+        };
 
-            res.on("end", function () {
-                var body = Buffer.concat(chunks);
-                console.log("response", body.toString());
-                try {
-                    const parsedBody = JSON.parse(body.toString());
-                    resolve(parsedBody.access_token);
-                    return parsedBody.access_token;
-                } catch (error) {
-                    reject(error);
-                }
-            });
+        var stringifiedJwtPayload = JSON.stringify(jwtPayload);
 
-            res.on("error", function (error) {
-                console.error(error);
-                reject(error);
-            });
-        });
+        // The secret is the private key of the certificate loaded into the client credentials mapping in NetSuite
+        let secret = pm.environment.get(CERTIFICATE_PRIVATE_KEY);
+        let encodedSecret = cryptojs.enc.Base64.stringify(cryptojs.enc.Utf8.parse(secret)); // we need to base64 encode the key
 
-        var postData = qs.stringify({
-            'grant_type': 'client_credentials',
-            'client_assertion_type': 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-            'client_assertion': 'eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InVKbDVicVVvMUkwd0g1TGxieVViWEpfRExLMXF1eGhHVmJqbDJPbzBXT00ifQ.eyJpc3MiOiJjZGIwNGY1MjUyNzM5MGUxMDMxZDhkMDVmNTdmODgxMzY1MzNkMzUzZDZhYjhhYjg3NTcwMDI0MTMxZmNiNzY3Iiwic2NvcGUiOlsicmVzdGxldHMiLCJyZXN0X3dlYnNlcnZpY2VzIiwic3VpdGVfYW5hbHl0aWNzIl0sImlhdCI6MTc0MTQ3Mjk1MC4zOTUsImV4cCI6MTc0MTQ3NjU1MC4zOTUsImF1ZCI6Imh0dHBzOi8vMTEzNzQ1ODUuc3VpdGV0YWxrLmFwaS5uZXRzdWl0ZS5jb20vc2VydmljZXMvcmVzdC9hdXRoL29hdXRoMi92MS90b2tlbiJ9.DmLN44AUOr40Z3ZwcyldGWrAh-JbDm_zMLO4sQ-QX2dGc2pYNbOsmsbhZEv-VsbuDMLoGO7mfAtitwbjjCWiyMatW0clJQ7D26EAieFx0SJNZfDN9mdcNcPo08IMOlmPbSXaZYkNiGDmi94pz5rMzMdX_jA7ksjpqDFjBVeqHuh1eWQNB69SYkyVzmbgFttie0uNaR5FN7zlQcLnEkjYRwbvo9ijbSW8KVx-BEc8ts1CxF_fo54eiTQ3XNn54YbCQsDU-X6iOl_9gg5yVzkcB6KWaBDU1tTJ_g3dDLoH2GLmBivwz_F73DpK-qSOy-Ks-dRtcktYR3w7_Z7ZK-qe1F9g6SieNuQxYlQ3toTQ6oJ-vpGbdydq45mJNsaLTDyMrJF9cWD_QQavRNzbr4tyhY3qE0GVNflkIOv9WFYkj8qdJKW0ejkdd3BGXPktvPfRxCdAElN5wja9nk5TvXKzigaX-uJMi-S5ACpLhT_2iWtpl5P94kjOoDcoO2UDI2Wm'
-        });
+        // Sign the JWT with the PS256 algorithm (algorithm must match what is specified in JWT header).
+        // The JWT is signed using the jsrsasign lib (KJUR)
+        let signedJWT = KJUR.jws.JWS.sign('PS256',stringifiedJwtHeader,stringifiedJwtPayload,secret);
 
-        req.write(postData);
-        req.end();
+        // The signed JWT is the client assertion (encoded JWT) that is used to retrieve an access token
+        pm.collectionVariables.set('clientAssertion', signedJWT);
+
+        
     });
 }
 
