@@ -4,7 +4,7 @@ var fs = require('fs');
 var qs = require('querystring');
 function get_token() {
   // Your code to get the token
-
+    new Promise((resolve, reject) => {
     var options = {
     'method': 'POST',
     'hostname': '11374585.suitetalk.api.netsuite.com',
@@ -41,7 +41,8 @@ function get_token() {
 
     req.write(postData);
 
-    req.end();
+    req.end();  
+    });
 }
 module.exports = {
     get_token
