@@ -11,6 +11,7 @@ var session = require('express-session');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -51,6 +52,33 @@ app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'favicon.i
 app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+// Initialize a map to keep track of 404 errors per IP address
+const ipErrorCount = new Map();
+const blacklistedIps = new Set();
+var blacklistFilePath = path.join(__dirname, 'blacklisted_ips.json');
+
+// Load blacklisted IPs from file
+if (fs.existsSync(blacklistFilePath)) {
+    const data = fs.readFileSync(blacklistFilePath, 'utf8');
+    const loadedIps = JSON.parse(data);
+    loadedIps.forEach(ip => blacklistedIps.add(ip));
+}
+
+// Middleware to check if IP is blacklisted
+app.use((req, res, next) => {
+    if (blacklistedIps.has(req.ip)) {
+        res.status(403).send('Forbidden');
+    } else {
+        next();
+    }
+});
+
+// Log the IP address of the requesting client
+app.use((req, res, next) => {
+    console.log('Request IP Address:', req.ip);
+    next();
+});
+
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -73,6 +101,16 @@ setInterval(() => {
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+    const ip = req.ip;
+    const count = ipErrorCount.get(ip) || 0;
+    ipErrorCount.set(ip, count + 1);
+
+    if (ipErrorCount.get(ip) > 10) {
+        blacklistedIps.add(ip);
+        console.log(`IP ${ip} has been blacklisted.`);
+        fs.writeFileSync(blacklistFilePath, JSON.stringify(Array.from(blacklistedIps)), 'utf8');
+    }
+
     next(createError(404));
 });
 
