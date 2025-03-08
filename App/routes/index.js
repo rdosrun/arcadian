@@ -26,9 +26,6 @@ router.post('/auth/callback', async function (req, res, next) {
 
     // Check if username exists and get access token
     try {
-        const accessToken = await get_token();
-        console.log('Access Token:', accessToken);
-
         // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;

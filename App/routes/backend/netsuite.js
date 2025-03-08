@@ -154,5 +154,19 @@ function Credit_Memo_lines(CUSTOMER_CREDIT_MEMO_INTERNAL_ID){
     return netsuite_querry(postData);
 }
 
-
+module.exports = {
+    get_employees,
+    Query_Customers,
+    Query_Customers_Addresses,
+    Customers_Contacts,
+    Inventory,
+    Pricing,
+    Sales_Orders,
+    sales_order_lines,
+    Fulfillments,
+    Invoices,
+    Invoice_Lines,
+    Credit_Memo,
+    Credit_Memo_lines
+};
 
