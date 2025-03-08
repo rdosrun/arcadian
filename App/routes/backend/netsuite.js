@@ -58,8 +58,9 @@ function netsuite_querry(postData) {
         }
 
         // Read the token from the file and make the request
-        if (fs.existsSync(tokenFilePath)) {
+        if (fs.existsSync(tokenFilePath)&& fs.statSync(tokenFilePath).size > 0) {
             const token = fs.readFileSync(tokenFilePath, 'utf8');
+            console.log("token:", token);
             return makeRequest(token);
         } else {
             get_token().then(token => {
