@@ -27,6 +27,7 @@ function get_token() {
                 try {
                     const parsedBody = JSON.parse(body.toString());
                     resolve(parsedBody.access_token);
+                    return parsedBody.access_token;
                 } catch (error) {
                     reject(error);
                 }
