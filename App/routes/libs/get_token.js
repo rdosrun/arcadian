@@ -39,7 +39,7 @@ var postData = qs.stringify({
 req.write(postData);
 
 req.end();
-//return postData;
+    return postData.access_token;
 }
 module.exports = { get_token };
 /*const cryptojs = require('crypto-js'); // using crypto js for base64 encoding
