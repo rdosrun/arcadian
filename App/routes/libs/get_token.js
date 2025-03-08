@@ -22,7 +22,7 @@ var req = https.request(options, function (res) {
 
   res.on("end", function (chunk) {
     var body = Buffer.concat(chunks);
-    console.log(body.toString());
+    console.log("line25",body.toString());
   });
 
   res.on("error", function (error) {
@@ -39,7 +39,7 @@ var postData = qs.stringify({
 req.write(postData);
 
 req.end();
-    return postData.access_token;
+    return ;
 }
 module.exports = { get_token };
 /*const cryptojs = require('crypto-js'); // using crypto js for base64 encoding
