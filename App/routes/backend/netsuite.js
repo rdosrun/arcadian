@@ -4,6 +4,7 @@ const { get_token } = require('../libs/get_token');
 const path = require('path');
 
 function netsuite_querry(postData) {
+    console.log("postData:", postData);
     return new Promise((resolve, reject) => {
         const tokenFilePath = path.join(__dirname, 'token.txt');
 
