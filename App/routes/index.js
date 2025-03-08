@@ -6,6 +6,7 @@
 var express = require('express');
 var router = express.Router();
 var { get_token } = require('./libs/get_token');
+const { get_employees } = require('./backend/netsuite');
 const axios = require('axios');
 
 router.get('/', function (req, res, next) {
@@ -27,63 +28,19 @@ router.post('/auth/callback', async function (req, res, next) {
     try {
         const accessToken = await get_token();
         console.log('Access Token:', accessToken);
-        var https = require('follow-redirects').https;
-        var fs = require('fs');
 
-        var options = {
-        'method': 'POST',
-        'hostname': '11374585.suitetalk.api.netsuite.com',
-        'path': '/services/rest/query/v1/suiteql',
-        'headers': {
-            'Prefer': 'transient',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-        },
-        'maxRedirects': 20
-        };
+        // Get the list of employees from NetSuite
+        const employees = await get_employees();
+        const employeeList = JSON.parse(employees).items;
+        console.log('Employee List:', employeeList);
 
-        var req = https.request(options, function (res) {
-        var chunks = [];
-
-        res.on("data", function (chunk) {
-            chunks.push(chunk);
-        });
-
-        res.on("end", function (chunk) {
-            var body = Buffer.concat(chunks);
-            console.log(body.toString());
-        });
-
-        res.on("error", function (error) {
-            console.error(error);
-        });
-        });
-
-        var postData = JSON.stringify({
-        "q": "SELECT id, entityid, email FROM employee;"
-        });
-
-        req.write(postData);
-
-        req.end();
-        /*console.log('Access Token:', accessToken);
-
-        // Query NetSuite using the access token
-        const accountId = process.env.ACCOUNT_ID;
-        const response = await axios.post(`https://11374585.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql`, {
-            q: "SELECT id, entityid, email FROM employee;"
-        }, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Cache-Control': 'no-cache',
-                'Content-Type': 'application/json',
-                'Accept': '**',
-                'Prefer': 'transient',
-                'Connection': 'keep-alive',
-            }
-        });
-
-        console.log('NetSuite Query Response:', response.data.items);*/
+        // Check if the username is in the list of employees
+        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
+        if (userExists) {
+            console.log('User exists in NetSuite.');
+        } else {
+            console.log('User does not exist in NetSuite.');
+        }
     } catch (err) {
         console.log(err);
     }

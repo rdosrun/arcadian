@@ -51,12 +51,6 @@ app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'favicon.i
 app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// Log the IP address of the requesting client
-app.use((req, res, next) => {
-    console.log('Request IP Address:', req.ip);
-    next();
-});
-
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
