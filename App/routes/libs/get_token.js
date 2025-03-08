@@ -26,7 +26,7 @@ var req = https.request(options, function (res) {
     try {
         body = JSON.parse(body.toString());
         console.log("line28",body);
-        return body;
+        return body.access_token;
     }catch (error) {
         console.error("Error parsing JSON:", error);
         return null;
