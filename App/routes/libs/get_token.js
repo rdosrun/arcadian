@@ -24,7 +24,7 @@ function get_token() {
 
     res.on("end", function (chunk) {
         var body = Buffer.concat(chunks);
-        console.log(body.toString());
+        console.log("response", body.toString());
         return JSON.parse(body.toString());
     });
 
