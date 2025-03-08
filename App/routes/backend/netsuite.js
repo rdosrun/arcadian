@@ -7,7 +7,7 @@ function netsuite_querry(postData) {
     return new Promise((resolve, reject) => {
         const tokenFilePath = path.join(__dirname, 'token.txt');
 
-        function makeRequest(token) {
+        async function makeRequest(token) {
             var options = {
                 'method': 'POST',
                 'hostname': '11374585.suitetalk.api.netsuite.com',
@@ -29,7 +29,7 @@ function netsuite_querry(postData) {
 
                 res.on("end", async function () {
                     var body = Buffer.concat(chunks);
-                    console.log(body.toString());
+                    console.log("returned data:",body.toString());
 
                     if (res.statusCode === 401) {
                         console.log('Received 401, refreshing token...');
@@ -42,6 +42,7 @@ function netsuite_querry(postData) {
                         }
                     } else {
                         resolve(body.toString());
+                        return JSON.parse(body.toString());
                     }
                 });
 
@@ -58,11 +59,11 @@ function netsuite_querry(postData) {
         // Read the token from the file and make the request
         if (fs.existsSync(tokenFilePath)) {
             const token = fs.readFileSync(tokenFilePath, 'utf8');
-            makeRequest(token);
+            return makeRequest(token);
         } else {
             get_token().then(token => {
                 fs.writeFileSync(tokenFilePath, token, 'utf8');
-                makeRequest(token);
+                return makeRequest(token);
             }).catch(reject);
         }
     });
@@ -72,7 +73,9 @@ function get_employees() {
     var postData = JSON.stringify({
         "q": "SELECT id, entityid, email FROM employee;"
     });
-    return netsuite_querry(postData);
+    var tmp = netsuite_querry(postData);
+    console.log("tmp:" , tmp);
+    return tmp;
 }
 
 function Query_Customers(){
