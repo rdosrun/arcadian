@@ -32,6 +32,7 @@ async function get_token() {
         res.on("end", function (chunk) {
             var body = Buffer.concat(chunks);
             console.log(body.toString());
+            resolve(JSON.parse(body.toString()).access_token);
         });
 
         res.on("error", function (error) {
@@ -91,7 +92,7 @@ function generate_jwt() {
         console.log('Signed JWT:', signedJWT);
         // The signed JWT is the client assertion (encoded JWT) that is used to retrieve an access token
         //.collectionVariables.set('clientAssertion', signedJWT);
-        return signedJWT;
+        resolve(signedJWT);
     });
 }
 
