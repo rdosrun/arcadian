@@ -10,7 +10,49 @@ const envData = JSON.parse(fs.readFileSync(envFilePath, 'utf8'));
 const CONSUMER_KEY = envData.values.find(v => v.key === 'CONSUMER_KEY').value;
 const CERTIFICATE_PRIVATE_KEY = envData.values.find(v => v.key === 'CERTIFICATE_PRIVATE_KEY').value;
 
-function get_token() {
+async function get_token() {
+    return new Promise(async (resolve, reject) => {
+        var options = {
+        'method': 'POST',
+        'hostname': '11374585.suitetalk.api.netsuite.com',
+        'path': '/services/rest/auth/oauth2/v1/token',
+        'headers': {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        'maxRedirects': 20
+        };
+
+        var req = https.request(options, function (res) {
+        var chunks = [];
+
+        res.on("data", function (chunk) {
+            chunks.push(chunk);
+        });
+
+        res.on("end", function (chunk) {
+            var body = Buffer.concat(chunks);
+            console.log(body.toString());
+        });
+
+        res.on("error", function (error) {
+            console.error(error);
+        });
+        });
+        let clientAssertion = await generate_jwt();
+        var postData = qs.stringify({
+        'grant_type': 'client_credentials',
+        'client_assertion_type': 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+        'client_assertion': `${clientAssertion}`,
+        });
+
+        req.write(postData);
+
+        req.end();
+        
+    });
+}
+
+function generate_jwt() {
     return new Promise((resolve, reject) => {
         var navigator = {}; // necessary as part of "eval" on jsrsasign lib
         var window = {}; // necessary as part of "eval" on jsrsasign lib
@@ -50,7 +92,6 @@ function get_token() {
         // The signed JWT is the client assertion (encoded JWT) that is used to retrieve an access token
         //.collectionVariables.set('clientAssertion', signedJWT);
         return signedJWT;
-        
     });
 }
 
