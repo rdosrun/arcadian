@@ -18,6 +18,9 @@ function netsuite_querry(postData) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
+                'body':{
+                    "q": "SELECT id, entityid, email FROM employee;"
+                },
                 'maxRedirects': 20
             };
 
