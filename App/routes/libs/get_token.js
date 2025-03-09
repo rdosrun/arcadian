@@ -35,7 +35,8 @@ function get_token() {
             exp: (new Date() / 1000) + 3600,        // timestamp in seconds, 1 hour later, which is max for expiration
             aud: 'https://11374585.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token'
         };
-        console.log('JWT Payload:');
+        console.log('JWT private key:', CERTIFICATE_PRIVATE_KEY);
+        console.log('JWT consumer_key:', CONSUMER_KEY);
         var stringifiedJwtPayload = JSON.stringify(jwtPayload);
 
         // The secret is the private key of the certificate loaded into the client credentials mapping in NetSuite
