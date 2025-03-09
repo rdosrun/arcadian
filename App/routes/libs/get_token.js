@@ -35,7 +35,7 @@ function get_token() {
             exp: (new Date() / 1000) + 3600,        // timestamp in seconds, 1 hour later, which is max for expiration
             aud: 'https://11374585.suitetalk.api.netsuite.com/services/rest/auth/oauth2/v1/token'
         };
-
+        console.log('JWT Payload:');
         var stringifiedJwtPayload = JSON.stringify(jwtPayload);
 
         // The secret is the private key of the certificate loaded into the client credentials mapping in NetSuite
@@ -45,7 +45,7 @@ function get_token() {
         // Sign the JWT with the PS256 algorithm (algorithm must match what is specified in JWT header).
         // The JWT is signed using the jsrsasign lib (KJUR)
         let signedJWT = jsrsasign.jws.JWS.sign('PS256',stringifiedJwtHeader,stringifiedJwtPayload,secret);
-
+        console.log('Signed JWT:', signedJWT);
         // The signed JWT is the client assertion (encoded JWT) that is used to retrieve an access token
         //.collectionVariables.set('clientAssertion', signedJWT);
         return signedJWT;
