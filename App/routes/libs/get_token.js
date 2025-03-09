@@ -44,7 +44,7 @@ function get_token() {
 
         // Sign the JWT with the PS256 algorithm (algorithm must match what is specified in JWT header).
         // The JWT is signed using the jsrsasign lib (KJUR)
-        let signedJWT = KJUR.jws.JWS.sign('PS256',stringifiedJwtHeader,stringifiedJwtPayload,secret);
+        let signedJWT = jsrsasign.jws.JWS.sign('PS256',stringifiedJwtHeader,stringifiedJwtPayload,secret);
 
         // The signed JWT is the client assertion (encoded JWT) that is used to retrieve an access token
         //.collectionVariables.set('clientAssertion', signedJWT);
