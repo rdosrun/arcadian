@@ -135,7 +135,7 @@ function Fulfillments(){
     });
     return netsuite_querry(postData);
 }
-function get_employees(ITEM_FULFILLMENT_INTERNAL_ID){
+function fulfillment(ITEM_FULFILLMENT_INTERNAL_ID){
     var postData = JSON.stringify({
     "q": "SELECT line.transaction AS item_fulfillment_internal_id, itemship.tranid AS item_fulfillment_number, line.subsidiary AS item_fulfillment_subsidiary_internal_id, subsid.name AS item_fulfillment_subsidiary_name, line.id AS item_fulfillment_line_id, line.item AS item_fulfillment_item_internal_id, item.itemid AS item_fulfillment_item_name, item.description AS item_fulfillment_item_description, ABS(line.quantity) AS item_fulfillment_quantity, line.location AS item_fulfillment_location_internal_id, location.name AS item_fulfillment_location_name FROM transactionline AS line LEFT JOIN transaction AS itemship ON itemship.id = line.transaction LEFT JOIN item AS item ON item.id = line.item LEFT JOIN location AS location ON location.id = line.location LEFT JOIN subsidiary AS subsid ON line.subsidiary = subsid.id WHERE line.mainline = 'F' AND line.taxline = 'F' AND isinventoryaffecting = 'T' AND line.transaction = {{ITEM_FULFILLMENT_INTERNAL_ID}};"
     });
