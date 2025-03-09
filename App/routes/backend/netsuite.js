@@ -9,6 +9,7 @@ function netsuite_querry(postData) {
         const tokenFilePath = path.join(__dirname, 'token.txt');
 
         async function makeRequest(token) {
+            console.log("req_token:", token);
             var options = {
                 'method': 'POST',
                 'hostname': '11374585.suitetalk.api.netsuite.com',
@@ -17,9 +18,6 @@ function netsuite_querry(postData) {
                     'Prefer': 'transient',
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                },
-                'body':{
-                    "q": "SELECT id, entityid, email FROM employee;"
                 },
                 'maxRedirects': 20
             };
@@ -55,7 +53,7 @@ function netsuite_querry(postData) {
                     reject(error);
                 });
             });
-
+            console.log("req_postData:", postData);
             req.write(postData);
             req.end();
         }
