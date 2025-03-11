@@ -31,10 +31,10 @@ router.get('/', function (req, res, next) {
 router.post('/auth/callback', async function (req, res, next) {
     //1 get the token deal with long in 
     /*console.log('Client Info:', req.body.client_info);
-    const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
+    
     console.log('Decoded Token:', decodedToken);
     console.log('Username:', decodedToken.preferred_username);*/
-
+    const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
     // Check if username exists and get access token
     try {
         // Get the list of employees from NetSuite
