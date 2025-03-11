@@ -33,11 +33,11 @@
     </nav>
     
     <div class="switch">
-
+        {{#unless isAuthenticated}}
         <a href="/auth/signin">
-          <button >Login with Microsoft</button>
+          <button>Login with Microsoft</button>
         </a>
-
+        {{/unless}}
     <div class="cta-btn dropdown" id="cart" style="display: none;">
       <div>Cart</div>
     <ul id="cart-items" class="dropdown-content">
