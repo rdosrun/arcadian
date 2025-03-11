@@ -58,7 +58,6 @@
   }
 }
 
-
 /* Header Bar Styles */
 .header-bar {
   display: flex;
@@ -67,6 +66,7 @@
   padding: 20px;
   background-color: #333;
   color: white;
+  flex-wrap: nowrap; /* Prevent wrapping */
 }
 
 .logo a {
@@ -79,6 +79,7 @@
 .nav-links ul {
   display: flex;
   list-style: none;
+  flex-wrap: nowrap; /* Prevent wrapping */
 }
 
 .nav-links ul li {
