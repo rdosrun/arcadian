@@ -72,7 +72,7 @@ router.get('/views/:page', function (req, res, next) {
 
 // Route to access pages in the retail folder
 router.get('/retail/:page', isAuthenticated, function (req, res, next) {
-    const page = req.params.page + '.html';
+    const page = req.params.page;
     res.sendFile(path.join(__dirname, '../views/retail', page));
 });
 
