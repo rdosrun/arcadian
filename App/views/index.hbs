@@ -22,10 +22,12 @@
         <li><button class="nav-btn" onclick="loadPage('/views/landing')">Home</button></li>
         <li><button class="nav-btn" onclick="loadPage('/views/about')">About Us</button></li>
         <li><button class="nav-btn" onclick="loadPage('/views/contact')">Contact</button></li>
-                    <div id="private-links" style="display: none;">
-        <li><button class="nav-btn" onclick="loadPage('/views/re-order')">Re-Order</button></li>
-        <li><button class="nav-btn" onclick="loadPage('/views/products')">Products</button></li>
-                    </div>
+        {{#if isAuthenticated}}
+        <div id="private-links">
+            <li><button class="nav-btn" onclick="loadPage('/views/re-order')">Re-Order</button></li>
+            <li><button class="nav-btn" onclick="loadPage('/views/products')">Products</button></li>
+        </div>
+        {{/if}}
         <li><button class="nav-btn" onclick="loadPage('/views/store_locator')">Store Locator</button></li>
         </ul>
     </nav>
