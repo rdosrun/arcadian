@@ -29,7 +29,14 @@ function update_hats(){
     .then(response => response.json())
     .then(data => {
         console.log('Inventory:', data);
-        // Process inventory data as needed
+        
+        // Check for an item with ID 'Arrows-Charcoal-Lt. Brown-Patch'
+        const item = data.items.find(item => item.item_class_name === 'Arrows-Charcoal-Lt. Brown-Patch');
+        if (item) {
+            console.log('Item found:', item);
+        } else {
+            console.log('Item not found.');
+        }
     })
     .catch(error => {
         console.error('Error fetching inventory:', error);
