@@ -6,7 +6,7 @@
 var express = require('express');
 var router = express.Router();
 var { get_token } = require('./libs/get_token');
-const { get_employees } = require('./backend/netsuite');
+const { get_employees, Inventory } = require('./backend/netsuite');
 const axios = require('axios');
 const path = require('path');
 
@@ -74,6 +74,22 @@ router.get('/views/:page', function (req, res, next) {
 router.get('/retail/:page', isAuthenticated, function (req, res, next) {
     const page = req.params.page;
     res.sendFile(path.join(__dirname, '../views/retail', page));
+});
+
+// Route to serve product images
+router.get('/product_images/:image', function (req, res, next) {
+    const image = req.params.image;
+    res.sendFile(path.join(__dirname, '../public/product_images', image));
+});
+
+// Route to get inventory
+router.get('/inventory', isAuthenticated, async function (req, res, next) {
+    try {
+        const inventory = await Inventory();
+        res.json(JSON.parse(inventory));
+    } catch (error) {
+        next(error);
+    }
 });
 
 module.exports = router;

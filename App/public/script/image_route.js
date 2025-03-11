@@ -12,20 +12,18 @@ function update_hats(){
     checkboxes.forEach(checkbox => {
         console.log(`${checkbox.value}: ${checkbox.checked ? 'Checked' : 'Unchecked'}`);
         if(checkbox.checked == true){
-		fetch("/images/Hat_Pictures/"+checkbox.value+"/count.txt")
+            fetch(`/product_images/${checkbox.value}/count.txt`)
             .then((response) => response.text())
             .then((count) => {
-                console.log(count,parseInt(count));
+                console.log(count, parseInt(count));
                 curr_hats = parseInt(count);
                 console.log(total_hats);
                 state = checkbox.value;
                 console.log(state);
             }).then(() => {duplicateElement();});
         }
-        });
-
+    });
 }
-
 
 function load_state(){
     update_hats();
@@ -56,15 +54,13 @@ function duplicateElement() {
             newElement.querySelector("img").src = x;
             storeItems.appendChild(newElement);
         }
-        if(i<curr_hats){
-            var x = "/images/Hat_Pictures/"+state+"/"+i+".jpg";
+        if(i < curr_hats){
+            var x = `/product_images/${state}/${i}.jpg`;
             document.getElementById(i).querySelector("img").src = x;
             document.getElementById(i).style.display = "inline";
-        }else{
+        } else {
             document.getElementById(i).style.display = "none";
         }
     }
-    // Create 49 copies of the original element
-
 }
 
