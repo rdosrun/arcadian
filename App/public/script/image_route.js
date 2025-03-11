@@ -23,6 +23,18 @@ function update_hats(){
             }).then(() => {duplicateElement();});
         }
     });
+
+    // Fetch inventory data
+    fetch('/inventory')
+    .then(response => response.json())
+    .then(data => {
+        console.log('Inventory:', data);
+        // Process inventory data as needed
+    })
+    .catch(error => {
+        console.error('Error fetching inventory:', error);
+    });
+    
 }
 
 function load_state(){
