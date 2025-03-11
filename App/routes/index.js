@@ -8,6 +8,17 @@ var router = express.Router();
 var { get_token } = require('./libs/get_token');
 const { get_employees } = require('./backend/netsuite');
 const axios = require('axios');
+const path = require('path');
+
+// Custom middleware to check if user is authenticated
+function isAuthenticated(req, res, next) {
+    if (!req.session.isAuthenticated) {
+        console.log('User is not authenticated');
+        return res.redirect('/auth/signin'); // redirect to sign-in route
+    }
+    console.log('User is authenticated.');
+    next();
+}
 
 router.get('/', function (req, res, next) {
     res.render('index', {
@@ -26,9 +37,6 @@ router.post('/auth/callback', async function (req, res, next) {
 
     // Check if username exists and get access token
     try {
-        const accessToken = await get_token();
-        console.log('Access Token:', accessToken);
-
         // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
@@ -57,6 +65,12 @@ router.get('/views/:page', function (req, res, next) {
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
     });
+});
+
+// Route to access pages in the retail folder
+router.get('/retail/:page', isAuthenticated, function (req, res, next) {
+    const page = req.params.page + '.html';
+    res.sendFile(path.join(__dirname, '../views/retail', page));
 });
 
 module.exports = router;
