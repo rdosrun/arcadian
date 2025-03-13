@@ -33,7 +33,9 @@
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>Select Customer</h2>
         <input type="text" id="customer-search" onkeyup="filterCustomers()" placeholder="Search for customers...">
-        <ul id="customer-list"></ul>
+        <div class="customer-list-container">
+            <ul id="customer-list"></ul>
+        </div>
         <button onclick="confirmCustomer()">Confirm</button>
     </div>
 </div>
