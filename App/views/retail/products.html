@@ -14,7 +14,7 @@
             <label><input type="radio" name="state" id="state-WA" value="WA" onClick="update_hats()" > WA</label>
             <label><input type="radio" name="state" id="state-WY" value="WY" onClick="update_hats()" > WY</label>
         </form>
-        <button onclick="place_order()">Place Order</button>
+        <button onclick="checkout()">Place Order</button>
     </div>
     <div class="main-content">
         <div class="store-items" id="store-items">
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<div id="customer-modal" class="modal" style="display:hidden;">
+<div id="customer-modal" class="modal" style="display:none;">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>Select Customer</h2>
