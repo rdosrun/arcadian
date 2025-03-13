@@ -6,7 +6,7 @@
 var express = require('express');
 var router = express.Router();
 var { get_token } = require('./libs/get_token');
-const { get_employees, Inventory } = require('./backend/netsuite');
+const { get_employees, Inventory, Query_Customers } = require('./backend/netsuite');
 const axios = require('axios');
 const path = require('path');
 
@@ -87,6 +87,16 @@ router.get('/inventory', isAuthenticated, async function (req, res, next) {
     try {
         const inventory = await Inventory();
         res.json(JSON.parse(inventory));
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Route to query customers
+router.get('/customers', isAuthenticated, async function (req, res, next) {
+    try {
+        const customers = await Query_Customers();
+        res.json(JSON.parse(customers));
     } catch (error) {
         next(error);
     }

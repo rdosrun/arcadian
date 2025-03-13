@@ -57,8 +57,17 @@ function createRemoveButton(index) {
     return button;
 }
 
-function place_order() {
-    var t = Query_Customers();
+async function place_order() {
+    var t = await fetch('/customers')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Customers:', data);
+            return data;
+        })
+        .catch(error => {
+            console.error('Error fetching customers:', error);
+        });
+
     console.log(t);
 
     const payload = {
