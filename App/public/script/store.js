@@ -73,6 +73,7 @@ async function checkout() {
 
 function displayCustomerModal(customers) {
     const modal = document.getElementById('customer-modal');
+    modal.style.display = 'block';
     const customerList = document.getElementById('customer-list');
     customerList.innerHTML = '';
 
