@@ -93,20 +93,11 @@ function closeModal() {
 }
 
 function selectCustomer(customer) {
-    selectedCustomer = customer;
+    selectedCustomer = customer.customer_company_name;
     console.log('Selected customer:', customer);
+    //place_order(customer);
 }
 
-function confirmCustomer() {
-    if (selectedCustomer) {
-        console.log('Customer confirmed:', selectedCustomer);
-        closeModal();
-        // Proceed with placing the order
-        place_order();
-    } else {
-        alert('Please select a customer.');
-    }
-}
 
 function filterCustomers() {
     const searchInput = document.getElementById('customer-search').value.toLowerCase();
@@ -123,7 +114,7 @@ function filterCustomers() {
     }
 }
 
-async function place_order() {
+async function place_order(customer) {
     
 
     const payload = {
