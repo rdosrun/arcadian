@@ -57,7 +57,7 @@ function createRemoveButton(index) {
     return button;
 }
 
-let selectedCustomer = null;
+var selectedCustomer = null;
 
 async function checkout() {
     const customers = await fetch('/customers')
