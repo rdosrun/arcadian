@@ -95,7 +95,7 @@ function closeModal() {
 function selectCustomer(customer) {
     selectedCustomer = customer.customer_company_name;
     console.log('Selected customer:', customer);
-    //place_order(customer);
+    place_order(customer);
 }
 
 
@@ -115,29 +115,25 @@ function filterCustomers() {
 }
 
 async function place_order(customer) {
-    
+    const date = new Date();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+
+    const formattedDate = `${month}/${day}/${year}`;
+
 
     const payload = {
-        customerId: 10,
-        customerName: "**BD Test Customer",
+        customerId: customer.customer_internal_id,
+        customerName: customer.customer_company_name,
         salesRep: 3,
-        orderDate: "02/24/2025",
-        shipDate: "02/25/2025",
+        orderDate: formattedDate,
+        shipDate: formattedDate,
         fulfillmentLocation: 1,
         poNumber: "PO12345",
         memo: "This is a new sales order",
         billToSelected: 1,
         shipToSelected: 1,
-        customShippingAddress: {
-            attention: "John Doe",
-            addressee: "**BD Test Customer",
-            addr1: "123 Main St.",
-            addr2: "Suite 100",
-            city: "San Francisco",
-            state: "CA",
-            zip: "94105",
-            country: "United States"
-        },
         items: cart.map(item => ({
             itemInternalId: item.ID,
             itemName: item.name,
