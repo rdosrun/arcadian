@@ -392,9 +392,7 @@ footer a:hover {
   background-color: #fefefe;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
-  max-width: 500px;
-  max-height: 80%;
+  width: 100%;
   overflow-y: auto;
   position: relative;
 }
