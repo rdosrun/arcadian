@@ -395,7 +395,7 @@ footer a:hover {
   width: 100%;
   overflow-y: auto;
   position: relative;
-  height: inherit;
+  height: 100%;
 }
 
 .customer-list-container {
