@@ -67,8 +67,8 @@ async function checkout() {
         });
 
     if (customers) {
-        console.log('Customers:', customers);
-        displayCustomerModal(customers);
+        console.log('Customers:', customers.items);
+        displayCustomerModal(customers.items);
     }
 }
 
