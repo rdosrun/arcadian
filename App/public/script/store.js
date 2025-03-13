@@ -78,12 +78,12 @@ function displayCustomerModal(customers) {
     const customerList = document.getElementById('customer-list');
     customerList.innerHTML = '';
 
-    c/*ustomers.forEach(customer => {
+    customers.forEach(customer => {
         const li = document.createElement('li');
         li.textContent = customer.name;
         li.onclick = () => selectCustomer(customer);
         customerList.appendChild(li);
-    });*/
+    });
 
     modal.style.display = 'block';
 }
