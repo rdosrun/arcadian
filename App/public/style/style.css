@@ -377,6 +377,7 @@ footer a:hover {
   display: none;
   position: fixed;
   z-index: 100000;
+  min-height: fit-content;
   left: 25vw;
   top: 25vh;
   width: 50%;
