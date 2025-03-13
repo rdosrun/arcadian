@@ -67,6 +67,7 @@ async function checkout() {
         });
 
     if (customers) {
+        console.log('Customers:', customers);
         displayCustomerModal(customers);
     }
 }
@@ -77,12 +78,12 @@ function displayCustomerModal(customers) {
     const customerList = document.getElementById('customer-list');
     customerList.innerHTML = '';
 
-    customers.forEach(customer => {
+    c/*ustomers.forEach(customer => {
         const li = document.createElement('li');
         li.textContent = customer.name;
         li.onclick = () => selectCustomer(customer);
         customerList.appendChild(li);
-    });
+    });*/
 
     modal.style.display = 'block';
 }
