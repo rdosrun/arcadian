@@ -79,7 +79,7 @@ function displayCustomerModal(customers) {
 
     customers.forEach(customer => {
         const li = document.createElement('li');
-        li.textContent = customer.name;
+        li.textContent = customer.customer_company_name;
         li.onclick = () => selectCustomer(customer);
         customerList.appendChild(li);
     });
