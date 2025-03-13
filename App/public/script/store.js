@@ -57,18 +57,73 @@ function createRemoveButton(index) {
     return button;
 }
 
-async function place_order() {
-    var t = await fetch('/customers')
+let selectedCustomer = null;
+
+async function checkout() {
+    const customers = await fetch('/customers')
         .then(response => response.json())
-        .then(data => {
-            console.log('Customers:', data);
-            return data;
-        })
         .catch(error => {
             console.error('Error fetching customers:', error);
         });
 
-    console.log(t);
+    if (customers) {
+        displayCustomerModal(customers);
+    }
+}
+
+function displayCustomerModal(customers) {
+    const modal = document.getElementById('customer-modal');
+    const customerList = document.getElementById('customer-list');
+    customerList.innerHTML = '';
+
+    customers.forEach(customer => {
+        const li = document.createElement('li');
+        li.textContent = customer.name;
+        li.onclick = () => selectCustomer(customer);
+        customerList.appendChild(li);
+    });
+
+    modal.style.display = 'block';
+}
+
+function closeModal() {
+    const modal = document.getElementById('customer-modal');
+    modal.style.display = 'none';
+}
+
+function selectCustomer(customer) {
+    selectedCustomer = customer;
+    console.log('Selected customer:', customer);
+}
+
+function confirmCustomer() {
+    if (selectedCustomer) {
+        console.log('Customer confirmed:', selectedCustomer);
+        closeModal();
+        // Proceed with placing the order
+        place_order();
+    } else {
+        alert('Please select a customer.');
+    }
+}
+
+function filterCustomers() {
+    const searchInput = document.getElementById('customer-search').value.toLowerCase();
+    const customerList = document.getElementById('customer-list');
+    const customers = customerList.getElementsByTagName('li');
+
+    for (let i = 0; i < customers.length; i++) {
+        const customer = customers[i];
+        if (customer.textContent.toLowerCase().includes(searchInput)) {
+            customer.style.display = '';
+        } else {
+            customer.style.display = 'none';
+        }
+    }
+}
+
+async function place_order() {
+    
 
     const payload = {
         customerId: 10,
