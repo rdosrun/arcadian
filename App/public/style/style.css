@@ -419,3 +419,28 @@ footer a:hover {
   text-decoration: none;
   cursor: pointer;
 }
+@media screen and (max-width: 768px) {
+  /* mobile modal */
+  .modal {
+    width: 90%;
+    height: auto;
+    top: 10vh;
+    left: 5vw;
+  }
+
+  .modal-content {
+    padding: 10px;
+    width: 100%;
+    height: auto;
+  }
+
+  .customer-list-container {
+    max-height: 50vh;
+  }
+
+  .close {
+    font-size: 24px;
+    top: 5px;
+    right: 5px;
+  }
+}
