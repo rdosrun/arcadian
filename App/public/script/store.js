@@ -1,3 +1,5 @@
+const { Query_Customers } = require("../../routes/backend/netsuite");
+
 // Store the cart items
 let cart = [];
 let totalPrice = 0;
@@ -54,16 +56,56 @@ function createRemoveButton(index) {
     };
     return button;
 }
-function make_pdf(){
-    const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
 
-      // Add each item from the array to the PDF
-      cart.forEach((item, index) => {
-        console.log(item);
-        doc.text(item.name + ' - ' + item.ID, 10, 10 + index * 10); // Adjust y-position for each item
-      });
+function place_order() {
+    var t = Query_Customers();
+    console.log(t);
 
-      // Save the PDF
-      doc.save('generated.pdf');
+    const payload = {
+        customerId: 10,
+        customerName: "**BD Test Customer",
+        salesRep: 3,
+        orderDate: "02/24/2025",
+        shipDate: "02/25/2025",
+        fulfillmentLocation: 1,
+        poNumber: "PO12345",
+        memo: "This is a new sales order",
+        billToSelected: 1,
+        shipToSelected: 1,
+        customShippingAddress: {
+            attention: "John Doe",
+            addressee: "**BD Test Customer",
+            addr1: "123 Main St.",
+            addr2: "Suite 100",
+            city: "San Francisco",
+            state: "CA",
+            zip: "94105",
+            country: "United States"
+        },
+        items: cart.map(item => ({
+            itemInternalId: item.ID,
+            itemName: item.name,
+            quantity: 1, // You can adjust the quantity as needed
+            priceLevel: null,
+            rate: null,
+            location: 1
+        }))
+    };
+
+    fetch(`https://11374585.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=905&deploy=1`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}` // Replace with your access token
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Order placed successfully:', data);
+    })
+    .catch(error => {
+        console.error('Error placing order:', error);
+    });
+    return t;
 }
