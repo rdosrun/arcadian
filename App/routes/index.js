@@ -9,6 +9,7 @@ var { get_token } = require('./libs/get_token');
 const { get_employees, Inventory, Query_Customers } = require('./backend/netsuite');
 const axios = require('axios');
 const path = require('path');
+const fs = require('fs');
 
 // Custom middleware to check if user is authenticated
 function isAuthenticated(req, res, next) {
@@ -79,7 +80,21 @@ router.get('/retail/:page', isAuthenticated, function (req, res, next) {
 // Route to serve product images
 router.get('/product_images/:image', function (req, res, next) {
     const image = req.params.image;
-    res.sendFile(path.join(__dirname, '../public/product_images', image));
+    res.sendFile(path.join(__dirname, '~/images/', image));
+});
+
+// Route to get the total number of hat images in a state's images folder
+router.get('/hats/:state', isAuthenticated, function (req, res, next) {
+    const state = req.params.state;
+    const hatsFolderPath = path.join(__dirname, `~/images/${state}/*`);
+
+    fs.readdir(hatsFolderPath, (err, files) => {
+        if (err) {
+            return next(err);
+        }
+        const hatImages = files.filter(file => file.endsWith('.jpg') || file.endsWith('.png'));
+        res.json({ totalHats: hatImages.length/4 });
+    });
 });
 
 // Route to get inventory
