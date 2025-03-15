@@ -81,6 +81,7 @@ app.get('/item/:upc', async (req, res) => {
 // Mock function to simulate fetching item name by UPC
 async function getItemNameByUPC(upc) {
     var inventory = Inventory(); // Assume Inventory() returns an array of items
+    console.log(inventory);
     return inventory;//inventory.find(item => item.upc === upc) || null;
 }
 
