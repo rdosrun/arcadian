@@ -85,7 +85,7 @@ app.get('/item/:upc', async function (req, res) {
 async function getItemNameByUPC(upc) {
     var temp = await netsuite.Inventory(); // Assume Inventory() returns an array of items
     console.log(temp);
-    inventory = temp.items;
+    inventory = JSON.parse(temp).items;
     console.log(inventory);
     
     for (var i = 0; i < inventory.length; i++) {
