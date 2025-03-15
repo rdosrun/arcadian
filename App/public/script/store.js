@@ -1,7 +1,7 @@
-const { Query_Customers } = require("../../routes/backend/netsuite");
+//const { Query_Customers } = require("../../routes/backend/netsuite");
 
 // Store the cart items
-document.addEventListener('DOMContentLoaded',  () => {
+
     var cart = [];
     var totalPrice = 0;
 
@@ -175,4 +175,3 @@ async function place_order(customer) {
     });
     return t;
 }
-});
