@@ -162,11 +162,12 @@ app.post('/submit-order', async (req, res) => {
     };
 
     try {
+        const newToken = await get_token();
         const response = await fetch(`https://11374585.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=905&deploy=1`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${process.env.NETSUITE_ACCESS_TOKEN}` // Replace with your access token
+                'Authorization': `Bearer ${newToken}` // Replace with your access token
             },
             body: JSON.stringify(payload)
         });
