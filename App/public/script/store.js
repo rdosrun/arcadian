@@ -9,9 +9,13 @@ function addToCart(button) {
     // Get the item details from the parent element
     const item = button.children[0].getAttribute('src').split('/');
     const itemID = item[3];
-    let name = fetch("/item/"+itemID).then(response => response.json()).then(data => data.results.item_display_name);
+    let name = fetch("/item/"+itemID).then(response => response.json()).then(
+        data => {
+            cart.push({ name: data.results, ID: itemID});
+        }
+    );
     // Add the item to the cart
-    cart.push({ name: name.value, ID: itemID});
+    
 
     // Update the cart display
     updateCart();
