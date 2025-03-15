@@ -26,17 +26,29 @@ async function addToCartManual() {
     }
 
     try {
-        const response = await fetch("/item/"+productId);
+        fetch("/item/"+productId).then(response => 
+            response.json().then(data => ({
+                data: data,
+                status: response.status
+            })
+        ).then(res => {
+            console.log(data,res);
+            if (data.success) {
+                const itemName = data.name;
+                cart.push({ name: itemName, ID: productId });
+                updateCart();
+            } else {
+                console.error("Item not found:", data.message);
+            }
+        }));
+
+
+
+        fetch("/item/"+productId).json().then(response =>{
+            data: response.json()
         
-        const data = await response;
-        console.log(response,data);
-        if (data.success) {
-            const itemName = data.name;
-            cart.push({ name: itemName, ID: productId });
-            updateCart();
-        } else {
-            console.error("Item not found:", data.message);
-        }
+     }
+    )
     } catch (error) {
         console.error("Error fetching item name:", error);
     }
