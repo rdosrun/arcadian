@@ -34,7 +34,7 @@ async function addToCartManual() {
         ).then(res => {
             console.log(res);
             var data = res.data.results;
-            if (res.success) {
+            if (res.data.success) {
                 const itemName = data.item_display_name;
                 cart.push({ name: itemName, ID: productId });
                 updateCart();
