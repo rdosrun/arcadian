@@ -31,7 +31,7 @@ function netsuite_querry(postData) {
 
                 res.on("end", async function () {
                     var body = Buffer.concat(chunks);
-                    console.log("returned data:", body.toString());
+                    //console.log("returned data:", body.toString());
 
                     if (res.statusCode === 401) {
                         console.log('Received 401, refreshing token...');
@@ -53,7 +53,7 @@ function netsuite_querry(postData) {
                     reject(error);
                 });
             });
-            console.log("req_postData:", postData);
+            //console.log("req_postData:", postData);
             req.write(postData);
             req.end();
         }
@@ -83,7 +83,7 @@ async function get_employees() {
         "q": "SELECT id, entityid, email FROM employee;"
     });
     var tmp = await netsuite_querry(postData);
-    console.log("tmp:" , tmp);
+    //console.log("tmp:" , tmp);
     return tmp;
 }
 
