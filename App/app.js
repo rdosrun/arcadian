@@ -107,19 +107,47 @@ app.get('/images/:state', function (req, res) {
         }
 
         if (stats.isDirectory()) {
-            fs.readdir(dirPath, (err, files) => {
+            fs.readdir(dirPath, (err, subDirs) => {
                 if (err) {
                     console.error('Error reading directory:', err);
                     return res.status(500).json({ success: false, message: 'Internal server error' });
                 }
 
-                const fileData = files.map(file => ({
-                    imageUrl: `/images/${state}/${file}`,
-                    id: path.parse(file).name,
-                    price: (Math.random() * 100).toFixed(2) // Mock price for demonstration
-                }));
+                const fileData = [];
+                let pending = subDirs.length;
 
-                res.json(fileData);
+                if (!pending) {
+                    return res.json(fileData); // No subdirectories
+                }
+
+                subDirs.forEach(subDir => {
+                    const subDirPath = path.join(dirPath, subDir);
+
+                    fs.stat(subDirPath, (err, subDirStats) => {
+                        if (err || !subDirStats.isDirectory()) {
+                            if (!--pending) {
+                                res.json(fileData);
+                            }
+                            return;
+                        }
+
+                        fs.readdir(subDirPath, (err, files) => {
+                            if (!err) {
+                                files.forEach(file => {
+                                    fileData.push({
+                                        imageUrl: `/images/${state}/${subDir}/${file}`,
+                                        id: path.parse(file).name,
+                                        price: 10 // Mock price for demonstration
+                                    });
+                                });
+                            }
+
+                            if (!--pending) {
+                                res.json(fileData);
+                            }
+                        });
+                    });
+                });
             });
         } else {
             res.status(400).json({ success: false, message: 'Not a directory' });
