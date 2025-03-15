@@ -28,7 +28,7 @@ async function addToCartManual() {
     try {
         const response = await fetch("/item/"+productId);
         
-        const data = await JSON.parse(response);
+        const data = await response;
         console.log(response,data);
         if (data.success) {
             const itemName = data.name;
