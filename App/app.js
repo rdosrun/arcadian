@@ -11,6 +11,7 @@ var session = require('express-session');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -94,6 +95,38 @@ async function getItemNameByUPC(upc) {
     return null;
     //return inventory.find(item => item.item_upc_code === upc) || null;
 }
+
+// Serve images or list files in a directory
+app.get('/images/:state', function (req, res) {
+    const state = req.params.state;
+    const dirPath = path.join(__dirname, 'images', state);
+
+    fs.stat(dirPath, (err, stats) => {
+        if (err) {
+            console.error('Error accessing path:', err);
+            return res.status(404).json({ success: false, message: 'Path not found' });
+        }
+
+        if (stats.isDirectory()) {
+            fs.readdir(dirPath, (err, files) => {
+                if (err) {
+                    console.error('Error reading directory:', err);
+                    return res.status(500).json({ success: false, message: 'Internal server error' });
+                }
+
+                const fileData = files.map(file => ({
+                    imageUrl: `/images/${state}/${file}`,
+                    id: path.parse(file).name,
+                    price: (Math.random() * 100).toFixed(2) // Mock price for demonstration
+                }));
+
+                res.json(fileData);
+            });
+        } else {
+            res.status(400).json({ success: false, message: 'Not a directory' });
+        }
+    });
+});
 
 // Run get_token every hour
 setInterval(() => {
