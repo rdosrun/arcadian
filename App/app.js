@@ -83,8 +83,11 @@ app.get('/item/:upc', async function (req, res) {
 
 // Mock function to simulate fetching item name by UPC
 async function getItemNameByUPC(upc) {
-    var inventory = await netsuite.Inventory().items; // Assume Inventory() returns an array of items
+    var temp = await netsuite.Inventory(); // Assume Inventory() returns an array of items
+    console.log(temp);
+    inventory = temp.items;
     console.log(inventory);
+    
     for (var i = 0; i < inventory.length; i++) {
         console.log(inventory[i].item_upc_code);
         if (inventory[i].item_upc_code == upc) {
