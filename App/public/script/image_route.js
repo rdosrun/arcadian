@@ -11,6 +11,7 @@ function update_hats() {
       .then(data => {
         storeItemsContainer.innerHTML = ''; // Clear existing items
         data.forEach(item => {
+          console.log(item);
           const button = document.createElement('button');
           button.className = 'item';
           button.setAttribute('onClick', 'addToCart(this)');
