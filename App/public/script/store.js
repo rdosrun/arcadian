@@ -32,7 +32,7 @@ async function addToCartManual() {
                 status: response.status
             })
         ).then(res => {
-            console.log(res.data.results);
+            console.log(res);
             var data = res.data.results;
             if (res.success) {
                 const itemName = data.item_display_name;
