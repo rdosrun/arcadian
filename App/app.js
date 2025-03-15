@@ -71,7 +71,7 @@ app.get('/item/:upc', async function (req, res) {
         // Replace this with your actual database or API query logic
         const itemName = await getItemNameByUPC(upc); // Assume this function fetches the item name
         if (itemName) {
-            res.json({ success: true, name: itemName });
+            res.json({ success: true, results: itemName });
         } else {
             res.status(404).json({ success: false, message: 'Item not found' });
         }
@@ -92,7 +92,7 @@ async function getItemNameByUPC(upc) {
         }
     }
     console.log("Item not found");
-    return null;
+    return inventory;;
     //return inventory.find(item => item.item_upc_code === upc) || null;
 }
 
