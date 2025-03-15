@@ -1,9 +1,10 @@
 const { Query_Customers } = require("../../routes/backend/netsuite");
 
 // Store the cart items
-var cart = [];
-var totalPrice = 0;
-
+document.addEventListener('DOMContentLoaded',  () => {
+    var cart = [];
+    var totalPrice = 0;
+});
 function addToCart(button) {
     // Get the item details from the parent element
     const item = button.children[0].getAttribute('src').split('/');
