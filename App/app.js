@@ -65,6 +65,7 @@ app.get('/views/:page', function (req, res, next) {
 // Add a route to get item name by UPC
 app.get('/item/:upc', async (req, res) => {
     const upc = req.params.upc;
+    console.log("UPC: " + upc);
     try {
         // Replace this with your actual database or API query logic
         const itemName = await getItemNameByUPC(upc); // Assume this function fetches the item name
