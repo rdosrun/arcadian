@@ -135,49 +135,37 @@ function filterCustomers() {
 }
 
 async function place_order(customer) {
-    const date = new Date();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-
-    const formattedDate = `${month}/${day}/${year}`;
-
-
     const payload = {
-        customerId: customer.customer_internal_id,
-        customerName: customer.customer_company_name,
-        salesRep: 3,
-        orderDate: formattedDate,
-        shipDate: formattedDate,
-        fulfillmentLocation: 1,
-        poNumber: "PO12345",
-        memo: "This is a new sales order",
-        billToSelected: 1,
-        shipToSelected: 1,
-        items: cart.map(item => ({
-            itemInternalId: item.ID,
-            itemName: item.name,
-            quantity: 1, // You can adjust the quantity as needed
-            priceLevel: null,
-            rate: null,
-            location: 1
-        }))
+        cart: cart.map(item => ({
+            ID: item.ID,
+            name: item.name
+        })),
+        customer: {
+            customer_internal_id: customer.customer_internal_id,
+            customer_company_name: customer.customer_company_name
+        }
     };
 
-    fetch(`https://11374585.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=905&deploy=1`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}` // Replace with your access token
-        },
-        body: JSON.stringify(payload)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Order placed successfully:', data);
-    })
-    .catch(error => {
+    try {
+        const response = await fetch('/submit-order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('Order placed successfully:', data);
+            alert('Order placed successfully!');
+        } else {
+            console.error('Failed to place order:', data.message);
+            alert('Failed to place order: ' + data.message);
+        }
+    } catch (error) {
         console.error('Error placing order:', error);
-    });
-    return t;
+        alert('Error placing order. Please try again.');
+    }
 }

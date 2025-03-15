@@ -127,6 +127,63 @@ app.get('/images/:state', function (req, res) {
     });
 });
 
+app.post('/submit-order', async (req, res) => {
+    const { cart, customer } = req.body;
+
+    if (!cart || !customer) {
+        return res.status(400).json({ success: false, message: 'Cart and customer details are required' });
+    }
+
+    const date = new Date();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Add 1 because months are 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    const formattedDate = `${month}/${day}/${year}`;
+
+    const payload = {
+        customerId: customer.customer_internal_id,
+        customerName: customer.customer_company_name,
+        salesRep: 3,
+        orderDate: formattedDate,
+        shipDate: formattedDate,
+        fulfillmentLocation: 1,
+        poNumber: "PO12345",
+        memo: "This is a new sales order",
+        billToSelected: 1,
+        shipToSelected: 1,
+        items: cart.map(item => ({
+            itemInternalId: item.ID,
+            itemName: item.name,
+            quantity: 1, // Adjust quantity as needed
+            priceLevel: null,
+            rate: null,
+            location: 1
+        }))
+    };
+
+    try {
+        const response = await fetch(`https://11374585.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=905&deploy=1`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.NETSUITE_ACCESS_TOKEN}` // Replace with your access token
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            res.json({ success: true, message: 'Order placed successfully', data });
+        } else {
+            res.status(response.status).json({ success: false, message: 'Failed to place order', data });
+        }
+    } catch (error) {
+        console.error('Error placing order:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 // Run get_token every hour
 setInterval(() => {
     try {
