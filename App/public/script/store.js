@@ -32,7 +32,7 @@ async function addToCartManual() {
                 status: response.status
             })
         ).then(res => {
-            console.log(data,res);
+            console.log(res);
             if (data.success) {
                 const itemName = data.name;
                 cart.push({ name: itemName, ID: productId });
@@ -41,14 +41,6 @@ async function addToCartManual() {
                 console.error("Item not found:", data.message);
             }
         }));
-
-
-
-        fetch("/item/"+productId).json().then(response =>{
-            data: response.json()
-        
-     }
-    )
     } catch (error) {
         console.error("Error fetching item name:", error);
     }
