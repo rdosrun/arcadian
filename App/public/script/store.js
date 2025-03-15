@@ -17,14 +17,27 @@ function addToCart(button) {
     updateCart();
 }
 
-function addToCartManual(itemName) {
-    // Get the item details from the page
-    const item = document.getElementById("product_id").getvalue();
-    // Add the item to the cart
-    cart.push({ name: itemName, ID: item });
+async function addToCartManual() {
+    const productId = document.getElementById("product_id").value;
+    if (!productId) {
+        console.error("Product ID is empty.");
+        return;
+    }
 
-    // Update the cart display
-    updateCart();
+    try {
+        const response = await fetch(`/item/${productId}`);
+        console.log(response);
+        const data = await response.json();
+        if (data.success) {
+            const itemName = data.name;
+            cart.push({ name: itemName, ID: productId });
+            updateCart();
+        } else {
+            console.error("Item not found:", data.message);
+        }
+    } catch (error) {
+        console.error("Error fetching item name:", error);
+    }
 }
 
 function updateCart() {

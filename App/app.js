@@ -61,6 +61,29 @@ app.get('/views/:page', function (req, res, next) {
     res.sendFile(path.join(__dirname, 'views', page));
 });
 
+// Add a route to get item name by UPC
+app.get('/item/:upc', async (req, res) => {
+    const upc = req.params.upc;
+    try {
+        // Replace this with your actual database or API query logic
+        const itemName = await getItemNameByUPC(upc); // Assume this function fetches the item name
+        if (itemName) {
+            res.json({ success: true, name: itemName });
+        } else {
+            res.status(404).json({ success: false, message: 'Item not found' });
+        }
+    } catch (error) {
+        console.error('Error fetching item name:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Mock function to simulate fetching item name by UPC
+async function getItemNameByUPC(upc) {
+    var inventory = Inventory(); // Assume Inventory() returns an array of items
+    return inventory;//inventory.find(item => item.upc === upc) || null;
+}
+
 // Run get_token every hour
 setInterval(() => {
     try {
