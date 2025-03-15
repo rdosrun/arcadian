@@ -32,7 +32,10 @@ function StartScanner(){
 
             Quagga.onDetected((data) => {
                 console.log("Barcode detected: ", data.codeResult.code);
-                alert(`Barcode detected: ${data.codeResult.code}`);
+                const productIdInput = document.getElementById('product_id');
+                if (productIdInput) {
+                    productIdInput.value = data.codeResult.code;
+                }
                 stopScanner();
             });
         });
