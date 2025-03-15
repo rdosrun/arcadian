@@ -15,6 +15,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
+var netsuite = require('./routes/backend/netsuite');
 const { get_token } = require('./routes/libs/get_token');
 
 // initialize express
@@ -80,7 +81,7 @@ app.get('/item/:upc', async (req, res) => {
 
 // Mock function to simulate fetching item name by UPC
 async function getItemNameByUPC(upc) {
-    var inventory = Inventory(); // Assume Inventory() returns an array of items
+    var inventory = netsuite.Inventory(); // Assume Inventory() returns an array of items
     console.log(inventory);
     return inventory;//inventory.find(item => item.upc === upc) || null;
 }
