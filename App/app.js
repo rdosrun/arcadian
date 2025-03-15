@@ -83,7 +83,13 @@ app.get('/item/:upc', async (req, res) => {
 async function getItemNameByUPC(upc) {
     var inventory = netsuite.Inventory(); // Assume Inventory() returns an array of items
     //console.log(JSON.stringify(inventory));
-    return inventory.find(item => item.item_upc_code === upc) || null;
+    for (var i = 0; i < inventory.length; i++) {
+        if (inventory[i].item_upc_code == upc) {
+            return inventory[i].item_name;
+        }
+    }
+    return null;
+    //return inventory.find(item => item.item_upc_code === upc) || null;
 }
 
 // Run get_token every hour
