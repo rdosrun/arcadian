@@ -11,3 +11,5 @@ build/
 .DS_Store
 .env
 App/Arcadian Outfitters LLC.postman_environment.json
+
+App/images/
