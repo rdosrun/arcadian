@@ -11,7 +11,7 @@ function addToCart(button) {
     const itemID = item[3];
     let name = fetch("/item/"+itemID).then(response => response.json()).then(data => data.results.item_display_name);
     // Add the item to the cart
-    cart.push({ name: name, ID: itemID});
+    cart.push({ name: name.value, ID: itemID});
 
     // Update the cart display
     updateCart();
