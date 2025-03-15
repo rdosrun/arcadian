@@ -63,7 +63,7 @@ app.get('/views/:page', function (req, res, next) {
 });
 
 // Add a route to get item name by UPC
-app.get('/item/:upc', async (req, res) => {
+app.get('/item', async (req, res) => {
     const upc = req.params.upc;
     console.log("UPC: " + upc);
     try {
