@@ -1,48 +1,36 @@
 var total_hats = 50;
 var curr_hats = 0;
 var state = "";
-function update_hats(){
-    // Get the div containing the checkboxes
-    const container = document.getElementById('checkbox-container');
-
-    // Get all checkboxes within the div
-    const checkboxes = container.querySelectorAll('input[type="radio"]');
-
-    // Iterate through the checkboxes and log their status
-    checkboxes.forEach(checkbox => {
-        console.log(`${checkbox.value}: ${checkbox.checked ? 'Checked' : 'Unchecked'}`);
-        if(checkbox.checked == true){
-            fetch(`/product_images/${checkbox.value}/count.txt`)
-            .then((response) => response.text())
-            .then((count) => {
-                console.log(count, parseInt(count));
-                curr_hats = parseInt(count);
-                console.log(total_hats);
-                state = checkbox.value;
-                console.log(state);
-            }).then(() => {duplicateElement();});
-        }
-    });
-
-    // Fetch inventory data
-    fetch('/inventory')
-    .then(response => response.json())
-    .then(data => {
-        console.log('Inventory:', data);
-        
-        // Check for an item with ID 'Arrows-Charcoal-Lt. Brown-Patch'
-        const item = data.items.find(item => item.item_class_name === 'Arrows-Charcoal-Lt. Brown-Patch');
-        if (item) {
-            console.log('Item found:', item);
-        } else {
-            console.log('Item not found.');
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching inventory:', error);
-    });
-    
-}
+function update_hats() {
+    const selectedState = document.querySelector('input[name="state"]:checked').value;
+    const storeItemsContainer = document.getElementById('store-items');
+    storeItemsContainer.setAttribute('data-state', selectedState);
+  
+    fetch("/images/"+selectedState)
+      .then(response => response.json())
+      .then(data => {
+        storeItemsContainer.innerHTML = ''; // Clear existing items
+        data.forEach(item => {
+          const button = document.createElement('button');
+          button.className = 'item';
+          button.setAttribute('onClick', 'addToCart(this)');
+          button.id = item.id;
+  
+          const img = document.createElement('img');
+          img.src = item.imageUrl;
+          img.alt = `Item ${item.id}`;
+  
+          const priceDiv = document.createElement('div');
+          priceDiv.className = 'price';
+          priceDiv.textContent = `$${item.price}`;
+  
+          button.appendChild(img);
+          button.appendChild(priceDiv);
+          storeItemsContainer.appendChild(button);
+        });
+      })
+      .catch(error => console.error('Error fetching images:', error));
+  }
 
 function load_state(){
     update_hats();
