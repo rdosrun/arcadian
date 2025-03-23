@@ -36,11 +36,13 @@
           <button>Login with Microsoft</button>
         </a>
         {{/unless}}
-    <div class="cta-btn dropdown" id="cart" style="display: none;">
-      <div>Cart</div>
-    <ul id="cart-items" class="dropdown-content">
-    </ul>
-    </div>
+        {{#if isAuthenticated}}
+          <div class="cta-btn dropdown" id="cart" style="">
+                <div>Cart</div>
+              <ul id="cart-items" class="dropdown-content">
+              </ul>
+              </div>
+        {{/if}}  
     </div>
   </headerbar>
   <!-- Main Page -->
