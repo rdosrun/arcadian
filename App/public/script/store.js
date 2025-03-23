@@ -85,6 +85,7 @@ function toggleCartDisplay() {
     cartItems.innerHTML = '';
 
     if (cartItems.style.display === 'none' || cartItems.style.display === '') {
+        var index = 0;
         // Add each item to the cart display
         cart.forEach(item => {
             const li = document.createElement('li');
@@ -95,7 +96,8 @@ function toggleCartDisplay() {
             img.style.height = '50px';
 
             li.textContent = `${item.name} - ${item.ID}`;
-            li.appendChild(createRemoveButton(index));
+            li.appendChild(createRemoveButton(index++));
+
             li.prepend(img);
             cartItems.appendChild(li);
         });
