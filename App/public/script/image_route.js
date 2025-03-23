@@ -9,26 +9,62 @@ function update_hats() {
     fetch("/images/" + selectedState)
         .then(response => response.json())
         .then(data => {
-                for (var i = 0; i < data.length; i=i+4) {
-                    const imgSrc = data[i].imageUrl;
-                    const imgSrc1 = data[i+1].imageUrl;
-                    const imgSrc2 = data[i+2].imageUrl;
-                    const imgSrc3 = data[i+3].imageUrl;
+                for (var i = 0; i < data.length; i = i + 4) {
+                    const imgSrcs = [
+                        data[i]?.imageUrl,
+                        data[i + 1]?.imageUrl,
+                        data[i + 2]?.imageUrl,
+                        data[i + 3]?.imageUrl
+                    ].filter(src => src); // Filter out undefined values
+
                     const newItem = document.createElement('div');
                     newItem.className = 'item';
                     newItem.id = i + 1;
-                    newItem.innerHTML = `
-                    <img src="${imgSrc}" alt="Product Image">
-                    <img src="${imgSrc1}" alt="Product Image">
-                    <img src="${imgSrc2}" alt="Product Image">
-                    <img src="${imgSrc3}" alt="Product Image">
-                    `;
+
+                    // Create a container for the slideshow
+                    const slideshowContainer = document.createElement('div');
+                    slideshowContainer.className = 'slideshow-container';
+
+                    imgSrcs.forEach((src, index) => {
+                        const slide = document.createElement('div');
+                        slide.className = 'slide';
+                        slide.style.display = index === 0 ? 'block' : 'none'; // Show the first image by default
+                        slide.innerHTML = `<img src="${src}" alt="Product Image">`;
+                        slideshowContainer.appendChild(slide);
+                    });
+
+                    // Add navigation buttons for the slideshow
+                    const prevButton = document.createElement('button');
+                    prevButton.className = 'prev';
+                    prevButton.innerHTML = '&#10094;';
+                    prevButton.onclick = () => changeSlide(newItem.id, -1);
+
+                    const nextButton = document.createElement('button');
+                    nextButton.className = 'next';
+                    nextButton.innerHTML = '&#10095;';
+                    nextButton.onclick = () => changeSlide(newItem.id, 1);
+
+                    newItem.appendChild(slideshowContainer);
+                    newItem.appendChild(prevButton);
+                    newItem.appendChild(nextButton);
 
                     storeItemsContainer.appendChild(newItem);
                 }
             }
         )
         .catch(error => console.error('Error fetching images:', error));
+}
+
+function changeSlide(itemId, direction) {
+    const item = document.getElementById(itemId);
+    if (!item) return;
+
+    const slides = item.querySelectorAll('.slide');
+    let currentIndex = Array.from(slides).findIndex(slide => slide.style.display === 'block');
+
+    slides[currentIndex].style.display = 'none';
+    currentIndex = (currentIndex + direction + slides.length) % slides.length;
+    slides[currentIndex].style.display = 'block';
 }
 
 function load_state(){
