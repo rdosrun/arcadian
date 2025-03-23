@@ -5,33 +5,67 @@ function update_hats() {
     const selectedState = document.querySelector('input[name="state"]:checked').value;
     const storeItemsContainer = document.getElementById('store-items');
     storeItemsContainer.setAttribute('data-state', selectedState);
-  
-    fetch("/images/"+selectedState)
-      .then(response => response.json())
-      .then(data => {
-        storeItemsContainer.innerHTML = ''; // Clear existing items
-        data.forEach(item => {
-          console.log(item);
-          const button = document.createElement('button');
-          button.className = 'item';
-          button.setAttribute('onClick', 'addToCart(this)');
-          button.id = item.id;
-  
-          const img = document.createElement('img');
-          img.src = item.imageUrl;
-          img.alt = `Item ${item.id}`;
-  
-          const priceDiv = document.createElement('div');
-          priceDiv.className = 'price';
-          priceDiv.textContent = `$${item.price}`;
-  
-          button.appendChild(img);
-          button.appendChild(priceDiv);
-          storeItemsContainer.appendChild(button);
-        });
-      })
-      .catch(error => console.error('Error fetching images:', error));
-  }
+    storeItemsContainer.innerHTML = ''; // Clear existing items
+
+    fetch("/images/" + selectedState)
+        .then(response => response.json())
+        .then(data => {
+            const paneCount = 4;
+            const itemsPerPane = Math.ceil(data.length / paneCount);
+
+            for (let paneIndex = 0; paneIndex < paneCount; paneIndex++) {
+                const pane = document.createElement('div');
+                pane.className = 'pane';
+                pane.style.display = paneIndex === 0 ? 'block' : 'none'; // Show only the first pane initially
+
+                const start = paneIndex * itemsPerPane;
+                const end = start + itemsPerPane;
+
+                data.slice(start, end).forEach(item => {
+                    const button = document.createElement('button');
+                    button.className = 'item';
+                    button.setAttribute('onClick', 'addToCart(this)');
+                    button.id = item.id;
+
+                    const img = document.createElement('img');
+                    img.src = item.imageUrl;
+                    img.alt = `Item ${item.id}`;
+
+                    const priceDiv = document.createElement('div');
+                    priceDiv.className = 'price';
+                    priceDiv.textContent = `$${item.price}`;
+
+                    button.appendChild(img);
+                    button.appendChild(priceDiv);
+                    pane.appendChild(button);
+                });
+
+                storeItemsContainer.appendChild(pane);
+            }
+
+            createPaneNavigation(storeItemsContainer, paneCount);
+        })
+        .catch(error => console.error('Error fetching images:', error));
+}
+
+function createPaneNavigation(container, paneCount) {
+    const navigation = document.createElement('div');
+    navigation.className = 'pane-navigation';
+
+    for (let i = 0; i < paneCount; i++) {
+        const navButton = document.createElement('button');
+        navButton.textContent = `Pane ${i + 1}`;
+        navButton.onclick = () => {
+            const panes = container.getElementsByClassName('pane');
+            for (let j = 0; j < panes.length; j++) {
+                panes[j].style.display = j === i ? 'block' : 'none';
+            }
+        };
+        navigation.appendChild(navButton);
+    }
+
+    container.appendChild(navigation);
+}
 
 function load_state(){
     update_hats();
