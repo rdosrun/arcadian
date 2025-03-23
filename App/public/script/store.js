@@ -109,7 +109,7 @@ function toggleCartDisplay() {
     }
     const checkoutButton = document.createElement('div');
     checkoutButton.innerHTML = '<button onclick="checkout()">Place Order</button>';
-    cartItems.appendChild(createCheckoutButton());
+    cartItems.appendChild(checkoutButton);
 }
 
 // Attach the toggleCartDisplay function to the cart button
