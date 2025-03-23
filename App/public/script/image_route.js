@@ -23,7 +23,7 @@ function update_hats() {
 
                     // Add click event to call addToCart
                     newItem.onclick = () => {
-                        addToCart(self);
+                        addToCart(imgSrcs[0]);
                     };
 
                     // Create a container for the slideshow

@@ -6,9 +6,9 @@
     var totalPrice = 0;
 
 function addToCart(button) {
-    console.log(button);
     // Get the item details from the parent element
-    const item = button.children[0].getAttribute('src').split('/');
+    console.log(button);
+    const item = button.split('/');
     const itemID = item[3];
     let name = fetch("/item/"+itemID).then(response => response.json()).then(
         data => {
