@@ -38,15 +38,32 @@ function update_hats() {
                     prevButton.className = 'prev';
                     prevButton.innerHTML = '&#10094;';
                     prevButton.onclick = () => changeSlide(newItem.id, -1);
+                    prevButton.style.position = 'absolute';
+                    prevButton.style.left = '0';
+                    prevButton.style.top = '50%';
+                    prevButton.style.transform = 'translateY(-50%)';
+                    prevButton.style.background = 'rgba(0, 0, 0, 0.5)';
+                    prevButton.style.color = 'white';
+                    prevButton.style.border = 'none';
+                    prevButton.style.cursor = 'pointer';
 
                     const nextButton = document.createElement('button');
                     nextButton.className = 'next';
                     nextButton.innerHTML = '&#10095;';
                     nextButton.onclick = () => changeSlide(newItem.id, 1);
+                    nextButton.style.position = 'absolute';
+                    nextButton.style.right = '0';
+                    nextButton.style.top = '50%';
+                    nextButton.style.transform = 'translateY(-50%)';
+                    nextButton.style.background = 'rgba(0, 0, 0, 0.5)';
+                    nextButton.style.color = 'white';
+                    nextButton.style.border = 'none';
+                    nextButton.style.cursor = 'pointer';
 
+                    slideshowContainer.style.position = 'relative'; // Ensure the container is positioned
                     newItem.appendChild(slideshowContainer);
-                    newItem.appendChild(prevButton);
-                    newItem.appendChild(nextButton);
+                    slideshowContainer.appendChild(prevButton); // Append buttons to the slideshow container
+                    slideshowContainer.appendChild(nextButton);
 
                     storeItemsContainer.appendChild(newItem);
                 }
