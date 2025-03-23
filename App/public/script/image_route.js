@@ -17,9 +17,14 @@ function update_hats() {
                         data[i + 3]?.imageUrl
                     ].filter(src => src); // Filter out undefined values
 
-                    const newItem = document.createElement('div');
+                    const newItem = document.createElement('button');
                     newItem.className = 'item';
                     newItem.id = i + 1;
+
+                    // Add click event to call addToCart
+                    newItem.onclick = () => {
+                        addToCart(self);
+                    };
 
                     // Create a container for the slideshow
                     const slideshowContainer = document.createElement('div');
@@ -64,7 +69,7 @@ function update_hats() {
                     newItem.appendChild(slideshowContainer);
                     slideshowContainer.appendChild(prevButton); // Append buttons to the slideshow container
                     slideshowContainer.appendChild(nextButton);
-                    newItem.addEventListener('click', addToCart('this'));
+
                     storeItemsContainer.appendChild(newItem);
                 }
             }
