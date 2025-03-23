@@ -64,7 +64,7 @@ function update_hats() {
                     newItem.appendChild(slideshowContainer);
                     slideshowContainer.appendChild(prevButton); // Append buttons to the slideshow container
                     slideshowContainer.appendChild(nextButton);
-                    newItem.onclick = addToCart(this);
+                    newItem.addEventListener('click', addToCart('this'));
                     storeItemsContainer.appendChild(newItem);
                 }
             }
