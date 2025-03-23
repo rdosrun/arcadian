@@ -6,6 +6,7 @@
     var totalPrice = 0;
 
 function addToCart(button) {
+    console.log(button);
     // Get the item details from the parent element
     const item = button.children[0].getAttribute('src').split('/');
     const itemID = item[3];
