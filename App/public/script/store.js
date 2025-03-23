@@ -89,7 +89,7 @@ function toggleCartDisplay() {
         cart.forEach(item => {
             const li = document.createElement('li');
             const img = document.createElement('img');
-            img.src = `/images/products/${item.ID}.jpg`; // Assuming images are stored with product ID as filename
+            img.src = `/images/products/${item.ID}`; // Assuming images are stored with product ID as filename
             img.alt = item.name;
             img.style.width = '50px';
             img.style.height = '50px';
