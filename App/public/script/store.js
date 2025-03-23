@@ -52,7 +52,7 @@ async function addToCartManual() {
 
 function updateCart() {
     // Get the cart items list and clear it
-    const cartItems = document.getElementById('cart-items');
+    /*const cartItems = document.getElementById('cart-items');
     cartItems.innerHTML = '';
 
     // Add each item to the cart display
@@ -61,7 +61,7 @@ function updateCart() {
         li.textContent = `${item.name} - ${item.ID}`;
         li.appendChild(createRemoveButton(index));
         cartItems.appendChild(li);
-    });
+    });*/
 
     // Update the total price
     //document.getElementById('total-price').textContent = totalPrice.toFixed(2);
@@ -95,6 +95,7 @@ function toggleCartDisplay() {
             img.style.height = '50px';
 
             li.textContent = `${item.name} - ${item.ID}`;
+            li.appendChild(createRemoveButton(index));
             li.prepend(img);
             cartItems.appendChild(li);
         });
