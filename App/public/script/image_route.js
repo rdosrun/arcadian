@@ -16,7 +16,6 @@ function update_hats() {
             for (let paneIndex = 0; paneIndex < paneCount; paneIndex++) {
                 const pane = document.createElement('div');
                 pane.className = 'pane';
-                pane.style.display = paneIndex === 0 ? 'block' : 'none'; // Show only the first pane initially
 
                 const start = paneIndex * itemsPerPane;
                 const end = start + itemsPerPane;
@@ -42,29 +41,8 @@ function update_hats() {
 
                 storeItemsContainer.appendChild(pane);
             }
-
-            createPaneNavigation(storeItemsContainer, paneCount);
         })
         .catch(error => console.error('Error fetching images:', error));
-}
-
-function createPaneNavigation(container, paneCount) {
-    const navigation = document.createElement('div');
-    navigation.className = 'pane-navigation';
-
-    for (let i = 0; i < paneCount; i++) {
-        const navButton = document.createElement('button');
-        navButton.textContent = `Pane ${i + 1}`;
-        navButton.onclick = () => {
-            const panes = container.getElementsByClassName('pane');
-            for (let j = 0; j < panes.length; j++) {
-                panes[j].style.display = j === i ? 'block' : 'none';
-            }
-        };
-        navigation.appendChild(navButton);
-    }
-
-    container.appendChild(navigation);
 }
 
 function load_state(){
