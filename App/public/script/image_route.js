@@ -9,58 +9,25 @@ function update_hats() {
     fetch("/images/" + selectedState)
         .then(response => response.json())
         .then(data => {
-            const paneCount = 4;
-            const itemsPerPane = Math.ceil(data.length / paneCount);
-            console.log(data);
-            for (let paneIndex = 0; paneIndex < paneCount; paneIndex++) {
-                const pane = document.createElement('div');
-                pane.className = 'pane';
+                for (var i = 0; i < data.length; i=i+4) {
+                    const imgSrc = data[i].imageUrl;
+                    const imgSrc1 = data[i+1].imageUrl;
+                    const imgSrc2 = data[i+2].imageUrl;
+                    const imgSrc3 = data[i+3].imageUrl;
+                    const newItem = document.createElement('div');
+                    newItem.className = 'item';
+                    newItem.id = i + 1;
+                    newItem.innerHTML = `
+                    <img src="${imgSrc}" alt="Product Image">
+                    <img src="${imgSrc1}" alt="Product Image">
+                    <img src="${imgSrc2}" alt="Product Image">
+                    <img src="${imgSrc3}" alt="Product Image">
+                    `;
 
-                const start = paneIndex * itemsPerPane;
-                const end = start + itemsPerPane;
-
-                data.slice(start, end).forEach(item => {
-                    const button = document.createElement('button');
-                    button.className = 'item';
-                    button.setAttribute('onClick', 'addToCart(this)');
-                    button.id = item.id;
-
-                    const slideshowContainer = document.createElement('div');
-                    slideshowContainer.className = 'slideshow-container';
-
-                    item.imageUrls.slice(0, 4).forEach((imageUrl, index) => {
-                        const slide = document.createElement('div');
-                        slide.className = 'slide';
-                        slide.style.display = index === 0 ? 'block' : 'none'; // Show the first image by default
-
-                        const img = document.createElement('img');
-                        img.src = imageUrl;
-                        img.alt = `Item ${item.id} - Slide ${index + 1}`;
-
-                        slide.appendChild(img);
-                        slideshowContainer.appendChild(slide);
-                    });
-
-                    let currentSlideIndex = 0;
-                    setInterval(() => {
-                        const slides = slideshowContainer.querySelectorAll('.slide');
-                        slides[currentSlideIndex].style.display = 'none';
-                        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-                        slides[currentSlideIndex].style.display = 'block';
-                    }, 3000); // Change slide every 3 seconds
-
-                    const priceDiv = document.createElement('div');
-                    priceDiv.className = 'price';
-                    priceDiv.textContent = `$${item.price}`;
-
-                    button.appendChild(slideshowContainer);
-                    button.appendChild(priceDiv);
-                    pane.appendChild(button);
-                });
-
-                storeItemsContainer.appendChild(pane);
+                    storeItemsContainer.appendChild(newItem);
+                }
             }
-        })
+        )
         .catch(error => console.error('Error fetching images:', error));
 }
 
