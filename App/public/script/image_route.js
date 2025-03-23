@@ -25,15 +25,35 @@ function update_hats() {
                     button.setAttribute('onClick', 'addToCart(this)');
                     button.id = item.id;
 
-                    const img = document.createElement('img');
-                    img.src = item.imageUrl;
-                    img.alt = `Item ${item.id}`;
+                    const slideshowContainer = document.createElement('div');
+                    slideshowContainer.className = 'slideshow-container';
+
+                    item.imageUrls.slice(0, 4).forEach((imageUrl, index) => {
+                        const slide = document.createElement('div');
+                        slide.className = 'slide';
+                        slide.style.display = index === 0 ? 'block' : 'none'; // Show the first image by default
+
+                        const img = document.createElement('img');
+                        img.src = imageUrl;
+                        img.alt = `Item ${item.id} - Slide ${index + 1}`;
+
+                        slide.appendChild(img);
+                        slideshowContainer.appendChild(slide);
+                    });
+
+                    let currentSlideIndex = 0;
+                    setInterval(() => {
+                        const slides = slideshowContainer.querySelectorAll('.slide');
+                        slides[currentSlideIndex].style.display = 'none';
+                        currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+                        slides[currentSlideIndex].style.display = 'block';
+                    }, 3000); // Change slide every 3 seconds
 
                     const priceDiv = document.createElement('div');
                     priceDiv.className = 'price';
                     priceDiv.textContent = `$${item.price}`;
 
-                    button.appendChild(img);
+                    button.appendChild(slideshowContainer);
                     button.appendChild(priceDiv);
                     pane.appendChild(button);
                 });
