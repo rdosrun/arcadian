@@ -80,6 +80,34 @@ function createRemoveButton(index) {
     return button;
 }
 
+function toggleCartDisplay() {
+    const cartItems = document.getElementById('cart-items');
+    cartItems.innerHTML = '';
+
+    if (cartItems.style.display === 'none' || cartItems.style.display === '') {
+        // Add each item to the cart display
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            const img = document.createElement('img');
+            img.src = `/images/products/${item.ID}.jpg`; // Assuming images are stored with product ID as filename
+            img.alt = item.name;
+            img.style.width = '50px';
+            img.style.height = '50px';
+
+            li.textContent = `${item.name} - ${item.ID}`;
+            li.prepend(img);
+            cartItems.appendChild(li);
+        });
+
+        cartItems.style.display = 'block';
+    } else {
+        cartItems.style.display = 'none';
+    }
+}
+
+// Attach the toggleCartDisplay function to the cart button
+document.getElementById('cart').addEventListener('click', toggleCartDisplay);
+
 var selectedCustomer = null;
 
 async function checkout() {
