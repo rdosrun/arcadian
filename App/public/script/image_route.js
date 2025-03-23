@@ -6,13 +6,12 @@ function update_hats() {
     const storeItemsContainer = document.getElementById('store-items');
     storeItemsContainer.setAttribute('data-state', selectedState);
     storeItemsContainer.innerHTML = ''; // Clear existing items
-
     fetch("/images/" + selectedState)
         .then(response => response.json())
         .then(data => {
             const paneCount = 4;
             const itemsPerPane = Math.ceil(data.length / paneCount);
-
+            console.log(data);
             for (let paneIndex = 0; paneIndex < paneCount; paneIndex++) {
                 const pane = document.createElement('div');
                 pane.className = 'pane';
