@@ -188,6 +188,7 @@ app.post('/submit-order', async (req, res) => {
             location: 1
         }))
     };
+    console.log(payload);
 
     try {
         const newToken = await get_token();
