@@ -176,7 +176,7 @@ async function place_order(customer) {
     const payload = {
         cart: cart.map(item => ({
             ID: item.ID,
-            name: item.name
+            name: item.ID
         })),
         customer: {
             customer_internal_id: customer.customer_internal_id,
