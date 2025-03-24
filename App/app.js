@@ -177,8 +177,8 @@ app.post('/submit-order', async (req, res) => {
         fulfillmentLocation: 1,
         poNumber: "PO12345",
         memo: "This is a new sales order",
-        billToSelected: 1,
-        shipToSelected: 1,
+        billToSelected: null,
+        shipToSelected: null,
         items: cart.map(item => ({
             itemInternalId: item.ID,
             itemName: item.name,
