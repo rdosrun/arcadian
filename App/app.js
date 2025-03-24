@@ -168,6 +168,7 @@ app.post('/submit-order', async (req, res) => {
     const year = date.getFullYear();
     const formattedDate = `${month}/${day}/${year}`;
 
+    console.log()
     const payload = {
         customerId: customer.customer_internal_id,
         customerName: customer.customer_company_name,
@@ -180,8 +181,8 @@ app.post('/submit-order', async (req, res) => {
         billToSelected: null,
         shipToSelected: null,
         items: cart.map(item => ({
-            itemInternalId: item.ID,
-            itemName: item.name,
+            //itemName: item.name,
+            itemUPC: item.ID,
             quantity: 1, // Adjust quantity as needed
             priceLevel: null,
             rate: null,
