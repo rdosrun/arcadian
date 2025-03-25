@@ -186,7 +186,7 @@ app.post('/submit-order', async (req, res) => {
             "city": "Monterey",
             "state": "CA",
             "zip": "93940",
-            "country": "usa"
+            "country": "United States"
         },
         shipToSelected: null,
         items: cart.map(item => ({
