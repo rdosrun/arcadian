@@ -172,13 +172,22 @@ app.post('/submit-order', async (req, res) => {
     const payload = {
         customerId: customer.customer_internal_id,
         customerName: customer.customer_company_name,
-        salesRep: 3,
         orderDate: formattedDate,
         shipDate: formattedDate,
         fulfillmentLocation: 1,
         poNumber: "PO12345",
         memo: "This is a new sales order",
         billToSelected: null,
+        customShippingAddress: {
+            "attention": "If applicable enter a custom Shipping address not part of the Customer's Address Book For example: John Doe",
+            "addressee": "If applicable enter a custom Shipping address not part of the Customer's Address Book For example: **BD Test Customer",
+            "addr1": "If applicable enter a custom Shipping address not part of the Customer's Address Book For example: 123 Main St.",
+            "addr2": "If applicable enter a custom Shipping address not part of the Customer's Address Book For example: Suite 100",
+            "city": Monterey,
+            "state": CA,
+            "zip": 93940,
+            "country": usa
+        },
         shipToSelected: null,
         items: cart.map(item => ({
             //itemName: item.name,
