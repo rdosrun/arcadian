@@ -192,9 +192,9 @@ app.post('/submit-order', async (req, res) => {
         items: cart.map(item => ({
             //itemName: item.name,
             itemUPC: item.ID,
-            quantity: 1, // Adjust quantity as needed
-            priceLevel: 2,
-            rate: null,
+            quantity: 8, // Adjust quantity as needed
+            priceLevel: null,
+            rate: 1,
             location: 1
         }))
     };
