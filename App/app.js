@@ -194,7 +194,7 @@ app.post('/submit-order', async (req, res) => {
             itemUPC: item.ID,
             quantity: 8, // Adjust quantity as needed
             priceLevel: null,
-            rate: 1,
+            rate: null,
             location: 1
         }))
     };
