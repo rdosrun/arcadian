@@ -183,10 +183,10 @@ app.post('/submit-order', async (req, res) => {
             "addressee": "If applicable enter a custom Shipping address not part of the Customer's Address Book For example: **BD Test Customer",
             "addr1": "If applicable enter a custom Shipping address not part of the Customer's Address Book For example: 123 Main St.",
             "addr2": "If applicable enter a custom Shipping address not part of the Customer's Address Book For example: Suite 100",
-            "city": Monterey,
-            "state": CA,
-            "zip": 93940,
-            "country": usa
+            "city": "Monterey",
+            "state": "CA",
+            "zip": "93940",
+            "country": "usa"
         },
         shipToSelected: null,
         items: cart.map(item => ({
