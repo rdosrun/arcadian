@@ -178,16 +178,6 @@ app.post('/submit-order', async (req, res) => {
         poNumber: "PO12345",
         memo: "This is a new sales order",
         billToSelected: null,
-        customShippingAddress: {
-            "attention": "test",
-            "addressee": "test",
-            "addr1": "test",
-            "addr2": "test",
-            "city": "Monterey",
-            "state": "CA",
-            "zip": "93940",
-            "country": "United States"
-        },
         shipToSelected: null,
         items: cart.map(item => ({
             //itemName: item.name,
