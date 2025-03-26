@@ -136,7 +136,7 @@ function displayCustomerModal(customers) {
     customerList.innerHTML = '';
 
     customers.forEach(customer => {
-        if(customer.customer_company_name == "**BD Test Customer") {
+        if(customer.customer_company_name == "**WEB Test Customer") {
             const li = document.createElement('li');
             li.textContent = customer.customer_company_name;
             li.onclick = () => selectCustomer(customer);
