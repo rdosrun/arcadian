@@ -136,10 +136,12 @@ function displayCustomerModal(customers) {
     customerList.innerHTML = '';
 
     customers.forEach(customer => {
-        const li = document.createElement('li');
-        li.textContent = customer.customer_company_name;
-        li.onclick = () => selectCustomer(customer);
-        customerList.appendChild(li);
+        if(customer.customer_company_name == "**BD Test Customer") {
+            const li = document.createElement('li');
+            li.textContent = customer.customer_company_name;
+            li.onclick = () => selectCustomer(customer);
+            customerList.appendChild(li);
+        }
     });
 
     modal.style.display = 'block';
