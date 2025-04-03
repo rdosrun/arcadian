@@ -183,9 +183,9 @@ app.post('/submit-order', async (req, res) => {
             //itemName: item.name,
             itemUPC: item.ID,
             quantity: 8, // Adjust quantity as needed
-            priceLevel: null,
-            rate: null,
-            location: 1
+            priceLevel: null, //grab price level from netsuite for each customer
+            rate: null, 
+            location: null // grab location from netsuite for each customer
         }))
     };
     console.log(payload);
