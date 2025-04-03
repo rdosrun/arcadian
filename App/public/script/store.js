@@ -151,6 +151,7 @@ function displayCustomerModal(customers) {
             button.style.cursor = 'pointer';
             button.style.width = '100%';
             button.style.textAlign = 'left';
+            button.style.color = 'black';
 
             button.onmouseover = () => (button.style.backgroundColor = '#e0e0e0');
             button.onmouseout = () => (button.style.backgroundColor = '#f9f9f9');
