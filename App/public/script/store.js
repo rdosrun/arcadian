@@ -136,10 +136,26 @@ function displayCustomerModal(customers) {
     customerList.innerHTML = '';
 
     customers.forEach(customer => {
-        if(customer.customer_company_name == "**WEB Test Customer") {
+        if (customer.customer_company_name == "**WEB Test Customer") {
             const li = document.createElement('li');
-            li.textContent = customer.customer_company_name;
-            li.onclick = () => selectCustomer(customer);
+            const button = document.createElement('button');
+            button.textContent = customer.customer_company_name;
+            button.onclick = () => selectCustomer(customer);
+
+            // Add styling to make the button look nice
+            button.style.padding = '10px 20px';
+            button.style.margin = '5px 0';
+            button.style.border = '1px solid #ccc';
+            button.style.borderRadius = '5px';
+            button.style.backgroundColor = '#f9f9f9';
+            button.style.cursor = 'pointer';
+            button.style.width = '100%';
+            button.style.textAlign = 'left';
+
+            button.onmouseover = () => (button.style.backgroundColor = '#e0e0e0');
+            button.onmouseout = () => (button.style.backgroundColor = '#f9f9f9');
+
+            li.appendChild(button);
             customerList.appendChild(li);
         }
     });
