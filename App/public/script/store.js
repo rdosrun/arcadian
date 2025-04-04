@@ -209,6 +209,7 @@ async function place_order(customer) {
     spinner.style.width = '50px';
     spinner.style.height = '50px';
     spinner.style.animation = 'spin 1s linear infinite';
+    spinner.style.zIndex = '1000000000';
     document.body.appendChild(spinner);
 
     try {
