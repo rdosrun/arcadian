@@ -13,13 +13,14 @@ function addToCart(button) {
     let name = fetch("/item/"+itemID).then(response => response.json()).then(
         data => {
             cart.push({ name: data.results.item_display_name, ID: itemID});
+            updateCart();
         }
     );
     // Add the item to the cart
     
 
     // Update the cart display
-    updateCart();
+    
 }
 
 async function addToCartManual() {
