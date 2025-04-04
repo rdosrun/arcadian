@@ -215,7 +215,7 @@ async function place_order(customer) {
     overlay.style.height = '100%';
     overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     overlay.style.zIndex = '999999999';
-    overlay.style.pointerEvents = 'none';
+    //overlay.style.pointerEvents = 'none';
 
     document.body.appendChild(overlay);
     document.body.appendChild(spinner);
