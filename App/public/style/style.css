@@ -290,7 +290,7 @@ footer a:hover {
 }
 
 .contact-form-container button:hover {
-    text-decoration: underline;
+    background-color: #45a049;
 }
         .sidebar {
               width: 200px;

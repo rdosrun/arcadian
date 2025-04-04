@@ -29,7 +29,7 @@ button {
 }
 
 button:hover {
-    background-color: #008000;
+    text-decoration: underline;
 }
 
 #html5-qrcode-anchor-scan-type-change {
