@@ -64,8 +64,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #333;
-  color: white;
+  background-color: white;
+  color: black;
   flex-wrap: nowrap; /* Prevent wrapping */
 }
 
@@ -87,7 +87,7 @@
 }
 
 .nav-links ul li a {
-  color: white;
+  color: black;
   text-decoration: none;
   font-size: 1rem;
 }
@@ -148,4 +148,6 @@
 .dropdown:hover .dropdown-content {display: block;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;}
+.dropdown:hover .dropbtn {
+  text-decoration: underline;
+}

@@ -17,7 +17,7 @@
     </div>
     <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
-    <nav class="nav-links">
+    <nav class="nav-links" >
       <ul>
         <li><button class="nav-btn" onclick="loadPage('/views/landing')">Home</button></li>
         <li><button class="nav-btn" onclick="loadPage('/views/about')">About Us</button></li>
@@ -38,6 +38,7 @@
         {{/unless}}
         {{#if isAuthenticated}}
           <div class="cta-btn dropdown" id="cart" style="">
+            <!-- TO-DO add value count of items in cart -->
                 <div>Cart</div>
               <ul id="cart-items" class="dropdown-content">
               </ul>
