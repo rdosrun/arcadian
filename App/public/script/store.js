@@ -204,6 +204,20 @@ async function place_order(customer) {
     spinner.style.top = '50%';
     spinner.style.left = '50%';
     spinner.style.zIndex = '1000000000';
+
+    // Create overlay to gray out the rest of the page
+    const overlay = document.createElement('div');
+    overlay.id = 'overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    overlay.style.zIndex = '999999999';
+    overlay.style.pointerEvents = 'none';
+
+    document.body.appendChild(overlay);
     document.body.appendChild(spinner);
 
     try {
@@ -239,8 +253,9 @@ async function place_order(customer) {
         console.error('Error placing order:', error);
         alert('Error placing order. Please try again.');
     } finally {
-        // Remove loading spinner
+        // Remove loading spinner and overlay
         document.body.removeChild(spinner);
+        document.body.removeChild(overlay);
     }
 }
 
