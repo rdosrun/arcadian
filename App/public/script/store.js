@@ -52,7 +52,8 @@ async function addToCartManual() {
 }
 
 function updateCart() {
-    document.getElementById('cart-count').innerHTML = cart.length;
+    document.getElementById('cart-count').innerHTML = cart.length+1;
+    console.log(cart);
     // Get the cart items list and clear it
     /*const cartItems = document.getElementById('cart-items');
     cartItems.innerHTML = '';
