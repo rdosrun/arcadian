@@ -199,16 +199,10 @@ async function place_order(customer) {
     // Show loading spinner
     const spinner = document.createElement('div');
     spinner.id = 'loading-spinner';
+    spinner.className = 'loader';
     spinner.style.position = 'fixed';
     spinner.style.top = '50%';
     spinner.style.left = '50%';
-    spinner.style.transform = 'translate(-50%, -50%)';
-    spinner.style.border = '8px solid #f3f3f3';
-    spinner.style.borderTop = '8px solid #3498db';
-    spinner.style.borderRadius = '50%';
-    spinner.style.width = '50px';
-    spinner.style.height = '50px';
-    spinner.style.animation = 'spin 1s linear infinite';
     spinner.style.zIndex = '1000000000';
     document.body.appendChild(spinner);
 
