@@ -52,7 +52,7 @@ async function addToCartManual() {
 }
 
 function updateCart() {
-    document.getElementById('cart-count').innerHTML = cart.length+1;
+    document.getElementById('cart-count').innerHTML = cart.length;
     console.log(cart);
     // Get the cart items list and clear it
     /*const cartItems = document.getElementById('cart-items');
@@ -174,7 +174,9 @@ function closeModal() {
 function selectCustomer(customer) {
     selectedCustomer = customer.customer_company_name;
     console.log('Selected customer:', customer);
-    place_order(customer);
+    place_order(customer).then(() => {
+        closeModal();
+    });
 }
 
 
@@ -194,18 +196,33 @@ function filterCustomers() {
 }
 
 async function place_order(customer) {
-    const payload = {
-        cart: cart.map(item => ({
-            ID: item.ID,
-            name: item.ID
-        })),
-        customer: {
-            customer_internal_id: customer.customer_internal_id,
-            customer_company_name: customer.customer_company_name
-        }
-    };
+    // Show loading spinner
+    const spinner = document.createElement('div');
+    spinner.id = 'loading-spinner';
+    spinner.style.position = 'fixed';
+    spinner.style.top = '50%';
+    spinner.style.left = '50%';
+    spinner.style.transform = 'translate(-50%, -50%)';
+    spinner.style.border = '8px solid #f3f3f3';
+    spinner.style.borderTop = '8px solid #3498db';
+    spinner.style.borderRadius = '50%';
+    spinner.style.width = '50px';
+    spinner.style.height = '50px';
+    spinner.style.animation = 'spin 1s linear infinite';
+    document.body.appendChild(spinner);
 
     try {
+        const payload = {
+            cart: cart.map(item => ({
+                ID: item.ID,
+                name: item.ID
+            })),
+            customer: {
+                customer_internal_id: customer.customer_internal_id,
+                customer_company_name: customer.customer_company_name
+            }
+        };
+
         const response = await fetch('/submit-order', {
             method: 'POST',
             headers: {
@@ -226,5 +243,17 @@ async function place_order(customer) {
     } catch (error) {
         console.error('Error placing order:', error);
         alert('Error placing order. Please try again.');
+    } finally {
+        // Remove loading spinner
+        document.body.removeChild(spinner);
     }
 }
+
+// Add CSS for spinner animation
+const style = document.createElement('style');
+style.textContent = `
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}`;
+document.head.appendChild(style);
