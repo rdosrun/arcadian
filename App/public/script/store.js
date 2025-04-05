@@ -139,7 +139,6 @@ function displayCustomerModal(customers) {
     customerList.innerHTML = '';
 
     customers.forEach(customer => {
-        if (customer.customer_company_name == "**WEB Test Customer") {
             const li = document.createElement('li');
             const button = document.createElement('button');
             button.textContent = customer.customer_company_name;
@@ -161,7 +160,6 @@ function displayCustomerModal(customers) {
 
             li.appendChild(button);
             customerList.appendChild(li);
-        }
     });
 
     modal.style.display = 'block';
