@@ -170,6 +170,8 @@ function displayCustomerModal(customers) {
 function closeModal() {
     const modal = document.getElementById('customer-modal');
     modal.style.display = 'none';
+    cart = [];
+    updateCart();
 }
 
 function selectCustomer(customer) {
