@@ -137,7 +137,7 @@ function displayCustomerModal(customers) {
     const modal = document.getElementById('customer-modal');
     const customerList = document.getElementById('customer-list');
     customerList.innerHTML = '';
-
+    
     customers.forEach(customer => {
             const li = document.createElement('li');
             const button = document.createElement('button');
