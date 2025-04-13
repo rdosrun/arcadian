@@ -79,6 +79,77 @@ function netsuite_querry(postData) {
     });
 }
 
+function netsuite_query_with_url(postData, limit = 1000, offset = 0) {
+    const url = `https://11374585.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql?limit=${limit}&offset=${offset}`;
+    return new Promise((resolve, reject) => {
+        const tokenFilePath = path.join(__dirname, 'token.txt');
+
+        async function makeRequest(token) {
+            const parsedUrl = new URL(url);
+            var options = {
+                'method': 'POST',
+                'hostname': parsedUrl.hostname,
+                'path': parsedUrl.pathname + parsedUrl.search,
+                'headers': {
+                    'Prefer': 'transient',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                'maxRedirects': 20
+            };
+            console.log("options:", options);
+            var req = https.request(options, function (res) {
+                var chunks = [];
+
+                res.on("data", function (chunk) {
+                    chunks.push(chunk);
+                });
+
+                res.on("end", async function () {
+                    var body = Buffer.concat(chunks);
+
+                    if (res.statusCode === 401) {
+                        console.log('Received 401, refreshing token...');
+                        try {
+                            const newToken = await get_token();
+                            fs.writeFileSync(tokenFilePath, newToken, 'utf8');
+                            makeRequest(newToken);
+                        } catch (error) {
+                            reject(error);
+                        }
+                    } else {
+                        resolve(body.toString());
+                    }
+                });
+
+                res.on("error", function (error) {
+                    console.error(error);
+                    reject(error);
+                });
+            });
+            req.write(postData);
+            req.end();
+        }
+
+        (async () => {
+            if (fs.existsSync(tokenFilePath) && fs.statSync(tokenFilePath).size > 0) {
+                const token = fs.readFileSync(tokenFilePath, 'utf8');
+                console.log("token:", token);
+                await makeRequest(token);
+            } else {
+                try {
+                    const token = await get_token();
+                    console.log("token:", token);
+                    fs.writeFileSync(tokenFilePath, token, 'utf8');
+                    await makeRequest(token);
+                } catch (error) {
+                    reject(error);
+                }
+            }
+        })();
+    });
+}
+
 async function get_employees() {
     var postData = JSON.stringify({
         "q": "SELECT id, entityid, email FROM employee;"
@@ -106,11 +177,11 @@ function Customers_Contacts(){
     });
     return netsuite_querry(postData);
 }
-async function Inventory(offset = 0){
-    var postData = JSON.stringify({
-        "q": `SELECT inventory.item AS item_internal_id, item.subsidiary AS item_subsidiary_internal_id, subsid.name AS item_subsidiary_name, item.itemid AS item_name, item.displayname AS item_display_name, item.upccode AS item_upc_code, item.description AS item_sales_description, item.purchasedescription AS item_purchase_description, item.custitem_discontinued AS item_discontinued, item.class AS item_class_id, class.fullname AS item_class_name, item.unitstype AS item_unit_type_internal_id, unitsType.name AS item_units_name, item.totalquantityonhand AS item_total_quanity_on_hand, item.minimumquantity AS item_minimum_order_quantity, item.totalvalue AS item_total_value_on_hand, inventory.location AS item_location_internal_id, location.name AS item_location_name, inventory.quantityonhand AS item_location_quantity_on_hand, inventory.quantitycommitted AS item_location_quantity_committed, inventory.quantityavailable AS item_location_quantity_available, inventory.quantityonorder AS item_location_quantity_on_order, inventory.quantityintransit AS item_location_quantity_in_transit, inventory.onhandvaluemli AS item_location_value_on_hand FROM inventoryItemLocations AS inventory LEFT JOIN item AS item ON inventory.item = item.id LEFT JOIN itemsubsidiarymap AS itemsubsidiarymap ON item.id = itemsubsidiarymap.item LEFT JOIN subsidiary AS subsid ON itemsubsidiarymap.subsidiary = subsid.id LEFT JOIN classification AS class ON item.class = class.id JOIN location AS location ON location.id = inventory.location LEFT JOIN unitsType AS unitsType ON item.unitstype = unitsType.id ORDER BY item.itemid, location.name OFFSET ${offset} ROWS;`
+async function Inventory(offset = 0) {
+    const postData = JSON.stringify({
+        "q": `SELECT inventory.item AS item_internal_id, item.subsidiary AS item_subsidiary_internal_id, subsid.name AS item_subsidiary_name, item.itemid AS item_name, item.displayname AS item_display_name, item.upccode AS item_upc_code, item.description AS item_sales_description, item.purchasedescription AS item_purchase_description, item.custitem_discontinued AS item_discontinued, item.class AS item_class_id, class.fullname AS item_class_name, item.unitstype AS item_unit_type_internal_id, unitsType.name AS item_units_name, item.totalquantityonhand AS item_total_quanity_on_hand, item.minimumquantity AS item_minimum_order_quantity, item.totalvalue AS item_total_value_on_hand, inventory.location AS item_location_internal_id, location.name AS item_location_name, inventory.quantityonhand AS item_location_quantity_on_hand, inventory.quantitycommitted AS item_location_quantity_committed, inventory.quantityavailable AS item_location_quantity_available, inventory.quantityonorder AS item_location_quantity_on_order, inventory.quantityintransit AS item_location_quantity_in_transit, inventory.onhandvaluemli AS item_location_value_on_hand FROM inventoryItemLocations AS inventory LEFT JOIN item AS item ON inventory.item = item.id LEFT JOIN itemsubsidiarymap AS itemsubsidiarymap ON item.id = itemsubsidiarymap.item LEFT JOIN subsidiary AS subsid ON itemsubsidiarymap.subsidiary = subsid.id LEFT JOIN classification AS class ON item.class = class.id JOIN location AS location ON location.id = inventory.location LEFT JOIN unitsType AS unitsType ON item.unitstype = unitsType.id ORDER BY item.itemid, location.name;`
     });
-    return netsuite_querry(postData);
+    return netsuite_query_with_url(postData, 1000, offset);
 }
 
 function Pricing(){
