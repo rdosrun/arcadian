@@ -4,12 +4,12 @@ const { get_token } = require('../libs/get_token');
 const path = require('path');
 
 function netsuite_querry(postData, offset = 0, limit = 1000) {
-    console.log("postData:", postData);
+    //console.log("postData:", postData);
     return new Promise((resolve, reject) => {
         const tokenFilePath = path.join(__dirname, 'token.txt');
 
         async function makeRequest(token) {
-            console.log("req_token:", token);
+            //console.log("req_token:", token);
             var options = {
                 'method': 'POST',
                 'hostname': '11374585.suitetalk.api.netsuite.com',
@@ -25,7 +25,7 @@ function netsuite_querry(postData, offset = 0, limit = 1000) {
                 }, // Add params section here
                 'maxRedirects': 20
             };
-
+            console.log("options:", options);
             var req = https.request(options, function (res) {
                 var chunks = [];
 
