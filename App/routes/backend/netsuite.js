@@ -111,11 +111,13 @@ async function Inventory(offset = 0, limit = 1000){
     });
     return netsuite_querry(postData);
 }
-async function Inventory_backup(offset = 0, limit = 1000){
-    fetch('https://11374585.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql?limit=1000&offset=1000').then(response => response.json()).
-    then(data => {
-        return data;
-    });
+async function Inventory_backup(offset = 0, limit = 1000) {
+    fetch(`https://11374585.suitetalk.api.netsuite.com/services/rest/query/v1/suiteql?limit=${limit}&offset=${offset}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            return data;
+        });
 }
 
 function Pricing(){
