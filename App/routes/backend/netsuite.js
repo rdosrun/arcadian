@@ -179,6 +179,7 @@ module.exports = {
     Query_Customers_Addresses,
     Customers_Contacts,
     Inventory,
+    Inventory_backup,
     Pricing,
     Sales_Orders,
     sales_order_lines,
