@@ -3,7 +3,7 @@ var fs = require('fs');
 const { get_token } = require('../libs/get_token');
 const path = require('path');
 
-function netsuite_querry(postData, offset = 0, limit = 1000) {
+function netsuite_querry(postData) {
     //console.log("postData:", postData);
     return new Promise((resolve, reject) => {
         const tokenFilePath = path.join(__dirname, 'token.txt');
@@ -19,10 +19,7 @@ function netsuite_querry(postData, offset = 0, limit = 1000) {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                'params': {
-                    'LIMIT': `${limit}`,
-                     'OFFSET': `${offset}`
-                }, // Add params section here
+                // Add params section here
                 'maxRedirects': 20
             };
             console.log("options:", options);
@@ -109,11 +106,11 @@ function Customers_Contacts(){
     });
     return netsuite_querry(postData);
 }
-async function Inventory(offset = 0, limit = 1000){
+async function Inventory(offset = 0){
     var postData = JSON.stringify({
-        "q": `SELECT inventory.item AS item_internal_id, item.subsidiary AS item_subsidiary_internal_id, subsid.name AS item_subsidiary_name, item.itemid AS item_name, item.displayname AS item_display_name, item.upccode AS item_upc_code, item.description AS item_sales_description, item.purchasedescription AS item_purchase_description, item.custitem_discontinued AS item_discontinued, item.class AS item_class_id, class.fullname AS item_class_name, item.unitstype AS item_unit_type_internal_id, unitsType.name AS item_units_name, item.totalquantityonhand AS item_total_quanity_on_hand, item.minimumquantity AS item_minimum_order_quantity, item.totalvalue AS item_total_value_on_hand, inventory.location AS item_location_internal_id, location.name AS item_location_name, inventory.quantityonhand AS item_location_quantity_on_hand, inventory.quantitycommitted AS item_location_quantity_committed, inventory.quantityavailable AS item_location_quantity_available, inventory.quantityonorder AS item_location_quantity_on_order, inventory.quantityintransit AS item_location_quantity_in_transit, inventory.onhandvaluemli AS item_location_value_on_hand FROM inventoryItemLocations AS inventory LEFT JOIN item AS item ON inventory.item = item.id LEFT JOIN itemsubsidiarymap AS itemsubsidiarymap ON item.id = itemsubsidiarymap.item LEFT JOIN subsidiary AS subsid ON itemsubsidiarymap.subsidiary = subsid.id LEFT JOIN classification AS class ON item.class = class.id JOIN location AS location ON location.id = inventory.location LEFT JOIN unitsType AS unitsType ON item.unitstype = unitsType.id ORDER BY item.itemid, location.name;`
+        "q": `SELECT inventory.item AS item_internal_id, item.subsidiary AS item_subsidiary_internal_id, subsid.name AS item_subsidiary_name, item.itemid AS item_name, item.displayname AS item_display_name, item.upccode AS item_upc_code, item.description AS item_sales_description, item.purchasedescription AS item_purchase_description, item.custitem_discontinued AS item_discontinued, item.class AS item_class_id, class.fullname AS item_class_name, item.unitstype AS item_unit_type_internal_id, unitsType.name AS item_units_name, item.totalquantityonhand AS item_total_quanity_on_hand, item.minimumquantity AS item_minimum_order_quantity, item.totalvalue AS item_total_value_on_hand, inventory.location AS item_location_internal_id, location.name AS item_location_name, inventory.quantityonhand AS item_location_quantity_on_hand, inventory.quantitycommitted AS item_location_quantity_committed, inventory.quantityavailable AS item_location_quantity_available, inventory.quantityonorder AS item_location_quantity_on_order, inventory.quantityintransit AS item_location_quantity_in_transit, inventory.onhandvaluemli AS item_location_value_on_hand FROM inventoryItemLocations AS inventory LEFT JOIN item AS item ON inventory.item = item.id LEFT JOIN itemsubsidiarymap AS itemsubsidiarymap ON item.id = itemsubsidiarymap.item LEFT JOIN subsidiary AS subsid ON itemsubsidiarymap.subsidiary = subsid.id LEFT JOIN classification AS class ON item.class = class.id JOIN location AS location ON location.id = inventory.location LEFT JOIN unitsType AS unitsType ON item.unitstype = unitsType.id ORDER BY item.itemid, location.name OFFSET ${offset} ROWS;`
     });
-    return netsuite_querry(postData, offset, limit);
+    return netsuite_querry(postData);
 }
 
 function Pricing(){
