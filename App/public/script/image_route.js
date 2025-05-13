@@ -21,9 +21,9 @@ function update_hats() {
                     newItem.className = 'item';
                     newItem.id = i + 1;
 
-                    // Add click event to call addToCart
+                    // Add click event to enlarge item and show details
                     newItem.onclick = () => {
-                        addToCart(imgSrcs[0]);
+                        enlargeItem(newItem, imgSrcs[0], data[i]?.upc);
                     };
 
                     // Create a container for the slideshow
@@ -75,6 +75,50 @@ function update_hats() {
             }
         )
         .catch(error => console.error('Error fetching images:', error));
+}
+
+function enlargeItem(item, imgSrc, upc) {
+    const enlargedContainer = document.createElement('div');
+    enlargedContainer.className = 'enlarged-container';
+    enlargedContainer.style.position = 'fixed';
+    enlargedContainer.style.top = '50%';
+    enlargedContainer.style.left = '50%';
+    enlargedContainer.style.transform = 'translate(-50%, -50%)';
+    enlargedContainer.style.backgroundColor = 'white';
+    enlargedContainer.style.padding = '20px';
+    enlargedContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    enlargedContainer.style.zIndex = '1000';
+
+    const enlargedImage = document.createElement('img');
+    enlargedImage.src = imgSrc;
+    enlargedImage.alt = 'Enlarged Product Image';
+    enlargedImage.style.width = '300px';
+    enlargedImage.style.height = '300px';
+
+    const upcText = document.createElement('p');
+    upcText.textContent = `UPC: ${upc}`;
+    upcText.style.marginTop = '10px';
+
+    const addToCartButton = document.createElement('button');
+    addToCartButton.textContent = 'Add to Cart';
+    addToCartButton.onclick = () => {
+        addToCart(imgSrc);
+        document.body.removeChild(enlargedContainer);
+    };
+
+    const closeButton = document.createElement('button');
+    closeButton.textContent = 'Close';
+    closeButton.style.marginLeft = '10px';
+    closeButton.onclick = () => {
+        document.body.removeChild(enlargedContainer);
+    };
+
+    enlargedContainer.appendChild(enlargedImage);
+    enlargedContainer.appendChild(upcText);
+    enlargedContainer.appendChild(addToCartButton);
+    enlargedContainer.appendChild(closeButton);
+
+    document.body.appendChild(enlargedContainer);
 }
 
 function changeSlide(itemId, direction) {
