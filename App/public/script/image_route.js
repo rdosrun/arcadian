@@ -23,8 +23,8 @@ function update_hats() {
 
                     // Add click event to enlarge item and show details
                     newItem.onclick = () => {
-                        console.log("Clicked item with ID:", imgSrcs[0].split('/')[2]);
-                        enlargeItem(newItem, imgSrcs[0], imgSrcs[0].split('/')[2]);
+                        console.log("Clicked item with ID:", imgSrcs[0].split('/')[3]);
+                        enlargeItem(newItem, imgSrcs[0], imgSrcs[0].split('/')[3]);
                     };
 
                     // Create a container for the slideshow
