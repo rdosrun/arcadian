@@ -23,8 +23,7 @@ function update_hats() {
 
                     // Add click event to enlarge item and show details
                     newItem.onclick = () => {
-                        var upc = self.getAttribute("src");
-                        console.log(upc);
+                        console.log("Clicked item with ID:", imgSrcs[0]);
                         enlargeItem(newItem, imgSrcs[0], upc);
                     };
 
