@@ -59,7 +59,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 //app.use('/upload', uploadPhotosRouter);
-app.post('/upload',function (req, res) {
+app.get('/upload',function (req, res) {
     return res.status(200).json({ success: true, message: 'File uploaded successfully' });
 });
 
