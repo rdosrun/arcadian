@@ -48,10 +48,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Serve static files
-app.get('/upload',function (req, res) {
-    return res.status(200).json({ success: true, message: 'File uploaded successfully' });
-});
-
 app.use('/style', express.static(path.join(__dirname, 'style')));
 app.use('/script', express.static(path.join(__dirname, 'script')));
 app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'favicon.ico')));
@@ -62,7 +58,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
-//app.use('/upload', uploadPhotosRouter);
+app.use('/upload', uploadPhotosRouter);
 
 
 app.get('/views/:page', function (req, res, next) {
