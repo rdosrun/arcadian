@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // POST route for uploading photos
-router.get('/test2', upload.single('photo'), (req, res) => {
+router.post('/', upload.single('photo'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ success: false, message: 'No file uploaded' });
     }
@@ -27,5 +27,17 @@ router.get('/test2', upload.single('photo'), (req, res) => {
         filePath: `/images/uploads/${req.file.filename}`
     });
 });
+router.get('/', upload.single('photo'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: 'No file uploaded' });
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'File uploaded successfully',
+        filePath: `/images/uploads/${req.file.filename}`
+    });
+});
+
 
 module.exports = router;
