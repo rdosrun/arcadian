@@ -58,8 +58,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
-app.use('/upload-photos', uploadPhotosRouter);
-
 app.post('/upload', ensureAuthenticated, uploadPhotosRouter);
 
 app.get('/views/:page', function (req, res, next) {
