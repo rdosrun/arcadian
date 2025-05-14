@@ -238,6 +238,23 @@ app.use(function (req, res, next) {
     next(createError(404));
 });
 
+// Add a route to handle 500 errors
+app.use(function (err, req, res, next) {
+    if (err.status === 500) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+            error: err.message
+        });
+    } else {
+        res.status(err.status || 500).json({
+            success: false,
+            message: 'An error occurred',
+            error: err.message
+        });
+    }
+});
+
 // error handler
 app.use(function (err, req, res, next) {
     // set locals, only providing error in development
