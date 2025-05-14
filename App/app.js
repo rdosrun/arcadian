@@ -18,6 +18,7 @@ var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 var netsuite = require('./routes/backend/netsuite');
 const { get_token } = require('./routes/libs/get_token');
+var uploadPhotosRouter = require('./routes/upload_photos');
 
 // initialize express
 var app = express();
@@ -57,6 +58,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/upload-photos', uploadPhotosRouter);
 
 app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
