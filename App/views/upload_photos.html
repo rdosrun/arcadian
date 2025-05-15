@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Photos</title>
     <link rel="stylesheet" href="../style/upload_photos.css">
+    <script src="../script/upload_photos.js" defer></script>
 </head>
 <body>
     <div class="upload-container">
         <h1>Upload Photos</h1>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" name="photo" accept="image/*">
-            <button type="submit">Upload</button>
-        </form>
+        <input type="file" id="photo-upload" accept="image/*">
+        <button onclick="uploadPhoto()">Upload</button>
     </div>
 </body>
 </html>
