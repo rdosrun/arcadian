@@ -1,7 +1,6 @@
 var total_hats = 50;
 var curr_hats = 0;
 var state = "";
-const db = indexedDB.open("myDatabase", 1);
 function update_hats() {
     console.log("Updating hats...");
     const selectedState = document.querySelector('input[name="state"]:checked').value;
@@ -186,6 +185,7 @@ function update_inventory(){
     console.log("Updating inventory...");
     var next = true;
     var offset = 0;
+    const db = indexedDB.open("myDatabase", 1);
     db.onsuccess = function(event) {
         const database = event.target.result;
         // Create object store if not exists (for demo, assumes store "inventory" exists)
