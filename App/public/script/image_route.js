@@ -7,6 +7,15 @@ function update_hats() {
     const storeItemsContainer = document.getElementById('store-items');
     storeItemsContainer.setAttribute('data-state', selectedState);
     storeItemsContainer.innerHTML = ''; // Clear existing items
+
+    // Load inventory from localStorage once
+    let inventory = [];
+    try {
+        inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    } catch (e) {
+        inventory = [];
+    }
+
     fetch("/images/" + selectedState)
         .then(response => response.json())
         .then(data => {
@@ -31,6 +40,42 @@ function update_hats() {
                     // Create a container for the slideshow
                     const slideshowContainer = document.createElement('div');
                     slideshowContainer.className = 'slideshow-container';
+                    slideshowContainer.id = `slideshow-${newItem.id}`;
+
+                    // Get UPC for this item (assume first image's UPC is representative)
+                    let upc = null;
+                    if (imgSrcs.length > 0 && imgSrcs[0]) {
+                        // Try to extract UPC from image URL (assuming split('/')[3] is UPC)
+                        upc = imgSrcs[0].split('/')[3];
+                    }
+
+                    // Find quantity in inventory
+                    let quantity = '';
+                    if (upc) {
+                        // Try both possible property names for compatibility
+                        let invItem = inventory.find(
+                            inv => inv.upc === upc
+                        );
+                        if (invItem) {
+                            quantity = invItem.quantity;
+                        }
+                    }
+
+                    // Add stock number badge
+                    const stockBadge = document.createElement('div');
+                    stockBadge.className = 'stock-badge';
+                    stockBadge.textContent = quantity !== '' ? quantity : '0';
+                    stockBadge.style.position = 'absolute';
+                    stockBadge.style.top = '5px';
+                    stockBadge.style.right = '10px';
+                    stockBadge.style.background = 'rgba(0,0,0,0.7)';
+                    stockBadge.style.color = 'white';
+                    stockBadge.style.padding = '2px 8px';
+                    stockBadge.style.borderRadius = '12px';
+                    stockBadge.style.fontSize = '14px';
+                    stockBadge.style.zIndex = '10';
+
+                    slideshowContainer.appendChild(stockBadge);
 
                     imgSrcs.forEach((src, index) => {
                         const slide = document.createElement('div');
@@ -83,7 +128,6 @@ function update_hats() {
             }
         )
         .catch(error => console.error('Error fetching images:', error));
-    //update_inventory();
 }
 
 function enlargeItem(item, imgSrc, upc) {
@@ -144,6 +188,7 @@ function changeSlide(itemId, direction) {
 
 function load_state(){
     update_hats();
+    update_inventory();
 }
 
 function duplicateElement() {
