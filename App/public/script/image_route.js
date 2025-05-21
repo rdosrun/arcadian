@@ -1,6 +1,7 @@
 var total_hats = 50;
 var curr_hats = 0;
 var state = "";
+const db = indexedDB.open("myDatabase", 1);
 function update_hats() {
     const selectedState = document.querySelector('input[name="state"]:checked').value;
     const storeItemsContainer = document.getElementById('store-items');
@@ -82,6 +83,7 @@ function update_hats() {
             }
         )
         .catch(error => console.error('Error fetching images:', error));
+    update_inventory();
 }
 
 function enlargeItem(item, imgSrc, upc) {
@@ -179,3 +181,27 @@ function duplicateElement() {
     }
 }
 
+function update_inventory(){
+    var next = true;
+    var offset = 0;
+    db.onsuccess = function(event) {
+        const database = event.target.result;
+        // Create object store if not exists (for demo, assumes store "inventory" exists)
+        while(next){
+            fetch("/inventory?offset=" + offset)
+                .then(response => response.json())
+                .then(data =>{
+                    next = data.hasMore;
+                    offset += data.items.length;
+                    const transaction = database.transaction(["inventory"], "readwrite");
+                    const store = transaction.objectStore("inventory");
+                    for(let i = 0; i < data.items.length; i++){
+                        var item = data.items[i];
+                        var upc = item.upc;
+                        var quantity = item.quantity;
+                        store.put({ upc: upc, quantity: quantity });
+                    }
+                });
+        }
+    };
+}
