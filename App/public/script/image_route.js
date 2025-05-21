@@ -83,7 +83,7 @@ function update_hats() {
             }
         )
         .catch(error => console.error('Error fetching images:', error));
-    update_inventory();
+    //update_inventory();
 }
 
 function enlargeItem(item, imgSrc, upc) {
