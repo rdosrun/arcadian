@@ -102,7 +102,7 @@ router.get('/inventory', isAuthenticated, async function (req, res, next) {
     try {
         const offset = req.query.offset || 0;
         const inventory = await Inventory(offset);
-        res.json(JSON.parse(inventory));
+        res.json(JSON.parse(inventory), req.query);
     } catch (error) {
         next(error);
     }
