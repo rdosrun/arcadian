@@ -45,8 +45,7 @@
 
   .toggle-btn {
     display: inline-block;
-    background-color: #333;
-    color: white;
+    background-color: white;
     border: none;
     font-size: 1.2rem;
     padding: 10px;

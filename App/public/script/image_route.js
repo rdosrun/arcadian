@@ -43,7 +43,10 @@ function update_hats() {
                     const prevButton = document.createElement('button');
                     prevButton.className = 'prev';
                     prevButton.innerHTML = '&#10094;';
-                    prevButton.onclick = () => changeSlide(newItem.id, -1);
+                    prevButton.onclick = (event) => {
+                        event.stopPropagation();
+                        changeSlide(newItem.id, -1);
+                    };
                     prevButton.style.position = 'absolute';
                     prevButton.style.left = '0';
                     prevButton.style.top = '50%';
@@ -56,7 +59,10 @@ function update_hats() {
                     const nextButton = document.createElement('button');
                     nextButton.className = 'next';
                     nextButton.innerHTML = '&#10095;';
-                    nextButton.onclick = () => changeSlide(newItem.id, 1);
+                    nextButton.onclick = (event) => {
+                        event.stopPropagation();
+                        changeSlide(newItem.id, 1);
+                    };
                     nextButton.style.position = 'absolute';
                     nextButton.style.right = '0';
                     nextButton.style.top = '50%';
