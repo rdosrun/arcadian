@@ -98,14 +98,11 @@ router.get('/hats/:state', isAuthenticated, function (req, res, next) {
 });
 
 // Route to get inventory
-router.get('/inventory/:offset', isAuthenticated, async function (req, res, next) {
+router.get('/inventory', isAuthenticated, async function (req, res, next) {
     try {
-        if(req.query.offset == null){
-            return res.status(400).json({ error: 'Offset parameter is required' });
-        }
-        const offset = req.query.offset;
+        const offset = req.query.offset || 0;
         const inventory = await Inventory(offset);
-        res.json(JSON.parse(inventory), req.query);
+        res.json(JSON.parse(inventory));
     } catch (error) {
         next(error);
     }
