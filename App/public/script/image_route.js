@@ -188,7 +188,7 @@ function update_inventory(){
         fetch("/inventory?offset=" + offset)
             .then(response => response.json())
             .then(data => {
-                console.log("Inventory data:", data);
+                console.log("Inventory data:", data.items);
                 allInventory = allInventory.concat(data.items.map(item => ({
                     upc: item.upc,
                     quantity: item.quantity
