@@ -184,12 +184,11 @@ function duplicateElement() {
 function update_inventory(){
     console.log("Updating inventory...");
     var next = true;
-    var offset = 0;
     const db = indexedDB.open("myDatabase", 1);
     db.onsuccess = function(event) {
         const database = event.target.result;
         // Create object store if not exists (for demo, assumes store "inventory" exists)
-        while(next){
+        const recursiveFetch = function fetch_inventory(offset=0) {
             fetch("/inventory?offset=" + offset)
                 .then(response => response.json())
                 .then(data =>{
@@ -205,7 +204,11 @@ function update_inventory(){
                         store.put({ upc: upc, quantity: quantity });
                     }
                 });
-                offset += 1000;
-        }
+                if(next){
+                    recursiveFetch(offset+1000);
+                } else {
+                    console.log("Finished updating inventory.");
+                }
+            }
     };
 }
