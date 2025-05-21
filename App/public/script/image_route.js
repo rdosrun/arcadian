@@ -194,7 +194,7 @@ function update_inventory(){
                 .then(response => response.json())
                 .then(data =>{
                     console.log("Inventory data:", data);
-                    next = data.hasMore;
+                    next = false;
                     offset += data.items.length;
                     const transaction = database.transaction(["inventory"], "readwrite");
                     const store = transaction.objectStore("inventory");
