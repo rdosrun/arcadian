@@ -193,6 +193,7 @@ function update_inventory(){
             fetch("/inventory?offset=" + offset)
                 .then(response => response.json())
                 .then(data =>{
+                    console.log("Inventory data:", data);
                     next = data.hasMore;
                     offset += data.items.length;
                     const transaction = database.transaction(["inventory"], "readwrite");
