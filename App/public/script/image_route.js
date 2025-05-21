@@ -2,6 +2,7 @@ var total_hats = 50;
 var curr_hats = 0;
 var state = "";
 function update_hats() {
+    update_inventory();
     console.log("Updating hats...");
     const selectedState = document.querySelector('input[name="state"]:checked').value;
     const storeItemsContainer = document.getElementById('store-items');
@@ -128,6 +129,7 @@ function update_hats() {
             }
         )
         .catch(error => console.error('Error fetching images:', error));
+        
 }
 
 function enlargeItem(item, imgSrc, upc) {
