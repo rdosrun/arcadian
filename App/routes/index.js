@@ -100,7 +100,7 @@ router.get('/hats/:state', isAuthenticated, function (req, res, next) {
 // Route to get inventory
 router.get('/inventory/:offset', isAuthenticated, async function (req, res, next) {
     try {
-        const offset = req.query.offset || 0;
+        const offset = req.params.offset || 0;
         const inventory = await Inventory(offset);
         res.json(JSON.parse(inventory), req.query);
     } catch (error) {
