@@ -210,5 +210,6 @@ function update_inventory(){
                     console.log("Finished updating inventory.");
                 }
             }
+            recursiveFetch();
     };
 }
