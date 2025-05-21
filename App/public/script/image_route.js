@@ -190,9 +190,10 @@ function update_inventory(){
             .then(data => {
                 console.log("Inventory data:", data.items);
                 allInventory = allInventory.concat(data.items.map(item => ({
-                    upc: item.upc,
-                    quantity: item.quantity
+                    upc: item.item_upc_code,
+                    quantity: item.item_total_quanity_on_hand
                 })));
+                console.log("Current inventory:", allInventory);
                 if (data.hasMore) {
                     fetch_inventory(offset + data.items.length);
                 } else {
