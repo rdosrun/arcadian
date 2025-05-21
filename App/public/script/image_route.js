@@ -183,37 +183,24 @@ function duplicateElement() {
 
 function update_inventory(){
     console.log("Updating inventory...");
-    var next = true;
-    const db = indexedDB.open("myDatabase", 1);
-    db.onsuccess = function(event) {
-        const database = event.target.result;
-        // Create object store if not exists (for demo, assumes store "inventory" exists)
-        const recursiveFetch = function fetch_inventory(offset=0) {
-            fetch("/inventory?offset=" + offset)
-                .then(response => response.json())
-                .then(data =>{
-                    console.log("Inventory data:", data);
-                    next = false;
-                    offset += data.items.length;
-                    if (!db.objectStoreNames.contains('inventory')) {
-                        db.createObjectStore('inventory', { keyPath: 'id' });
-                    }
-                    const transaction = database.transaction(["inventory"], "readwrite");
-                    const store = transaction.objectStore("inventory");
-                    for(let i = 0; i < data.items.length; i++){
-                        var item = data.items[i];
-                        var upc = item.upc;
-                        var quantity = item.quantity;
-                        store.put({ upc: upc, quantity: quantity });
-                    }
-                    if(next){
-                        recursiveFetch(offset);
-                    } else {
-                        console.log("Finished updating inventory.");
-                    }
-                });
-                
-            }
-            recursiveFetch();
+    let allInventory = [];
+    const recursiveFetch = function fetch_inventory(offset=0) {
+        fetch("/inventory?offset=" + offset)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Inventory data:", data);
+                allInventory = allInventory.concat(data.items.map(item => ({
+                    upc: item.upc,
+                    quantity: item.quantity
+                })));
+                if (data.hasMore) {
+                    fetch_inventory(offset + data.items.length);
+                } else {
+                    // Store the full inventory array in localStorage as JSON
+                    localStorage.setItem('inventory', JSON.stringify(allInventory));
+                    console.log("Finished updating inventory. Inventory stored in localStorage.");
+                }
+            });
     };
+    recursiveFetch();
 }
