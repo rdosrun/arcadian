@@ -203,12 +203,13 @@ function update_inventory(){
                         var quantity = item.quantity;
                         store.put({ upc: upc, quantity: quantity });
                     }
+                    if(next){
+                        recursiveFetch(offset+1000);
+                    } else {
+                        console.log("Finished updating inventory.");
+                    }
                 });
-                if(next){
-                    recursiveFetch(offset+1000);
-                } else {
-                    console.log("Finished updating inventory.");
-                }
+                
             }
             recursiveFetch();
     };
