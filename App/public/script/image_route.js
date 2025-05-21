@@ -3,6 +3,7 @@ var curr_hats = 0;
 var state = "";
 const db = indexedDB.open("myDatabase", 1);
 function update_hats() {
+    console.log("Updating hats...");
     const selectedState = document.querySelector('input[name="state"]:checked').value;
     const storeItemsContainer = document.getElementById('store-items');
     storeItemsContainer.setAttribute('data-state', selectedState);
@@ -182,6 +183,7 @@ function duplicateElement() {
 }
 
 function update_inventory(){
+    console.log("Updating inventory...");
     var next = true;
     var offset = 0;
     db.onsuccess = function(event) {
