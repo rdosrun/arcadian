@@ -205,6 +205,7 @@ function update_inventory(){
                         store.put({ upc: upc, quantity: quantity });
                     }
                 });
+                offset += 1000;
         }
     };
 }
