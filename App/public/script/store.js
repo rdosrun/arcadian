@@ -172,14 +172,51 @@ function closeModal() {
     updateCart();
 }
 
+// Show confirmation popup before placing order
 function selectCustomer(customer) {
     selectedCustomer = customer.customer_company_name;
     console.log('Selected customer:', customer);
-    place_order(customer).then(() => {
-        closeModal();
-    });
-}
 
+    // Create confirmation popup
+    const confirmPopup = document.createElement('div');
+    confirmPopup.style.position = 'fixed';
+    confirmPopup.style.top = '50%';
+    confirmPopup.style.left = '50%';
+    confirmPopup.style.transform = 'translate(-50%, -50%)';
+    confirmPopup.style.background = 'white';
+    confirmPopup.style.padding = '30px';
+    confirmPopup.style.boxShadow = '0 4px 16px rgba(0,0,0,0.2)';
+    confirmPopup.style.zIndex = '1000001';
+    confirmPopup.style.borderRadius = '8px';
+    confirmPopup.style.textAlign = 'center';
+
+    const nameText = document.createElement('div');
+    nameText.textContent = `Place order for: ${customer.customer_company_name}?`;
+    nameText.style.marginBottom = '20px';
+
+    const okBtn = document.createElement('button');
+    okBtn.textContent = 'Okay';
+    okBtn.style.marginRight = '10px';
+    okBtn.onclick = () => {
+        document.body.removeChild(confirmPopup);
+        place_order(customer).then(() => {
+            closeModal();
+        });
+    };
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.onclick = () => {
+        document.body.removeChild(confirmPopup);
+        // Do not place order, just close popup
+    };
+
+    confirmPopup.appendChild(nameText);
+    confirmPopup.appendChild(okBtn);
+    confirmPopup.appendChild(closeBtn);
+
+    document.body.appendChild(confirmPopup);
+}
 
 function filterCustomers() {
     const searchInput = document.getElementById('customer-search').value.toLowerCase();
