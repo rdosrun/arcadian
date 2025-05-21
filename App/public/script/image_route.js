@@ -94,7 +94,7 @@ function enlargeItem(item, imgSrc, upc) {
     enlargedContainer.style.backgroundColor = 'white';
     enlargedContainer.style.padding = '20px';
     enlargedContainer.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
-    enlargedContainer.style.zIndex = '1000';
+    enlargedContainer.style.zIndex = '100000';
 
     const enlargedImage = document.createElement('img');
     enlargedImage.src = imgSrc;
