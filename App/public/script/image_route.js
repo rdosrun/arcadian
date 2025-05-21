@@ -195,6 +195,9 @@ function update_inventory(){
                     console.log("Inventory data:", data);
                     next = false;
                     offset += data.items.length;
+                    if (!db.objectStoreNames.contains('inventory')) {
+                        db.createObjectStore('inventory', { keyPath: 'id' });
+                    }
                     const transaction = database.transaction(["inventory"], "readwrite");
                     const store = transaction.objectStore("inventory");
                     for(let i = 0; i < data.items.length; i++){
@@ -204,7 +207,7 @@ function update_inventory(){
                         store.put({ upc: upc, quantity: quantity });
                     }
                     if(next){
-                        recursiveFetch(offset+1000);
+                        recursiveFetch(offset);
                     } else {
                         console.log("Finished updating inventory.");
                     }
