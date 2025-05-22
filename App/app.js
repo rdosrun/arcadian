@@ -223,6 +223,37 @@ app.post('/submit-order', async (req, res) => {
     }
 });
 
+// Add endpoints for invoices, sales orders, and credit memos
+app.get('/api/invoices', async (req, res) => {
+    try {
+        const data = await netsuite.Invoices();
+        res.json({ success: true, data: JSON.parse(data) });
+    } catch (error) {
+        console.error('Error fetching invoices:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+app.get('/api/sales-orders', async (req, res) => {
+    try {
+        const data = await netsuite.Sales_Orders();
+        res.json({ success: true, data: JSON.parse(data) });
+    } catch (error) {
+        console.error('Error fetching sales orders:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+app.get('/api/credit-memos', async (req, res) => {
+    try {
+        const data = await netsuite.Credit_Memo();
+        res.json({ success: true, data: JSON.parse(data) });
+    } catch (error) {
+        console.error('Error fetching credit memos:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 // Run get_token every hour
 setInterval(() => {
     try {

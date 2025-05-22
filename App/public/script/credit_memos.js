@@ -1,31 +1,26 @@
 // credit_memos.js
-// Demo data for credit memos (replace with real API call in production)
-const demoCreditMemos = [
-    {
-        memoNumber: 'CM-1001',
-        customer: 'Acme Corp',
-        date: '2025-05-01',
-        amount: 250.00,
-        status: 'Open',
-        details: 'Returned 5 hats, restocked.'
-    },
-    {
-        memoNumber: 'CM-1002',
-        customer: 'Beta LLC',
-        date: '2025-05-10',
-        amount: 120.50,
-        status: 'Closed',
-        details: 'Refund for defective item.'
-    },
-    {
-        memoNumber: 'CM-1003',
-        customer: 'Gamma Inc',
-        date: '2025-05-15',
-        amount: 75.00,
-        status: 'Open',
-        details: 'Credit for late shipment.'
+
+// Fetch credit memos from backend API
+async function fetchCreditMemos() {
+    try {
+        const res = await fetch('/api/credit-memos');
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data.items)) {
+            return json.data.items.map(item => ({
+                memoNumber: item.customer_credit_memo_number || '',
+                customer: item.customer_credit_memo_customer_name || '',
+                date: item.customer_credit_memo_date || '',
+                amount: Number(item.customer_credit_memo_total) || 0,
+                status: item.customer_credit_memo_status || '',
+                details: item.customer_credit_memo_memo || ''
+            }));
+        }
+        return [];
+    } catch (e) {
+        console.error('Failed to fetch credit memos:', e);
+        return [];
     }
-];
+}
 
 function renderCreditMemos(memos) {
     const tbody = document.querySelector('#creditMemosTable tbody');
@@ -44,25 +39,26 @@ function renderCreditMemos(memos) {
     });
 }
 
-function filterMemos(query) {
+function filterMemos(memos, query) {
     query = query.trim().toLowerCase();
-    return demoCreditMemos.filter(memo =>
-        memo.memoNumber.toLowerCase().includes(query) ||
-        memo.customer.toLowerCase().includes(query) ||
-        memo.date.includes(query)
+    return memos.filter(memo =>
+        (memo.memoNumber || '').toLowerCase().includes(query) ||
+        (memo.customer || '').toLowerCase().includes(query) ||
+        (memo.date || '').includes(query)
     );
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderCreditMemos(demoCreditMemos);
+document.addEventListener('DOMContentLoaded', async () => {
+    let allMemos = await fetchCreditMemos();
+    renderCreditMemos(allMemos);
 
     document.getElementById('searchBtn').onclick = () => {
         const query = document.getElementById('searchInput').value;
-        renderCreditMemos(filterMemos(query));
+        renderCreditMemos(filterMemos(allMemos, query));
     };
     document.getElementById('searchInput').addEventListener('keyup', e => {
         if (e.key === 'Enter') {
-            renderCreditMemos(filterMemos(e.target.value));
+            renderCreditMemos(filterMemos(allMemos, e.target.value));
         }
     });
 
