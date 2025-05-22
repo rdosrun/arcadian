@@ -1,0 +1,115 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px 40px 40px 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+#searchInput {
+    width: 300px;
+    padding: 8px 12px;
+    border: 1px solid #bbb;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    font-size: 16px;
+}
+#searchBtn {
+    padding: 8px 18px;
+    border: none;
+    background: #0078d7;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+#searchBtn:hover {
+    background: #005fa3;
+}
+#creditMemosTableContainer {
+    overflow-x: auto;
+}
+#creditMemosTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: #fafafa;
+}
+#creditMemosTable th, #creditMemosTable td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: left;
+}
+#creditMemosTable th {
+    background: #f0f6ff;
+    color: #222;
+}
+#creditMemosTable tr:hover {
+    background: #eaf3ff;
+}
+.details-btn {
+    background: #0078d7;
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.2s;
+}
+.details-btn:hover {
+    background: #005fa3;
+}
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: auto;
+    background: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background: #fff;
+    margin: 8% auto;
+    padding: 30px 40px;
+    border-radius: 8px;
+    width: 400px;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+}
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.close:hover {
+    color: #333;
+}
+#memoDetails {
+    margin-top: 10px;
+    font-size: 16px;
+}

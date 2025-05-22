@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Memos</title>
+    <link rel="stylesheet" href="../style/credit_memos.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Credit Memos</h1>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by Customer, Memo #, or Date...">
+            <button id="searchBtn">Search</button>
+        </div>
+        <div id="creditMemosTableContainer">
+            <table id="creditMemosTable">
+                <thead>
+                    <tr>
+                        <th>Memo #</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Credit memos will be populated here by JS -->
+                </tbody>
+            </table>
+        </div>
+        <div id="memoDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="memoDetails"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../script/credit_memos.js"></script>
+</body>
+</html>
