@@ -28,7 +28,7 @@ function update_hats() {
                     }else if(data[i].imageUrl == null){
                         continue; // Skip if no image URL
                     }
-                    var imgSrcs = [];
+                    const imgSrcs = [];
                     for (let j = 0; j < 4; j++) {
                         if(data[i+j].imageUrl.split('/')[3] != data[i].imageUrl.split('/')[3]){
                             break;
