@@ -20,13 +20,26 @@ function update_hats() {
     fetch("/images/" + selectedState)
         .then(response => response.json())
         .then(data => {
-                for (var i = 0; i < data.length; i = i + 4) {
-                    const imgSrcs = [
+                var total_photots =1;
+                for (var i = 0; i < data.length; i = i + total_photots) {
+                    if(data[i] == null ){
+                        continue; // Skip if no data for this index
+                    }else if(data[i].imageUrl == null){
+                        continue; // Skip if no image URL
+                    }
+                    var imgSrcs = [];
+                    for (let j = 0; j < 4; j++) {
+                        if(data[i+j].imageUrl.split('/')[3] != data[i].imageUrl.split('/')[3]){
+                            break;
+                        }
+                        imgSrcs.push(data[i+j].imageUrl);
+                    }
+                    /*const imgSrcs = [
                         data[i]?.imageUrl,
                         data[i + 1]?.imageUrl,
                         data[i + 2]?.imageUrl,
                         data[i + 3]?.imageUrl
-                    ].filter(src => src); // Filter out undefined values
+                    ]*/
 
                     const newItem = document.createElement('button');
                     newItem.className = 'item';
