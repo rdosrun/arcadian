@@ -22,6 +22,7 @@ function update_hats() {
         .then(data => {
                 var total_photots =1;
                 for (var i = 0; i < data.length; i = i + total_photots) {
+                    total_photots = 1; 
                     if(data[i] == null ){
                         continue; // Skip if no data for this index
                     }else if(data[i].imageUrl == null){
@@ -33,6 +34,7 @@ function update_hats() {
                             break;
                         }
                         imgSrcs.push(data[i+j].imageUrl);
+                        total_photots++;
                     }
                     /*const imgSrcs = [
                         data[i]?.imageUrl,
