@@ -155,7 +155,9 @@ body {
   padding-bottom: 2rem;
 
 }
-
+h1{
+  color:white;
+}
 .hero-content p {
   font-size: 1.25rem;
   margin-bottom: 2rem;
@@ -444,6 +446,8 @@ footer a:hover {
     right: 5px;
   }
 }
+
+
 
 /* HTML: <div class="loader"></div> */
 .loader {
