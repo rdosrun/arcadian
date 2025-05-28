@@ -36,6 +36,7 @@ function update_hats() {
                         imgSrcs.push(data[i+j].imageUrl);
                         total_photots++;
                     }
+                    console.log(imgSrcs)
                     /*const imgSrcs = [
                         data[i]?.imageUrl,
                         data[i + 1]?.imageUrl,
