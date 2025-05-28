@@ -3,7 +3,7 @@
 // Fetch credit memos from backend API
 async function fetchCreditMemos() {
     try {
-        const res = await fetch('/credit-memos');
+        const res = await fetch('/api/credit-memos');
         const json = await res.json();
         if (json.success && Array.isArray(json.data.items)) {
             return json.data.items.map(item => ({
