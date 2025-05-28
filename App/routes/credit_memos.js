@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // GET /credit-memo
-router.get('/credit-memo', (req, res) => {
+router.get('/', (req, res) => {
   // Example static data
   const items = [
     {
