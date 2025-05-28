@@ -60,6 +60,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadPhotosRouter);
+app.use('/credit-memos', creditMemosRouter);
 
 
 app.get('/views/:page', function (req, res, next) {
