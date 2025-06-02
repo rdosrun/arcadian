@@ -13,8 +13,6 @@ function loadPage(route) {
             }
             if (route == "/views/retail/products") {
                 //loadScriptDynamically("/product.js");
-                update_inventory();
-                update_hats();
             }
         });
     const navLinks = document.querySelector('.nav-links');
