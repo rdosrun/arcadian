@@ -11,7 +11,7 @@ function loadPage(route) {
             if (route == "/views/re-order") {
             StartScanner();
             }
-            if (route == "/views/retail/products") {
+            if (route == "/retail/products") {
                 // Dynamically load image_route.js if not already loaded
                 if (!window.update_hats) {
                     loadScriptDynamically("/script/image_route.js");
