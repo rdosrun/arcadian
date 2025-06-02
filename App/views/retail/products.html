@@ -2,7 +2,7 @@
 <div class="sidebar" id="checkbox-sidebar">
     <button class="toggle-checkbox-btn" onclick="toggleCheckboxContainer()">Toggle Filters</button>
         <h2>Filter by State</h2>
-        <form id="checkbox-container">
+        <form id="checkbox-container" style="max-height: 80vh; overflow-y: auto;">
             <label><input type="radio" name="state" id="state-AL" value="AL" onClick="update_hats()"> AL</label>
             <label><input type="radio" name="state" id="state-AK" value="AK" onClick="update_hats()"> AK</label>
             <label><input type="radio" name="state" id="state-AZ" value="AZ" onClick="update_hats()"> AZ</label>
