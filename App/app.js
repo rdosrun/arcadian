@@ -15,6 +15,7 @@ const fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var creditMemosRouter = require('./routes/credit_memos');
 var authRouter = require('./routes/auth');
 var netsuite = require('./routes/backend/netsuite');
 const { get_token} = require('./routes/libs/get_token');
@@ -59,6 +60,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadPhotosRouter);
+app.use('/credit-memos', creditMemosRouter);
+
 
 app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
