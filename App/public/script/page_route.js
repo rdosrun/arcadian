@@ -13,6 +13,7 @@ function loadPage(route) {
             }
             if (route == "/views/products") {
                 loadScriptDynamically("/product.js");
+                update_inventory();
             }
         });
     const navLinks = document.querySelector('.nav-links');
