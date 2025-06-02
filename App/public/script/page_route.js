@@ -11,8 +11,8 @@ function loadPage(route) {
             if (route == "/views/re-order") {
             StartScanner();
             }
-            if (route == "/views/products") {
-                loadScriptDynamically("/product.js");
+            if (route == "/views/retail/products") {
+                //loadScriptDynamically("/product.js");
                 update_inventory();
             }
         });
