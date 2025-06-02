@@ -18,6 +18,7 @@ function loadPage(route) {
                 }
                 // Call update_hats after a short delay to ensure the script is loaded
                 setTimeout(() => {
+                    console.log("Calling update_hats after loading image_route.js");
                     if (typeof update_hats === 'function') {
                         update_hats();
                     }
