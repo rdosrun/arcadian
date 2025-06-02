@@ -12,7 +12,16 @@ function loadPage(route) {
             StartScanner();
             }
             if (route == "/views/retail/products") {
-                //loadScriptDynamically("/product.js");
+                // Dynamically load image_route.js if not already loaded
+                if (!window.update_hats) {
+                    loadScriptDynamically("/script/image_route.js");
+                }
+                // Call update_hats after a short delay to ensure the script is loaded
+                setTimeout(() => {
+                    if (typeof update_hats === 'function') {
+                        update_hats();
+                    }
+                }, 200);
             }
         });
     const navLinks = document.querySelector('.nav-links');
@@ -31,7 +40,7 @@ function loadScriptDynamically(src) {
   document.head.appendChild(script); // Append to <head> or <body>
 }
 
-var total_hats = 50;
+/*var total_hats = 50;
 var curr_hats = 0;
 var state = "";
 function update_hats(){
@@ -57,7 +66,7 @@ function update_hats(){
         }
         });
 
-}
+}*/
 
 
 function load_state(){
