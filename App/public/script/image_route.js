@@ -23,15 +23,19 @@ function update_hats() {
             console.log("Fetched images for state:", selectedState, data);
                 var total_photots =1;
                 for (var i = 0; i < data.length; i = i + total_photots) {
-                    console.log("Processing item at index:", i, data.length);
                     total_photots = 1; 
                     if(data[i] == null ){
+                        console.warn("No data for index:", i);
                         continue; // Skip if no data for this index
                     }else if(data[i].imageUrl == null){
+                        console.warn("No image URL for item at index:", i);
                         continue; // Skip if no image URL
                     }
                     const imgSrcs = [];
                     for (let j = 0; j < 4; j++) {
+                        if(i+j >= data.length){
+                            break;
+                        }
                         if(data[i+j].imageUrl.split('/')[3] != data[i].imageUrl.split('/')[3]){
                             break;
                         }
