@@ -20,6 +20,7 @@ function update_hats() {
     fetch("/images/" + selectedState)
         .then(response => response.json())
         .then(data => {
+            console.log("Fetched images for state:", selectedState, data);
                 var total_photots =1;
                 for (var i = 0; i < data.length; i = i + total_photots) {
                     total_photots = 1; 
