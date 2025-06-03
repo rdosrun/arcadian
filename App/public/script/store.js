@@ -12,7 +12,12 @@ function addToCart(button) {
     const itemID = item[3];
     let name = fetch("/item/"+itemID).then(response => response.json()).then(
         data => {
-            cart.push({ name: data.results.item_display_name, ID: itemID});
+            if(data.results.item_display_name == undefined){
+                cart.push({ name: "N/A", ID: itemID});
+            }else{
+                cart.push({ name: data.results.item_display_name, ID: itemID});
+            }
+            
             updateCart();
         }
     );
