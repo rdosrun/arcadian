@@ -13,7 +13,7 @@ function addToCart(button) {
     let name = fetch("/item/"+itemID).then(response => response.json()).then(
         data => {
             if(data.results.item_display_name == undefined){
-                cart.push({ name: "N/A", ID: itemID});
+                cart.push({ name: "", ID: itemID});
             }else{
                 cart.push({ name: data.results.item_display_name, ID: itemID});
             }
