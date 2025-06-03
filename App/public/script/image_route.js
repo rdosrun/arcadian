@@ -22,7 +22,7 @@ function update_hats() {
         .then(data => {
             console.log("Fetched images for state:", selectedState, data);
                 var total_photots =1;
-                for (var i = 0; i < data.length; i = i + total_photots) {
+                for (var i = 0; i <= data.length; i = i + total_photots) {
                     total_photots = 1; 
                     if(data[i] == null ){
                         continue; // Skip if no data for this index
