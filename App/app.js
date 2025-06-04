@@ -217,8 +217,10 @@ app.post('/submit-order', async (req, res) => {
 
         if (response.ok) {
             res.json({ success: true, message: 'Order placed successfully', data });
+            console.log('Order placed successfully:', response);
         } else {
             res.status(response.status).json({ success: false, message: 'Failed to place order', data });
+            console.log('Failed to place order:', response);
         }
     } catch (error) {
         console.error('Error placing order:', error);
