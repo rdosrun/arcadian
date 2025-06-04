@@ -200,7 +200,7 @@ app.post('/submit-order', async (req, res) => {
             location: null // grab location from netsuite for each customer
         }))
     };
-    console.log(payload);
+    console.log("this is a an order", payload);
 
     try {
         const newToken = await get_token();
