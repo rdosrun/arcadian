@@ -201,17 +201,6 @@ app.post('/submit-order', async (req, res) => {
     };
     console.log("this is a an order", payload);
 
-    // Write payload to file with timestamp
-    try {
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const payloadPath = path.join(__dirname, 'order_logs', `payload_${timestamp}.json`);
-        // Ensure order_logs directory exists
-        fs.mkdirSync(path.join(__dirname, 'order_logs'), { recursive: true });
-        fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2), 'utf8');
-    } catch (err) {
-        console.error('Error writing payload to file:', err);
-    }
-
     try {
         const newToken = await get_token();
         const response = await fetch(`https://11374585.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=905&deploy=1`, {
@@ -229,6 +218,7 @@ app.post('/submit-order', async (req, res) => {
         try {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
+            fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2), 'utf8');
             fs.writeFileSync(responsePath, JSON.stringify(data, null, 2), 'utf8');
         } catch (err) {
             console.error('Error writing response to file:', err);
@@ -242,6 +232,14 @@ app.post('/submit-order', async (req, res) => {
             console.log('Failed to place order:', response);
         }
     } catch (error) {
+        try {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
+            fs.writeFileSync(payloadPath, JSON.stringify(payload, null, 2), 'utf8');
+            fs.writeFileSync(responsePath, JSON.stringify(data, null, 2), 'utf8');
+        } catch (err) {
+            console.error('Error writing response to file:', err);
+        }
         console.error('Error placing order:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
