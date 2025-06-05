@@ -218,8 +218,7 @@ app.post('/submit-order', async (req, res) => {
         try {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
-            fs.writeFileSync(responsePath, JSON.stringify(payload, null, 2), 'utf8');
-            fs.writeFileSync(responsePath, JSON.stringify(data, null, 2), 'utf8');
+            fs.writeFileSync(responsePath, JSON.stringify([payload,data], null, 2), 'utf8');
         } catch (err) {
             console.error('Error writing response to file:', err);
         }
@@ -235,8 +234,7 @@ app.post('/submit-order', async (req, res) => {
         try {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
-            fs.writeFileSync(responsePath, JSON.stringify(payload, null, 2), 'utf8');
-            fs.writeFileSync(responsePath, JSON.stringify(data, null, 2), 'utf8');
+            fs.writeFileSync(responsePath, JSON.stringify([payload,data], null, 2), 'utf8');
         } catch (err) {
             console.error('Error writing response to file:', err);
         }
