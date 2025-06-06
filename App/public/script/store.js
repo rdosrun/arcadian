@@ -10,6 +10,10 @@ function addToCart(button) {
     console.log(button);
     const item = button.split('/');
     const itemID = item[3];
+    if(itemID[itemID.length - 1] == "_"){
+        itemID = itemID.slice(0, -1); // Remove trailing underscore if present
+        itemID = itemID + ".";
+    }
     let name = fetch("/item/"+itemID).then(response => response.json()).then(
         data => {
             if(data.results.item_display_name == undefined){
