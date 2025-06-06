@@ -9,7 +9,7 @@ function addToCart(button) {
     // Get the item details from the parent element
     console.log(button);
     const item = button.split('/');
-    const itemID = item[3];
+    var itemID = item[3];
     if(itemID[itemID.length - 1] == "_"){
         itemID = itemID.slice(0, -1); // Remove trailing underscore if present
         itemID = itemID + ".";
