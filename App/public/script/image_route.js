@@ -56,7 +56,12 @@ function update_hats() {
                     // Add click event to enlarge item and show details
                     newItem.onclick = () => {
                         console.log("Clicked item with ID:", imgSrcs[0].split('/')[3]);
-                        enlargeItem(newItem, imgSrcs[0], imgSrcs[0].split('/')[3]);
+                        var tmp = imgSrcs[0].split('/')[3];
+                        if(tmp[tmp.length - 1] == "_"){
+                            tmp = tmp.slice(0, -1); // Remove trailing underscore if present
+                            tmp = tmp + ".";
+                        }
+                        enlargeItem(newItem, imgSrcs[0], tmp);
                     };
 
                     // Create a container for the slideshow
