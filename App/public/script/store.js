@@ -104,7 +104,12 @@ function toggleCartDisplay() {
             const li = document.createElement('li');
             const img = document.createElement('img');
             console.log(item);
-            img.src = `/images/${item.name.substring(0,2)}/${item.ID}/1.jpg`; // Assuming images are stored with product ID as filename
+            var tmp = item.ID;
+            if(tmp[tmp.length - 1] == "."){
+                tmp = tmp.slice(0, -1); // Remove trailing dot if present
+                tmp = tmp+ "_";
+            }
+            img.src = `/images/${tmp}/1.jpg`; // Assuming images are stored with product ID as filename
             img.alt = item.name;
             img.style.width = '50px';
             img.style.height = '50px';
