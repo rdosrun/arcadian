@@ -5,6 +5,7 @@ async function fetchCreditMemos() {
     try {
         const res = await fetch('/api/credit-memos');
         const json = await res.json();
+        console.log('Fetched credit memos:', json);
         if (json.success && Array.isArray(json.data.items)) {
             return json.data.items.map(item => ({
                 memoNumber: item.customer_credit_memo_number || '',
