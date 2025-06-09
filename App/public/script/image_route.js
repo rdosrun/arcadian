@@ -22,6 +22,7 @@ function update_hats() {
         .then(data => {
             console.log("Fetched images for state:", selectedState, data);
                 var total_photots =1;
+                var local_inventory = localStorage.getItem('inventory');
                 for (var i = 0; i < data.length; i = i + total_photots) {
                     total_photots = 1; 
                     if(data[i] == null ){
@@ -41,6 +42,10 @@ function update_hats() {
                         }
                         imgSrcs.push(data[i+j].imageUrl);
                         total_photots = j+1;
+                    }
+                    if(local_inventory[data[i].imageUrl.split('/')[3]].isinactive != "F"){
+                        console.warn("Item is inactive, skipping:", data[i].imageUrl);
+                        continue; // Skip if item is inactive
                     }
                     /*const imgSrcs = [
                         data[i]?.imageUrl,
@@ -264,7 +269,8 @@ function update_inventory(){
                 console.log("Inventory data:", data.items);
                 allInventory = allInventory.concat(data.items.map(item => ({
                     upc: item.item_upc_code,
-                    quantity: item.item_total_quanity_on_hand
+                    quantity: item.item_total_quanity_on_hand,
+                    isinactive: item.isinactive,
                 })));
                 console.log("Current inventory:", allInventory);
                 if (data.hasMore) {
