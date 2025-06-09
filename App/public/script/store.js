@@ -18,6 +18,7 @@ function addToCart(button) {
 
         data => {
             var inventory = JSON.parse(localStorage.getItem('inventory'));
+            console.log(data);
             for( let i =0;i<inventory.length;i++){
                 if(inventory[i].upc == itemID){
                     if(inventory[i].quantity <= 0){
