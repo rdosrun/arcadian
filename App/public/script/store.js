@@ -294,8 +294,8 @@ async function place_order(customer) {
         });
 
         const data = await response.json();
-
-        if (response.data.success) {
+        console.log('Response from server:', data);
+        if (data.success) {
             console.log('Order placed successfully:', data);
             alert('Order placed successfully!');
         } else {
