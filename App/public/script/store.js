@@ -17,7 +17,7 @@ function addToCart(button) {
     let name = fetch("/item/"+itemID).then(response => response.json()).then(
         data => {
             if(data.results.item_display_name == undefined){
-                cart.push({ name: "", ID: itemID});
+                cart.push({ name: "", ID: itemID,State:document.getElementById("checkbox-container").value });
             }else{
                 cart.push({ name: data.results.item_display_name, ID: itemID});
             }
@@ -109,7 +109,7 @@ function toggleCartDisplay() {
                 tmp = tmp.slice(0, -1); // Remove trailing dot if present
                 tmp = tmp+ "_";
             }
-            img.src = `/images/${tmp}/1.jpg`; // Assuming images are stored with product ID as filename
+            img.src = `/images/${item.State}/${tmp}/1.jpg`; // Assuming images are stored with product ID as filename
             img.alt = item.name;
             img.style.width = '50px';
             img.style.height = '50px';
