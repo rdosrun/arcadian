@@ -43,7 +43,7 @@ function update_hats() {
                         imgSrcs.push(data[i+j].imageUrl);
                         total_photots = j+1;
                     }
-                    if(local_inventory[data[i].imageUrl.split('/')[3]].isinactive == "T"){
+                    if(local_inventory[data[i].imageUrl.split('/')[3]].isinactive == true){
                         console.warn("Item is inactive, skipping:", data[i].imageUrl);
                         continue; // Skip if item is inactive
                     }
@@ -269,8 +269,7 @@ function update_inventory(){
                 console.log("Inventory data:", data.items);
                 allInventory = allInventory.concat(data.items.map(item => ({
                     upc: item.item_upc_code,
-                    quantity: item.item_total_quanity_on_hand,
-                    isinactive: item.isinactive,
+                    quantity: item.item_total_quanity_on_hand
                 })));
                 console.log("Current inventory:", allInventory);
                 if (data.hasMore) {
