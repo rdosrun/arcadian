@@ -7,7 +7,7 @@ async function fetchCreditMemos() {
         const json = await res.json();
         console.log('Fetched credit memos:', json);
         if (json.success && Array.isArray(json.data.items)) {
-            return json.data.items.map(item => ({
+            const memos = json.data.items.map(item => ({
                 memoNumber: item.customer_credit_memo_number || '',
                 customer: item.customer_credit_memo_customer_name || '',
                 date: item.customer_credit_memo_date || '',
@@ -15,15 +15,28 @@ async function fetchCreditMemos() {
                 status: item.customer_credit_memo_status || '',
                 details: item.customer_credit_memo_memo || ''
             }));
+            renderCreditMemos(memos);
+            return; // No need to return memos
         }
-        return [];
+        renderCreditMemos([]); // Render empty if no data
     } catch (e) {
         console.error('Failed to fetch credit memos:', e);
-        return [];
+        renderCreditMemos([]);
     }
 }
 
 function renderCreditMemos(memos) {
+    // Check if the table element already exists, if not, create it with id 'credit_table'
+    let table = document.getElementById('credit_table');
+    if (!table) {
+        table = document.createElement('table');
+        table.id = 'credit_table';
+        // Optionally, add classes or attributes as needed
+        // Insert the table into the DOM (for example, inside a container)
+        const container = document.getElementById('creditMemosTableContainer') || document.body;
+        container.appendChild(table);
+        // Optionally, add thead/tbody structure if needed
+    }
     const tbody = document.querySelector('#creditMemosTable tbody');
     tbody.innerHTML = '';
     memos.forEach(memo => {
@@ -50,16 +63,49 @@ function filterMemos(memos, query) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    let allMemos = await fetchCreditMemos();
-    renderCreditMemos(allMemos);
+    await fetchCreditMemos();
 
     document.getElementById('searchBtn').onclick = () => {
         const query = document.getElementById('searchInput').value;
-        renderCreditMemos(filterMemos(allMemos, query));
+        // Re-fetch and filter on search
+        fetch('/api/credit-memos')
+            .then(res => res.json())
+            .then(json => {
+                if (json.success && Array.isArray(json.data.items)) {
+                    const memos = json.data.items.map(item => ({
+                        memoNumber: item.customer_credit_memo_number || '',
+                        customer: item.customer_credit_memo_customer_name || '',
+                        date: item.customer_credit_memo_date || '',
+                        amount: Number(item.customer_credit_memo_total) || 0,
+                        status: item.customer_credit_memo_status || '',
+                        details: item.customer_credit_memo_memo || ''
+                    }));
+                    renderCreditMemos(filterMemos(memos, query));
+                } else {
+                    renderCreditMemos([]);
+                }
+            });
     };
     document.getElementById('searchInput').addEventListener('keyup', e => {
         if (e.key === 'Enter') {
-            renderCreditMemos(filterMemos(allMemos, e.target.value));
+            const query = e.target.value;
+            fetch('/api/credit-memos')
+                .then(res => res.json())
+                .then(json => {
+                    if (json.success && Array.isArray(json.data.items)) {
+                        const memos = json.data.items.map(item => ({
+                            memoNumber: item.customer_credit_memo_number || '',
+                            customer: item.customer_credit_memo_customer_name || '',
+                            date: item.customer_credit_memo_date || '',
+                            amount: Number(item.customer_credit_memo_total) || 0,
+                            status: item.customer_credit_memo_status || '',
+                            details: item.customer_credit_memo_memo || ''
+                        }));
+                        renderCreditMemos(filterMemos(memos, query));
+                    } else {
+                        renderCreditMemos([]);
+                    }
+                });
         }
     });
 
