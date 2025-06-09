@@ -19,7 +19,7 @@ function addToCart(button) {
             if(data.results.item_display_name == undefined){
                 cart.push({ name: "", ID: itemID,State:"" });
             }else{
-                cart.push({ name: data.results.item_display_name, ID: itemID, State: document.getElementById("checkbox-container").value });
+                cart.push({ name: data.results.item_display_name, ID: itemID, State: document.querySelector('input[name="state"]:checked').value });
             }
             
             updateCart();
