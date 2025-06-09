@@ -16,12 +16,60 @@ async function fetchCreditMemos() {
                 details: item.customer_credit_memo_memo || ''
             }));
             renderCreditMemos(memos);
-            return; // No need to return memos
+            return;
         }
-        renderCreditMemos([]); // Render empty if no data
+        renderCreditMemos([]);
     } catch (e) {
         console.error('Failed to fetch credit memos:', e);
         renderCreditMemos([]);
+    }
+}
+
+async function fetchSalesOrders() {
+    try {
+        const res = await fetch('/api/sales-orders');
+        const json = await res.json();
+        console.log('Fetched sales orders:', json);
+        if (json.success && Array.isArray(json.data.items)) {
+            const orders = json.data.items.map(item => ({
+                orderNumber: item.sales_order_number || '',
+                customer: item.sales_order_customer_company_name || '',
+                date: item.sales_order_date || '',
+                amount: Number(item.sales_order_total) || 0,
+                status: item.sales_order_status_order_name || '',
+                details: item.sales_order_memo || ''
+            }));
+            renderSalesOrders(orders);
+            return;
+        }
+        renderSalesOrders([]);
+    } catch (e) {
+        console.error('Failed to fetch sales orders:', e);
+        renderSalesOrders([]);
+    }
+}
+
+async function fetchInvoices() {
+    try {
+        const res = await fetch('/api/invoices');
+        const json = await res.json();
+        console.log('Fetched invoices:', json);
+        if (json.success && Array.isArray(json.data.items)) {
+            const invoices = json.data.items.map(item => ({
+                invoiceNumber: item.customer_invoice_number || '',
+                customer: item.customer_invoice_customer_name || '',
+                date: item.customer_invoice_date || '',
+                amount: Number(item.customer_invoice_total) || 0,
+                status: item.customer_invoice_status_name || '',
+                details: item.customer_invoice_memo || ''
+            }));
+            renderInvoices(invoices);
+            return;
+        }
+        renderInvoices([]);
+    } catch (e) {
+        console.error('Failed to fetch invoices:', e);
+        renderInvoices([]);
     }
 }
 
@@ -53,6 +101,40 @@ function renderCreditMemos(memos) {
     });
 }
 
+function renderSalesOrders(orders) {
+    const tbody = document.querySelector('#salesOrdersTable tbody');
+    tbody.innerHTML = '';
+    orders.forEach(order => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${order.orderNumber}</td>
+            <td>${order.customer}</td>
+            <td>${order.date}</td>
+            <td>$${order.amount.toFixed(2)}</td>
+            <td>${order.status}</td>
+            <td><button class="details-btn" data-order='${JSON.stringify(order)}'>View</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function renderInvoices(invoices) {
+    const tbody = document.querySelector('#invoicesTable tbody');
+    tbody.innerHTML = '';
+    invoices.forEach(invoice => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${invoice.invoiceNumber}</td>
+            <td>${invoice.customer}</td>
+            <td>${invoice.date}</td>
+            <td>$${invoice.amount.toFixed(2)}</td>
+            <td>${invoice.status}</td>
+            <td><button class="details-btn" data-invoice='${JSON.stringify(invoice)}'>View</button></td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
 function filterMemos(memos, query) {
     query = query.trim().toLowerCase();
     return memos.filter(memo =>
@@ -62,33 +144,31 @@ function filterMemos(memos, query) {
     );
 }
 
+function filterSalesOrders(orders, query) {
+    query = query.trim().toLowerCase();
+    return orders.filter(order =>
+        (order.orderNumber || '').toLowerCase().includes(query) ||
+        (order.customer || '').toLowerCase().includes(query) ||
+        (order.date || '').includes(query)
+    );
+}
+
+function filterInvoices(invoices, query) {
+    query = query.trim().toLowerCase();
+    return invoices.filter(invoice =>
+        (invoice.invoiceNumber || '').toLowerCase().includes(query) ||
+        (invoice.customer || '').toLowerCase().includes(query) ||
+        (invoice.date || '').includes(query)
+    );
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     await fetchCreditMemos();
 
     document.getElementById('searchBtn').onclick = () => {
         const query = document.getElementById('searchInput').value;
-        // Re-fetch and filter on search
-        fetch('/api/credit-memos')
-            .then(res => res.json())
-            .then(json => {
-                if (json.success && Array.isArray(json.data.items)) {
-                    const memos = json.data.items.map(item => ({
-                        memoNumber: item.customer_credit_memo_number || '',
-                        customer: item.customer_credit_memo_customer_name || '',
-                        date: item.customer_credit_memo_date || '',
-                        amount: Number(item.customer_credit_memo_total) || 0,
-                        status: item.customer_credit_memo_status || '',
-                        details: item.customer_credit_memo_memo || ''
-                    }));
-                    renderCreditMemos(filterMemos(memos, query));
-                } else {
-                    renderCreditMemos([]);
-                }
-            });
-    };
-    document.getElementById('searchInput').addEventListener('keyup', e => {
-        if (e.key === 'Enter') {
-            const query = e.target.value;
+        // Determine which tab is active and search accordingly
+        if (document.getElementById('creditMemosTable').style.display !== 'none') {
             fetch('/api/credit-memos')
                 .then(res => res.json())
                 .then(json => {
@@ -106,6 +186,48 @@ document.addEventListener('DOMContentLoaded', async () => {
                         renderCreditMemos([]);
                     }
                 });
+        } else if (document.getElementById('salesOrdersTable').style.display !== 'none') {
+            fetch('/api/sales-orders')
+                .then(res => res.json())
+                .then(json => {
+                    if (json.success && Array.isArray(json.data.items)) {
+                        const orders = json.data.items.map(item => ({
+                            orderNumber: item.sales_order_number || '',
+                            customer: item.sales_order_customer_company_name || '',
+                            date: item.sales_order_date || '',
+                            amount: Number(item.sales_order_total) || 0,
+                            status: item.sales_order_status_order_name || '',
+                            details: item.sales_order_memo || ''
+                        }));
+                        renderSalesOrders(filterSalesOrders(orders, query));
+                    } else {
+                        renderSalesOrders([]);
+                    }
+                });
+        } else if (document.getElementById('invoicesTable').style.display !== 'none') {
+            fetch('/api/invoices')
+                .then(res => res.json())
+                .then (json => {
+                    if (json.success && Array.isArray(json.data.items)) {
+                        const invoices = json.data.items.map(item => ({
+                            invoiceNumber: item.customer_invoice_number || '',
+                            customer: item.customer_invoice_customer_name || '',
+                            date: item.customer_invoice_date || '',
+                            amount: Number(item.customer_invoice_total) || 0,
+                            status: item.customer_invoice_status_name || '',
+                            details: item.customer_invoice_memo || ''
+                        }));
+                        renderInvoices(filterInvoices(invoices, query));
+                    } else {
+                        renderInvoices([]);
+                    }
+                });
+        }
+    };
+
+    document.getElementById('searchInput').addEventListener('keyup', e => {
+        if (e.key === 'Enter') {
+            document.getElementById('searchBtn').onclick();
         }
     });
 
@@ -113,6 +235,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target.classList.contains('details-btn')) {
             const memo = JSON.parse(e.target.getAttribute('data-memo'));
             showMemoDetails(memo);
+        }
+    };
+    document.querySelector('#salesOrdersTable tbody').onclick = function(e) {
+        if (e.target.classList.contains('details-btn')) {
+            const order = JSON.parse(e.target.getAttribute('data-order'));
+            showSalesOrderDetails(order);
+        }
+    };
+    document.querySelector('#invoicesTable tbody').onclick = function(e) {
+        if (e.target.classList.contains('details-btn')) {
+            const invoice = JSON.parse(e.target.getAttribute('data-invoice'));
+            showInvoiceDetails(invoice);
         }
     };
 
@@ -137,6 +271,34 @@ function showMemoDetails(memo) {
         <p><strong>Amount:</strong> $${memo.amount.toFixed(2)}</p>
         <p><strong>Status:</strong> ${memo.status}</p>
         <p><strong>Details:</strong> ${memo.details}</p>
+    `;
+    document.getElementById('memoDetailsModal').style.display = 'block';
+}
+
+function showSalesOrderDetails(order) {
+    const detailsDiv = document.getElementById('memoDetails');
+    detailsDiv.innerHTML = `
+        <h2>Sales Order Details</h2>
+        <p><strong>Order #:</strong> ${order.orderNumber}</p>
+        <p><strong>Customer:</strong> ${order.customer}</p>
+        <p><strong>Date:</strong> ${order.date}</p>
+        <p><strong>Amount:</strong> $${order.amount.toFixed(2)}</p>
+        <p><strong>Status:</strong> ${order.status}</p>
+        <p><strong>Details:</strong> ${order.details}</p>
+    `;
+    document.getElementById('memoDetailsModal').style.display = 'block';
+}
+
+function showInvoiceDetails(invoice) {
+    const detailsDiv = document.getElementById('memoDetails');
+    detailsDiv.innerHTML = `
+        <h2>Invoice Details</h2>
+        <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
+        <p><strong>Customer:</strong> ${invoice.customer}</p>
+        <p><strong>Date:</strong> ${invoice.date}</p>
+        <p><strong>Amount:</strong> $${invoice.amount.toFixed(2)}</p>
+        <p><strong>Status:</strong> ${invoice.status}</p>
+        <p><strong>Details:</strong> ${invoice.details}</p>
     `;
     document.getElementById('memoDetailsModal').style.display = 'block';
 }
@@ -167,8 +329,8 @@ function showTab(tab) {
     if (tab === 'credit-memos') {
         fetchCreditMemos();
     } else if (tab === 'sales-orders') {
-        if (typeof fetchSalesOrders === 'function') fetchSalesOrders();
+        fetchSalesOrders();
     } else if (tab === 'invoices') {
-        if (typeof fetchInvoices === 'function') fetchInvoices();
+        fetchInvoices();
     }
 }
