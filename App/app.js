@@ -86,25 +86,77 @@ app.get('/item/:upc', async function (req, res) {
     }
 });
 
-// Mock function to simulate fetching item name by UPC
-async function getItemNameByUPC(upc) {
-    var j =0;
-    while(true){
-        var temp = await netsuite.Inventory(j*1000); // Assume Inventory() returns an array of items
-        inventory = JSON.parse(temp).items;
-        for (var i = 0; i < inventory.length; i++) {
-            if (inventory[i].item_upc_code == upc) {
-                return inventory[i];
+// Inventory cache file path
+const inventoryCachePath = path.join(__dirname, 'inventory_cache.json');
+
+// Function to update inventory cache every 5 minutes
+async function updateInventoryCache() {
+    try {
+        let allItems = [];
+        let offset = 0;
+        let hasMore = true;
+        while (hasMore) {
+            const temp = await netsuite.Inventory(offset);
+            const parsed = JSON.parse(temp);
+            if (Array.isArray(parsed.items)) {
+                allItems = allItems.concat(parsed.items);
+                if (parsed.items.length < 1000) {
+                    hasMore = false;
+                } else {
+                    offset += parsed.items.length;
+                }
+            } else {
+                hasMore = false;
             }
         }
-        if (inventory.length < 1000){
-            break;
+        fs.writeFileSync(inventoryCachePath, JSON.stringify({ items: allItems }), 'utf8');
+        console.log(`[Inventory Cache] Updated at ${new Date().toISOString()}`);
+    } catch (err) {
+        console.error('[Inventory Cache] Error updating inventory:', err);
+    }
+}
+
+// Start inventory cache update interval
+setInterval(updateInventoryCache, 5 * 60 * 1000); // every 5 minutes
+// Initial cache update on server start
+updateInventoryCache();
+
+// Mock function to simulate fetching item name by UPC
+async function getItemNameByUPC(upc) {
+    // Try to read from cache file
+    let inventory = [];
+    try {
+        if (fs.existsSync(inventoryCachePath)) {
+            const cache = JSON.parse(fs.readFileSync(inventoryCachePath, 'utf8'));
+            inventory = cache.items || [];
+        } else {
+            // If cache doesn't exist, fallback to direct fetch
+            let j = 0;
+            while (true) {
+                var temp = await netsuite.Inventory(j * 1000);
+                inventory = inventory.concat(JSON.parse(temp).items);
+                if (JSON.parse(temp).items.length < 1000) break;
+                j++;
+            }
         }
+    } catch (err) {
+        console.error('[Inventory Cache] Error reading cache:', err);
+        // fallback to direct fetch
+        let j = 0;
+        while (true) {
+            var temp = await netsuite.Inventory(j * 1000);
+            inventory = inventory.concat(JSON.parse(temp).items);
+            if (JSON.parse(temp).items.length < 1000) break;
             j++;
+        }
     }
 
+    for (let i = 0; i < inventory.length; i++) {
+        if (inventory[i].item_upc_code == upc) {
+            return inventory[i];
+        }
+    }
     return null;
-    //return inventory.find(item => item.item_upc_code === upc) || null;
 }
 
 // Serve images or list files in a directory
