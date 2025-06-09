@@ -47,12 +47,7 @@ function update_hats() {
                         console.warn("Item is inactive, skipping:", data[i].imageUrl);
                         continue; // Skip if item is inactive
                     }
-                    /*const imgSrcs = [
-                        data[i]?.imageUrl,
-                        data[i + 1]?.imageUrl,
-                        data[i + 2]?.imageUrl,
-                        data[i + 3]?.imageUrl
-                    ]*/
+
 
                     const newItem = document.createElement('button');
                     newItem.className = 'item';
