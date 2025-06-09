@@ -17,9 +17,9 @@ function addToCart(button) {
     let name = fetch("/item/"+itemID).then(response => response.json()).then(
         data => {
             if(data.results.item_display_name == undefined){
-                cart.push({ name: "", ID: itemID,State:document.getElementById("checkbox-container").value });
+                cart.push({ name: "", ID: itemID,State:"" });
             }else{
-                cart.push({ name: data.results.item_display_name, ID: itemID});
+                cart.push({ name: data.results.item_display_name, ID: itemID, State: document.getElementById("checkbox-container").value });
             }
             
             updateCart();
