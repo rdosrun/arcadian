@@ -14,28 +14,32 @@ function addToCart(button) {
         itemID = itemID.slice(0, -1); // Remove trailing underscore if present
         itemID = itemID + ".";
     }
-    let name = fetch("/item/"+itemID).then(response => response.json()).then(
-
-        data => {
-            var inventory = JSON.parse(localStorage.getItem('inventory'));
-            console.log(data);
-            for( let i =0;i<inventory.length;i++){
-                if(inventory[i].upc == itemID){
-                    if(inventory[i].quantity <= 0){
-                        alert("Item is out of stock. Please select another item.");
-                        return;
+    try{
+        let name = fetch("/item/"+itemID).then(response => response.json()).then(
+            data => {
+                var inventory = JSON.parse(localStorage.getItem('inventory'));
+                console.log(data);
+                for( let i =0;i<inventory.length;i++){
+                    if(inventory[i].upc == itemID){
+                        if(inventory[i].quantity <= 0){
+                            alert("Item is out of stock. Please select another item.");
+                            return;
+                        }
                     }
                 }
+                if(data.results.item_display_name == undefined){
+                    cart.push({ name: "", ID: itemID,State:"" });
+                }else{
+                    cart.push({ name: data.results.item_display_name, ID: itemID, State: document.querySelector('input[name="state"]:checked').value });
+                }
+                
+                updateCart();
             }
-            if(data.results.item_display_name == undefined){
-                cart.push({ name: "", ID: itemID,State:"" });
-            }else{
-                cart.push({ name: data.results.item_display_name, ID: itemID, State: document.querySelector('input[name="state"]:checked').value });
-            }
-            
-            updateCart();
-        }
-    );
+        );
+    } catch (error) {
+        alert("Item is out of stock. Please select another item.");
+        return;
+    }
     // Add the item to the cart
     
 

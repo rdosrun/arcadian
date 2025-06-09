@@ -140,3 +140,35 @@ function showMemoDetails(memo) {
     `;
     document.getElementById('memoDetailsModal').style.display = 'block';
 }
+
+function showTab(tab) {
+    // Update tab title
+    document.getElementById('tab-title').textContent =
+        tab === 'credit-memos' ? 'Credit Memos' :
+        tab === 'sales-orders' ? 'Sales Orders' : 'Invoices';
+
+    // Toggle table visibility
+    document.getElementById('creditMemosTable').style.display = tab === 'credit-memos' ? '' : 'none';
+    document.getElementById('salesOrdersTable').style.display = tab === 'sales-orders' ? '' : 'none';
+    document.getElementById('invoicesTable').style.display = tab === 'invoices' ? '' : 'none';
+
+    // Update tab button styles
+    document.getElementById('tab-credit-memos').style.fontWeight = tab === 'credit-memos' ? 'bold' : 'normal';
+    document.getElementById('tab-sales-orders').style.fontWeight = tab === 'sales-orders' ? 'bold' : 'normal';
+    document.getElementById('tab-invoices').style.fontWeight = tab === 'invoices' ? 'bold' : 'normal';
+
+    // Change search placeholder
+    document.getElementById('searchInput').placeholder =
+        tab === 'credit-memos' ? "Search by Customer, Memo #, or Date..." :
+        tab === 'sales-orders' ? "Search by Customer, Order #, or Date..." :
+        "Search by Customer, Invoice #, or Date...";
+
+    // Optionally, trigger fetch for the selected tab
+    if (tab === 'credit-memos') {
+        fetchCreditMemos();
+    } else if (tab === 'sales-orders') {
+        if (typeof fetchSalesOrders === 'function') fetchSalesOrders();
+    } else if (tab === 'invoices') {
+        if (typeof fetchInvoices === 'function') fetchInvoices();
+    }
+}

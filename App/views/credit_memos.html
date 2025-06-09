@@ -1,31 +1,70 @@
-    <div class="container">
-        <h1>Credit Memos</h1>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search by Customer, Memo #, or Date...">
-            <button id="searchBtn" onclick="fetchCreditMemos()">Search</button>
-        </div>
-        <div id="creditMemosTableContainer">
-            <table id="creditMemosTable">
-                <thead>
-                    <tr>
-                        <th>Memo #</th>
-                        <th>Customer</th>
-                        <th>Date</th>
-                        <th>Amount</th>
-                        <th>Status</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Credit memos will be populated here by JS -->
-                </tbody>
-            </table>
-        </div>
-        <div id="memoDetailsModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div id="memoDetails"></div>
-            </div>
+<div class="container">
+    <!-- Tabs for switching between types -->
+    <div class="tabs" style="margin-bottom: 20px;">
+        <button class="tab-btn" id="tab-credit-memos" onclick="showTab('credit-memos')" style="font-weight:bold;">Credit Memos</button>
+        <button class="tab-btn" id="tab-sales-orders" onclick="showTab('sales-orders')">Sales Orders</button>
+        <button class="tab-btn" id="tab-invoices" onclick="showTab('invoices')">Invoices</button>
+    </div>
+    <h1 id="tab-title">Credit Memos</h1>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by Customer, Memo #, or Date...">
+        <button id="searchBtn" onclick="fetchCreditMemos()">Search</button>
+    </div>
+    <div id="creditMemosTableContainer">
+        <table id="creditMemosTable">
+            <thead>
+                <tr>
+                    <th>Memo #</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Credit memos will be populated here by JS -->
+            </tbody>
+        </table>
+        <!-- Sales Orders Table (hidden by default) -->
+        <table id="salesOrdersTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Sales orders will be populated here by JS -->
+            </tbody>
+        </table>
+        <!-- Invoices Table (hidden by default) -->
+        <table id="invoicesTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Invoices will be populated here by JS -->
+            </tbody>
+        </table>
+    </div>
+    <div id="memoDetailsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="memoDetails"></div>
         </div>
     </div>
+</div>
+
 
