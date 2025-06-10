@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
   }
   res.json({
     success: true,
-    data: { items: salesOrdersCache }
+    data: { items: JSON.parse(salesOrdersCache).items }
   });
 });
 

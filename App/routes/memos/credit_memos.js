@@ -28,7 +28,7 @@ router.get('/', async (req, res) => {
   }
   res.json({
     success: true,
-    data: { items: creditMemosCache }
+    data: { items:JSON.parse(creditMemosCache).items   }
   });
 });
 
