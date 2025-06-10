@@ -20,7 +20,7 @@ function loadPage(route) {
                 setTimeout(() => {
                     console.log("Calling update_hats after loading image_route.js");
                     if (typeof update_hats === 'function') {
-                        update_hats();
+                        update_hats(true);
                     }
                 }, 200);
             }

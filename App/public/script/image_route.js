@@ -1,7 +1,7 @@
 var total_hats = 50;
 var curr_hats = 0;
 var state = "";
-function update_hats() {
+function update_hats(authorized = false) {
     update_inventory(); // Ensure inventory is updated before hats
     console.log("Updating hats...");
     const selectedState = document.querySelector('input[name="state"]:checked').value;
@@ -57,15 +57,17 @@ function update_hats() {
                     newItem.id = i + 1;
 
                     // Add click event to enlarge item and show details
-                    newItem.onclick = () => {
-                        console.log("Clicked item with ID:", imgSrcs[0].split('/')[3]);
-                        var tmp = imgSrcs[0].split('/')[3];
-                        if(tmp[tmp.length - 1] == "_"){
-                            tmp = tmp.slice(0, -1); // Remove trailing underscore if present
-                            tmp = tmp + ".";
-                        }
-                        enlargeItem(newItem, imgSrcs[0], tmp);
-                    };
+                    if(authorized) {
+                        newItem.onclick = () => {
+                            console.log("Clicked item with ID:", imgSrcs[0].split('/')[3]);
+                            var tmp = imgSrcs[0].split('/')[3];
+                            if(tmp[tmp.length - 1] == "_"){
+                                tmp = tmp.slice(0, -1); // Remove trailing underscore if present
+                                tmp = tmp + ".";
+                            }
+                            enlargeItem(newItem, imgSrcs[0], tmp);
+                        };
+                    }
 
                     // Create a container for the slideshow
                     const slideshowContainer = document.createElement('div');
