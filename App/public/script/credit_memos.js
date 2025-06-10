@@ -1,5 +1,6 @@
 // credit_memos.js
 
+var curr_tab = 'credit-memos'; // Default tab
 // Fetch credit memos from backend API
 async function fetchCreditMemos() {
     try {
@@ -137,7 +138,7 @@ function renderInvoices(invoices) {
 
 function Search(){
     const query = document.getElementById('searchInput').value;
-    const tab = document.querySelector('.tab.selected').id;
+    const tab = curr_tab;
 
     if (tab === 'tab-credit-memos') {
         fetchCreditMemos().then(() => {
@@ -235,7 +236,7 @@ function showTab(tab) {
     document.getElementById('tab-title').textContent =
         tab === 'credit-memos' ? 'Credit Memos' :
         tab === 'sales-orders' ? 'Sales Orders' : 'Invoices';
-
+    curr_tab = tab;
     // Toggle table visibility
     document.getElementById('creditMemosTable').style.display = tab === 'credit-memos' ? '' : 'none';
     document.getElementById('salesOrdersTable').style.display = tab === 'sales-orders' ? '' : 'none';
