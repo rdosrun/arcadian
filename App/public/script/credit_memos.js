@@ -1,6 +1,11 @@
 // credit_memos.js
 
 var curr_tab = 'credit-memos'; // Default tab
+
+var memos = [];
+var orders = [];
+var invoices = [];
+
 // Fetch credit memos from backend API
 async function fetchCreditMemos() {
     try {
@@ -8,7 +13,7 @@ async function fetchCreditMemos() {
         const json = await res.json();
         console.log('Fetched credit memos:', json);
         if (json.success && Array.isArray(json.data.items)) {
-            const memos = json.data.items.map(item => ({
+            memos = json.data.items.map(item => ({
                 memoNumber: item.customer_credit_memo_number || '',
                 customer: item.customer_credit_memo_customer_name || '',
                 date: item.customer_credit_memo_date || '',
@@ -16,7 +21,7 @@ async function fetchCreditMemos() {
                 status: item.customer_credit_memo_status || '',
                 details: item.customer_credit_memo_memo || ''
             }));
-            renderCreditMemos(memos);
+            renderCreditMemos();
             return;
         }
         renderCreditMemos([]);
@@ -32,7 +37,7 @@ async function fetchSalesOrders() {
         const json = await res.json();
         console.log('Fetched sales orders:', json);
         if (json.success && Array.isArray(json.data.items)) {
-            const orders = json.data.items.map(item => ({
+            orders = json.data.items.map(item => ({
                 orderNumber: item.sales_order_number || '',
                 customer: item.sales_order_customer_company_name || '',
                 date: item.sales_order_date || '',
@@ -40,7 +45,7 @@ async function fetchSalesOrders() {
                 status: item.sales_order_status_order_name || '',
                 details: item.sales_order_memo || ''
             }));
-            renderSalesOrders(orders);
+            renderSalesOrders();
             return;
         }
         renderSalesOrders([]);
@@ -56,7 +61,7 @@ async function fetchInvoices() {
         const json = await res.json();
         console.log('Fetched invoices:', json);
         if (json.success && Array.isArray(json.data.items)) {
-            const invoices = json.data.items.map(item => ({
+            invoices = json.data.items.map(item => ({
                 invoiceNumber: item.customer_invoice_number || '',
                 customer: item.customer_invoice_customer_name || '',
                 date: item.customer_invoice_date || '',
@@ -64,7 +69,7 @@ async function fetchInvoices() {
                 status: item.customer_invoice_status_name || '',
                 details: item.customer_invoice_memo || ''
             }));
-            renderInvoices(invoices);
+            renderInvoices();
             return;
         }
         renderInvoices([]);
@@ -74,7 +79,7 @@ async function fetchInvoices() {
     }
 }
 
-function renderCreditMemos(memos) {
+function renderCreditMemos(memosToRender = memos) {
     // Check if the table element already exists, if not, create it with id 'credit_table'
     let table = document.getElementById('credit_table');
     if (!table) {
@@ -88,7 +93,7 @@ function renderCreditMemos(memos) {
     }
     const tbody = document.querySelector('#creditMemosTable tbody');
     tbody.innerHTML = '';
-    memos.forEach(memo => {
+    memosToRender.forEach(memo => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${memo.memoNumber}</td>
@@ -102,10 +107,10 @@ function renderCreditMemos(memos) {
     });
 }
 
-function renderSalesOrders(orders) {
+function renderSalesOrders(ordersToRender = orders) {
     const tbody = document.querySelector('#salesOrdersTable tbody');
     tbody.innerHTML = '';
-    orders.forEach(order => {
+    ordersToRender.forEach(order => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${order.orderNumber}</td>
@@ -119,10 +124,10 @@ function renderSalesOrders(orders) {
     });
 }
 
-function renderInvoices(invoices) {
+function renderInvoices(invoicesToRender = invoices) {
     const tbody = document.querySelector('#invoicesTable tbody');
     tbody.innerHTML = '';
-    invoices.forEach(invoice => {
+    invoicesToRender.forEach(invoice => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${invoice.invoiceNumber}</td>
@@ -142,19 +147,16 @@ function Search(){
 
     if (tab === 'credit-memos') {
         fetchCreditMemos().then(() => {
-            const memos = Array.from(document.querySelectorAll('#creditMemosTable tbody tr'));
             const filteredMemos = filterMemos(memos, query);
             renderCreditMemos(filteredMemos);
         });
     } else if (tab === 'sales-orders') {
         fetchSalesOrders().then(() => {
-            const orders = Array.from(document.querySelectorAll('#salesOrdersTable tbody tr'));
             const filteredOrders = filterSalesOrders(orders, query);
             renderSalesOrders(filteredOrders);
         });
     } else if (tab === 'invoices') {
         fetchInvoices().then(() => {
-            const invoices = Array.from(document.querySelectorAll('#invoicesTable tbody tr'));
             const filteredInvoices = filterInvoices(invoices, query);
             renderInvoices(filteredInvoices);
         });
