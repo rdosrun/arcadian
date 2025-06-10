@@ -160,10 +160,15 @@ function filterInvoices(invoices, query) {
         (invoice.customer || '').toLowerCase().includes(query) ||
         (invoice.date || '').includes(query)
     );
-}
+} 
 
 document.addEventListener('DOMContentLoaded', async () => {
     await fetchCreditMemos();
+
+    // --- Live search as user types ---
+    document.getElementById('searchInput').addEventListener('input', function() {
+        document.getElementById('searchBtn').onclick();
+    });
 
     document.getElementById('searchBtn').onclick = () => {
         const query = document.getElementById('searchInput').value;
@@ -314,10 +319,10 @@ function showTab(tab) {
     document.getElementById('salesOrdersTable').style.display = tab === 'sales-orders' ? '' : 'none';
     document.getElementById('invoicesTable').style.display = tab === 'invoices' ? '' : 'none';
 
-    // Update tab button styles
-    document.getElementById('tab-credit-memos').style.fontWeight = tab === 'credit-memos' ? 'bold' : 'normal';
-    document.getElementById('tab-sales-orders').style.fontWeight = tab === 'sales-orders' ? 'bold' : 'normal';
-    document.getElementById('tab-invoices').style.fontWeight = tab === 'invoices' ? 'bold' : 'normal';
+    // Update tab button styles (darker for selected, using .selected class)
+    document.getElementById('tab-credit-memos').classList.toggle('selected', tab === 'credit-memos');
+    document.getElementById('tab-sales-orders').classList.toggle('selected', tab === 'sales-orders');
+    document.getElementById('tab-invoices').classList.toggle('selected', tab === 'invoices');
 
     // Change search placeholder
     document.getElementById('searchInput').placeholder =

@@ -36,6 +36,9 @@ function loadPage(route) {
                     }
                 }, 200);
             }
+            if(route == "/views/credit_memos"){
+                showTab('credit-memos')
+            }
         });
     const navLinks = document.querySelector('.nav-links');
       if (navLinks && navLinks.classList.contains('active')) {

@@ -113,3 +113,7 @@ h1 {
     margin-top: 10px;
     font-size: 16px;
 }
+.tab-btn.selected {
+    background: #333 !important;
+    color: #fff !important;
+}
