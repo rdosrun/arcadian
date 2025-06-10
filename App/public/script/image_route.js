@@ -2,20 +2,23 @@ var total_hats = 50;
 var curr_hats = 0;
 var state = "";
 function update_hats(authorized = false) {
-    update_inventory(); // Ensure inventory is updated before hats
+    let inventory = [];
+    if(authorized) {
+        update_inventory(); // Ensure inventory is updated before hats
+         // Load inventory from localStorage once
+        try {
+            inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+        } catch (e) {
+            inventory = [];
+        }
+    }
     console.log("Updating hats...");
     const selectedState = document.querySelector('input[name="state"]:checked').value;
     const storeItemsContainer = document.getElementById('store-items');
     storeItemsContainer.setAttribute('data-state', selectedState);
     storeItemsContainer.innerHTML = ''; // Clear existing items
 
-    // Load inventory from localStorage once
-    let inventory = [];
-    try {
-        inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-    } catch (e) {
-        inventory = [];
-    }
+   
 
     fetch("/images/" + selectedState)
         .then(response => response.json())
@@ -86,33 +89,34 @@ function update_hats(authorized = false) {
                     }
 
                     // Find quantity in inventory
-                    let quantity = '';
-                    if (upc) {
-                        // Try both possible property names for compatibility
-                        let invItem = inventory.find(
-                            inv => inv.upc === upc
-                        );
-                        if (invItem) {
-                            quantity = invItem.quantity;
+                    if(authorized){
+                        let quantity = '';
+                        if (upc) {
+                            // Try both possible property names for compatibility
+                            let invItem = inventory.find(
+                                inv => inv.upc === upc
+                            );
+                            if (invItem) {
+                                quantity = invItem.quantity;
+                            }
                         }
+
+                        // Add stock number badge
+                        const stockBadge = document.createElement('div');
+                        stockBadge.className = 'stock-badge';
+                        stockBadge.textContent = quantity !== '' ? quantity : '0';
+                        stockBadge.style.position = 'absolute';
+                        stockBadge.style.top = '5px';
+                        stockBadge.style.right = '10px';
+                        stockBadge.style.background = 'rgba(0,0,0,0.7)';
+                        stockBadge.style.color = 'white';
+                        stockBadge.style.padding = '2px 8px';
+                        stockBadge.style.borderRadius = '12px';
+                        stockBadge.style.fontSize = '14px';
+                        stockBadge.style.zIndex = '10';
+
+                        slideshowContainer.appendChild(stockBadge);
                     }
-
-                    // Add stock number badge
-                    const stockBadge = document.createElement('div');
-                    stockBadge.className = 'stock-badge';
-                    stockBadge.textContent = quantity !== '' ? quantity : '0';
-                    stockBadge.style.position = 'absolute';
-                    stockBadge.style.top = '5px';
-                    stockBadge.style.right = '10px';
-                    stockBadge.style.background = 'rgba(0,0,0,0.7)';
-                    stockBadge.style.color = 'white';
-                    stockBadge.style.padding = '2px 8px';
-                    stockBadge.style.borderRadius = '12px';
-                    stockBadge.style.fontSize = '14px';
-                    stockBadge.style.zIndex = '10';
-
-                    slideshowContainer.appendChild(stockBadge);
-
                     imgSrcs.forEach((src, index) => {
                         const slide = document.createElement('div');
                         slide.className = 'slide';
