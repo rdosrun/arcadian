@@ -38,7 +38,6 @@ function loadPage(route) {
             }
             if(route == "/views/credit_memos"){
                 showTab('credit-memos');
-                PageLoaded();
             }
         });
     const navLinks = document.querySelector('.nav-links');

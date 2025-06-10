@@ -135,6 +135,31 @@ function renderInvoices(invoices) {
     });
 }
 
+function Search(){
+    const query = document.getElementById('searchInput').value;
+    const tab = document.querySelector('.tab.selected').id;
+
+    if (tab === 'tab-credit-memos') {
+        fetchCreditMemos().then(() => {
+            const memos = Array.from(document.querySelectorAll('#creditMemosTable tbody tr'));
+            const filteredMemos = filterMemos(memos, query);
+            renderCreditMemos(filteredMemos);
+        });
+    } else if (tab === 'tab-sales-orders') {
+        fetchSalesOrders().then(() => {
+            const orders = Array.from(document.querySelectorAll('#salesOrdersTable tbody tr'));
+            const filteredOrders = filterSalesOrders(orders, query);
+            renderSalesOrders(filteredOrders);
+        });
+    } else if (tab === 'tab-invoices') {
+        fetchInvoices().then(() => {
+            const invoices = Array.from(document.querySelectorAll('#invoicesTable tbody tr'));
+            const filteredInvoices = filterInvoices(invoices, query);
+            renderInvoices(filteredInvoices);
+        });
+    }
+}
+
 function filterMemos(memos, query) {
     query = query.trim().toLowerCase();
     return memos.filter(memo =>
@@ -161,111 +186,7 @@ function filterInvoices(invoices, query) {
         (invoice.date || '').includes(query)
     );
 } 
-function PageLoaded(){
-    document.addEventListener('DOMContentLoaded', async () => {
-        await fetchCreditMemos();
 
-        // --- Live search as user types ---
-        document.getElementById('searchInput').addEventListener('input', function() {
-            document.getElementById('searchBtn').onclick();
-        });
-
-        document.getElementById('searchBtn').onclick = () => {
-            const query = document.getElementById('searchInput').value;
-            // Determine which tab is active and search accordingly
-            if (document.getElementById('creditMemosTable').style.display !== 'none') {
-                fetch('/api/credit-memos')
-                    .then(res => res.json())
-                    .then(json => {
-                        if (json.success && Array.isArray(json.data.items)) {
-                            const memos = json.data.items.map(item => ({
-                                memoNumber: item.customer_credit_memo_number || '',
-                                customer: item.customer_credit_memo_customer_name || '',
-                                date: item.customer_credit_memo_date || '',
-                                amount: Number(item.customer_credit_memo_total) || 0,
-                                status: item.customer_credit_memo_status || '',
-                                details: item.customer_credit_memo_memo || ''
-                            }));
-                            renderCreditMemos(filterMemos(memos, query));
-                        } else {
-                            renderCreditMemos([]);
-                        }
-                    });
-            } else if (document.getElementById('salesOrdersTable').style.display !== 'none') {
-                fetch('/api/sales-orders')
-                    .then(res => res.json())
-                    .then(json => {
-                        if (json.success && Array.isArray(json.data.items)) {
-                            const orders = json.data.items.map(item => ({
-                                orderNumber: item.sales_order_number || '',
-                                customer: item.sales_order_customer_company_name || '',
-                                date: item.sales_order_date || '',
-                                amount: Number(item.sales_order_total) || 0,
-                                status: item.sales_order_status_order_name || '',
-                                details: item.sales_order_memo || ''
-                            }));
-                            renderSalesOrders(filterSalesOrders(orders, query));
-                        } else {
-                            renderSalesOrders([]);
-                        }
-                    });
-            } else if (document.getElementById('invoicesTable').style.display !== 'none') {
-                fetch('/api/invoices')
-                    .then(res => res.json())
-                    .then (json => {
-                        if (json.success && Array.isArray(json.data.items)) {
-                            const invoices = json.data.items.map(item => ({
-                                invoiceNumber: item.customer_invoice_number || '',
-                                customer: item.customer_invoice_customer_name || '',
-                                date: item.customer_invoice_date || '',
-                                amount: Number(item.customer_invoice_total) || 0,
-                                status: item.customer_invoice_status_name || '',
-                                details: item.customer_invoice_memo || ''
-                            }));
-                            renderInvoices(filterInvoices(invoices, query));
-                        } else {
-                            renderInvoices([]);
-                        }
-                    });
-            }
-        };
-
-        document.getElementById('searchInput').addEventListener('keyup', e => {
-            if (e.key === 'Enter') {
-                document.getElementById('searchBtn').onclick();
-            }
-        });
-
-        document.querySelector('#creditMemosTable tbody').onclick = function(e) {
-            if (e.target.classList.contains('details-btn')) {
-                const memo = JSON.parse(e.target.getAttribute('data-memo'));
-                showMemoDetails(memo);
-            }
-        };
-        document.querySelector('#salesOrdersTable tbody').onclick = function(e) {
-            if (e.target.classList.contains('details-btn')) {
-                const order = JSON.parse(e.target.getAttribute('data-order'));
-                showSalesOrderDetails(order);
-            }
-        };
-        document.querySelector('#invoicesTable tbody').onclick = function(e) {
-            if (e.target.classList.contains('details-btn')) {
-                const invoice = JSON.parse(e.target.getAttribute('data-invoice'));
-                showInvoiceDetails(invoice);
-            }
-        };
-
-        // Modal logic
-        const modal = document.getElementById('memoDetailsModal');
-        const closeBtn = document.querySelector('.modal .close');
-        closeBtn.onclick = () => { modal.style.display = 'none'; };
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        };
-    });
-}
 
 function showMemoDetails(memo) {
     const detailsDiv = document.getElementById('memoDetails');
