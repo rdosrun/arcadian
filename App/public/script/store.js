@@ -21,7 +21,7 @@ function addToCart(button) {
                 console.log(data);
                 for( let i =0;i<inventory.length;i++){
                     if(inventory[i].upc == itemID){
-                        if(inventory[i].quantity <= 0){
+                        if(inventory[i].quantity <= 0 || inventory[i].quantity == undefined){
                             alert("Item is out of stock. Please select another item.");
                             return;
                         }
