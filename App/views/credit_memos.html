@@ -6,15 +6,15 @@
         <button class="tab-btn" id="tab-invoices" onclick="showTab('invoices')">Invoices</button>
     </div>
     <h1 id="tab-title">Credit Memos</h1>
-    <div class="search-bar">
-        <input type="text" id="searchInput"  oninput="Search()" placeholder="Search by Customer, Memo #, or Date...">
-        <div style="margin-top:8px;">
+    <ul style="list-style-type:none;" class="search-bar">
+        <div style="margin-top:8px;"></div>
+            <input type="text" id="searchInput"  oninput="Search()" placeholder="Search by Customer, Memo #, or Date...">
             Min Amount:
             <input type="number" id="amountInput" oninput="Search()" placeholder="min">
             Max Amount:
             <input type="number" id="amountInputMax" oninput="Search()" placeholder="max">
         </div>
-    </div>
+    </ul>
     <div id="creditMemosTableContainer">
         <table id="creditMemosTable">
             <thead>
