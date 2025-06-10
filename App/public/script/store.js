@@ -47,15 +47,14 @@ function addToCart(button) {
     
 }
 
-async function addToCartManual() {
-    const productId = document.getElementById("product_id").value;
-    if (!productId) {
-        console.error("Product ID is empty.");
+async function addToCartManual(upc) {
+    if (!upc) {
+        console.error("UPC is empty.");
         return;
     }
 
     try {
-        fetch("/item/"+productId).then(response => 
+        fetch("/item/" + upc).then(response => 
             response.json().then(data => ({
                 data: data,
                 status: response.status
@@ -65,7 +64,7 @@ async function addToCartManual() {
             var data = res.data.results;
             if (res.data.success) {
                 const itemName = data.item_display_name;
-                cart.push({ name: itemName, ID: productId });
+                cart.push({ name: itemName, ID: upc });
                 updateCart();
             } else {
                 console.error("Item not found:", data.message);
