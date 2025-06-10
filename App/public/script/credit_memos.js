@@ -140,19 +140,19 @@ function Search(){
     const query = document.getElementById('searchInput').value;
     const tab = curr_tab;
 
-    if (tab === 'tab-credit-memos') {
+    if (tab === 'credit-memos') {
         fetchCreditMemos().then(() => {
             const memos = Array.from(document.querySelectorAll('#creditMemosTable tbody tr'));
             const filteredMemos = filterMemos(memos, query);
             renderCreditMemos(filteredMemos);
         });
-    } else if (tab === 'tab-sales-orders') {
+    } else if (tab === 'sales-orders') {
         fetchSalesOrders().then(() => {
             const orders = Array.from(document.querySelectorAll('#salesOrdersTable tbody tr'));
             const filteredOrders = filterSalesOrders(orders, query);
             renderSalesOrders(filteredOrders);
         });
-    } else if (tab === 'tab-invoices') {
+    } else if (tab === 'invoices') {
         fetchInvoices().then(() => {
             const invoices = Array.from(document.querySelectorAll('#invoicesTable tbody tr'));
             const filteredInvoices = filterInvoices(invoices, query);
