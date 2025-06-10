@@ -51,12 +51,6 @@ function update_hats() {
                             }
                         }
                     }
-                    /*const imgSrcs = [
-                        data[i]?.imageUrl,
-                        data[i + 1]?.imageUrl,
-                        data[i + 2]?.imageUrl,
-                        data[i + 3]?.imageUrl
-                    ]*/
 
                     const newItem = document.createElement('button');
                     newItem.className = 'item';
@@ -83,6 +77,10 @@ function update_hats() {
                     if (imgSrcs.length > 0 && imgSrcs[0]) {
                         // Try to extract UPC from image URL (assuming split('/')[3] is UPC)
                         upc = imgSrcs[0].split('/')[3];
+                        if(upc && upc.endsWith('_')) {
+                            upc = upc.slice(0, -1); // Remove trailing underscore if present
+                            upc = upc + '.'; // Add a dot at the end
+                        }
                     }
 
                     // Find quantity in inventory
