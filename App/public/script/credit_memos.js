@@ -143,6 +143,8 @@ function renderInvoices(invoicesToRender = invoices) {
 
 function Search(){
     const query = document.getElementById('searchInput').value;
+    const floor = document.getElementById('minAmount').value;
+    const ceiling = document.getElementById('maxAmount').value;
     const tab = curr_tab;
 
     if (tab === 'credit-memos') {
@@ -167,27 +169,33 @@ function filterMemos(memos, query) {
     query = query.trim().toLowerCase();
     console.log('Filtering memos with query:', query, memos);
     return memos.filter(memo =>
-        (memo.memoNumber || '').toLowerCase().includes(query) ||
+        ((memo.memoNumber || '').toLowerCase().includes(query) ||
         (memo.customer || '').toLowerCase().includes(query) ||
-        (memo.date || '').includes(query)
+        (memo.date || '').includes(query)) &&
+        (memo.amount >= parseFloat(floor) || isNaN(parseFloat(floor))) &&
+        (memo.amount <= parseFloat(ceiling) || isNaN(parseFloat(ceiling)))
     );
 }
 
 function filterSalesOrders(orders, query) {
     query = query.trim().toLowerCase();
     return orders.filter(order =>
-        (order.orderNumber || '').toLowerCase().includes(query) ||
+        ((order.orderNumber || '').toLowerCase().includes(query) ||
         (order.customer || '').toLowerCase().includes(query) ||
-        (order.date || '').includes(query)
+        (order.date || '').includes(query)) &&
+        (order.amount >= parseFloat(floor) || isNaN(parseFloat(floor))) &&
+        (order.amount <= parseFloat(ceiling) || isNaN(parseFloat(ceiling)))
     );
 }
 
 function filterInvoices(invoices, query) {
     query = query.trim().toLowerCase();
     return invoices.filter(invoice =>
-        (invoice.invoiceNumber || '').toLowerCase().includes(query) ||
+        ((invoice.invoiceNumber || '').toLowerCase().includes(query) ||
         (invoice.customer || '').toLowerCase().includes(query) ||
-        (invoice.date || '').includes(query)
+        (invoice.date || '').includes(query)) &&
+        (invoice.amount >= parseFloat(floor) || isNaN(parseFloat(floor))) &&
+        (invoice.amount <= parseFloat(ceiling) || isNaN(parseFloat(ceiling)))
     );
 } 
 
