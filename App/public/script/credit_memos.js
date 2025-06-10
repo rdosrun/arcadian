@@ -163,7 +163,7 @@ function Search(){
 
 function filterMemos(memos, query) {
     query = query.trim().toLowerCase();
-    console.log('Filtering memos with query:', query);
+    console.log('Filtering memos with query:', query, memos);
     return memos.filter(memo =>
         (memo.memoNumber || '').toLowerCase().includes(query) ||
         (memo.customer || '').toLowerCase().includes(query) ||
