@@ -143,8 +143,8 @@ function renderInvoices(invoicesToRender = invoices) {
 
 function Search(){
     const query = document.getElementById('searchInput').value;
-    const floor = document.getElementById('minAmount').value;
-    const ceiling = document.getElementById('maxAmount').value;
+    const floor = document.getElementById('amountInputMin').value;
+    const ceiling = document.getElementById('amountInputMinMax').value;
     const tab = curr_tab;
 
     if (tab === 'credit-memos') {
