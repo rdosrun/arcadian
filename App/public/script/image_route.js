@@ -24,6 +24,12 @@ function update_hats(authorized = false) {
         .then(response => response.json())
         .then(data => {
             console.log("Fetched images for state:", selectedState, data);
+            if(data.success == false) {
+                console.error("Error fetching images:", data.message);
+                storeItemsContainer.innerHTML = '<p>No items found for this state.</p>';
+                return;
+            }
+
                 var total_photots =1;
                 var local_inventory = JSON.parse(localStorage.getItem('inventory'));
                 for (var i = 0; i < data.length; i = i + total_photots) {

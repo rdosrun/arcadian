@@ -24,6 +24,18 @@ function loadPage(route) {
                     }
                 }, 200);
             }
+            if(route == "/retail/gallery"){
+                if (!window.update_hats) {
+                    loadScriptDynamically("/script/image_route.js");
+                }
+                // Call update_hats after a short delay to ensure the script is loaded
+                setTimeout(() => {
+                    console.log("Calling update_hats after loading image_route.js");
+                    if (typeof update_hats === 'function') {
+                        update_hats();
+                    }
+                }, 200);
+            }
         });
     const navLinks = document.querySelector('.nav-links');
       if (navLinks && navLinks.classList.contains('active')) {
