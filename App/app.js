@@ -15,7 +15,9 @@ const fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var creditMemosRouter = require('./routes/credit_memos');
+var creditMemosRouter = require('./routes/memos/credit_memos');
+var salesOrdersRouter = require('./routes/memos/sales_orders');
+var invoicesRouter = require('./routes/memos/invoices');
 var authRouter = require('./routes/auth');
 var netsuite = require('./routes/backend/netsuite');
 const { get_token} = require('./routes/libs/get_token');
@@ -61,7 +63,14 @@ app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadPhotosRouter);
 app.use('/credit-memos', creditMemosRouter);
+app.use('/sales-orders', salesOrdersRouter);
+app.use('/invoices', invoicesRouter);
 
+
+// API endpoints that proxy to the new routers
+app.use('/api/credit-memos', creditMemosRouter);
+app.use('/api/sales-orders', salesOrdersRouter);
+app.use('/api/invoices', invoicesRouter);
 
 app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
@@ -295,36 +304,7 @@ app.post('/submit-order', async (req, res) => {
     }
 });
 
-// Add endpoints for invoices, sales orders, and credit memos
-app.get('/api/invoices', async (req, res) => {
-    try {
-        const data = await netsuite.Invoices();
-        res.json({ success: true, data: JSON.parse(data) });
-    } catch (error) {
-        console.error('Error fetching invoices:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-app.get('/api/sales-orders', async (req, res) => {
-    try {
-        const data = await netsuite.Sales_Orders();
-        res.json({ success: true, data: JSON.parse(data) });
-    } catch (error) {
-        console.error('Error fetching sales orders:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-app.get('/api/credit-memos', async (req, res) => {
-    try {
-        const data = await netsuite.Credit_Memo();
-        res.json({ success: true, data: JSON.parse(data) });
-    } catch (error) {
-        console.error('Error fetching credit memos:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
+// Remove or comment out the old endpoints for /api/invoices, /api/sales-orders, /api/credit-memos if present
 
 // Run get_token every hour
 setInterval(() => {
