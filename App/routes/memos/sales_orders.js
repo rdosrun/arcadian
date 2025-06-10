@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const netsuite = require('../../netsuite'); // Adjust path if needed
+const netsuite = require('../backend/netsuite'); // Adjust path if needed
 
 // In-memory cache
 let salesOrdersCache = [];
