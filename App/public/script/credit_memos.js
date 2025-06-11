@@ -342,8 +342,9 @@ function display_record(jsonObj) {
     closeBtn.style.cursor = 'pointer';
     closeBtn.style.zIndex = '2';
     closeBtn.style.backgroundColor = 'red';
-    closeBtn.style.width = '45px';
-    closeBtn.style.height = '45px';
+    closeBtn.style.width = '30px';
+    closeBtn.style.height = '30px';
+    closeBtn.style.textAlign = 'center';
     closeBtn.onclick = () => {
         document.body.removeChild(modalBg);
     };
@@ -357,7 +358,6 @@ function display_record(jsonObj) {
 
     // Table header
     const thead = document.createElement('thead');
-    thead
     const headerRow = document.createElement('tr');
     const keys = Object.keys(jsonObj.items[0]);
     keys.forEach(key => {
