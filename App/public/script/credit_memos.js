@@ -340,6 +340,7 @@ function display_record(jsonObj) {
     closeBtn.style.fontSize = '28px';
     closeBtn.style.fontWeight = 'bold';
     closeBtn.style.cursor = 'pointer';
+    closeBtn.style.zIndex = '2';
     closeBtn.onclick = () => {
         document.body.removeChild(modalBg);
     };
@@ -358,7 +359,6 @@ function display_record(jsonObj) {
     keys.forEach(key => {
         const th = document.createElement('th');
         th.textContent = key;
-        th.style.padding = '8px 6px';
         th.style.background = '#f0f6ff';
         th.style.borderBottom = '1px solid #e0e0e0';
         th.style.position = 'sticky';
