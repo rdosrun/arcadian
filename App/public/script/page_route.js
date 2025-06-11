@@ -24,7 +24,7 @@ function loadPage(route) {
                     }
                 }, 200);
             }
-            if(route == "/retail/gallery"){
+            if(route == "/views/retail/gallery"){
                 if (!window.update_hats) {
                     loadScriptDynamically("/script/image_route.js");
                 }
