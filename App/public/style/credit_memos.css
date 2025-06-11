@@ -11,6 +11,8 @@ body {
     padding: 30px 40px 40px 40px;
     border-radius: 10px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 h1 {
     text-align: center;
