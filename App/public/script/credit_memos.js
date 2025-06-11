@@ -326,7 +326,7 @@ function display_record(jsonObj) {
     modalContent.style.borderRadius = '8px';
     modalContent.style.boxShadow = '0 4px 24px rgba(0,0,0,0.18)';
     modalContent.style.maxHeight = '80vh';
-    modalContent.style.overflow = 'auto';
+    modalContent.style.overflow = 'scroll';
     modalContent.style.minWidth = '350px';
     modalContent.style.maxWidth = '90vw';
     modalContent.id = 'record-modal-content';
