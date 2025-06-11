@@ -19,7 +19,8 @@ async function fetchCreditMemos() {
                 date: item.customer_credit_memo_date || '',
                 amount: Number(item.customer_credit_memo_total) || 0,
                 status: item.customer_credit_memo_status || '',
-                details: item.customer_credit_memo_memo || ''
+                details: item.customer_credit_memo_memo || '',
+                interal_id: item.customer_credit_memo_internal_id || ''
             }));
             renderCreditMemos();
             return;
@@ -68,7 +69,8 @@ async function fetchInvoices() {
                 date: item.customer_invoice_date || '',
                 amount: Number(item.customer_invoice_total) || 0,
                 status: item.customer_invoice_status_name || '',
-                details: item.customer_invoice_memo || ''
+                details: item.customer_invoice_memo || '',
+                interal_id: item.customer_invoice_internal_id || ''
             }));
             renderInvoices();
             return;
@@ -100,7 +102,7 @@ function renderCreditMemos(memosToRender = memos) {
             <td>${memo.date}</td>
             <td>$${memo.amount.toFixed(2)}</td>
             <td>${memo.status}</td>
-            <td><button class="details-btn" onclick="fetch_record('${memo.memoNumber}')">View</button></td>
+            <td><button class="details-btn" onclick="fetch_record('${memo.interal_id}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -134,7 +136,7 @@ function renderInvoices(invoicesToRender = invoices) {
             <td>${invoice.date}</td>
             <td>$${invoice.amount.toFixed(2)}</td>
             <td>${invoice.status}</td>
-            <td><button class="details-btn" onclick="fetch_record('${invoice.invoiceNumber}')">View</button></td>
+            <td><button class="details-btn" onclick="fetch_record('${invoice.interal_id}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
