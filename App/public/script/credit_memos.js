@@ -322,7 +322,7 @@ function display_record(jsonObj) {
     modalContent.style.left = '50%';
     modalContent.style.transform = 'translate(-50%, -50%)';
     modalContent.style.background = '#fff';
-    modalContent.style.padding = '30px 40px';
+    modalContent.style.padding = '30px 0px 0px 40px';
     modalContent.style.borderRadius = '8px';
     modalContent.style.boxShadow = '0 4px 24px rgba(0,0,0,0.18)';
     modalContent.style.maxHeight = '80vh';
@@ -340,7 +340,6 @@ function display_record(jsonObj) {
     closeBtn.style.fontSize = '28px';
     closeBtn.style.fontWeight = 'bold';
     closeBtn.style.cursor = 'pointer';
-    closeBtn.style.zIndex = '2';
     closeBtn.onclick = () => {
         document.body.removeChild(modalBg);
     };
@@ -354,11 +353,13 @@ function display_record(jsonObj) {
 
     // Table header
     const thead = document.createElement('thead');
+    thead
     const headerRow = document.createElement('tr');
     const keys = Object.keys(jsonObj.items[0]);
     keys.forEach(key => {
         const th = document.createElement('th');
         th.textContent = key;
+        th.style.padding = '8px 6px';
         th.style.background = '#f0f6ff';
         th.style.borderBottom = '1px solid #e0e0e0';
         th.style.position = 'sticky';
