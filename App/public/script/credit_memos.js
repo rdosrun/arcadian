@@ -344,7 +344,7 @@ function display_record(jsonObj) {
     closeBtn.onclick = () => {
         document.body.removeChild(modalBg);
     };
-    modalContent.appendChild(closeBtn);
+    modalBg.appendChild(closeBtn);
 
     // Table
     const table = document.createElement('table');
