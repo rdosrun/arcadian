@@ -52,15 +52,16 @@ function update_hats(authorized = false) {
                         imgSrcs.push(data[i+j].imageUrl);
                         total_photots = j+1;
                     }
-                    for(let j = 0; j<local_inventory.length; j++){
-                        if(local_inventory[j].upc == data[i].imageUrl.split('/')[3]){
-                            if(local_inventory[j].isinactive == "T"){
-                                console.warn("Item is inactive, skipping:", data[i].imageUrl);
-                                continue; // Skip if item is inactive
+                    if(authorized){
+                        for(let j = 0; j<local_inventory.length; j++){
+                            if(local_inventory[j].upc == data[i].imageUrl.split('/')[3]){
+                                if(local_inventory[j].isinactive == "T"){
+                                    console.warn("Item is inactive, skipping:", data[i].imageUrl);
+                                    continue; // Skip if item is inactive
+                                }
                             }
                         }
                     }
-
                     const newItem = document.createElement('button');
                     newItem.className = 'item';
                     newItem.id = i + 1;
