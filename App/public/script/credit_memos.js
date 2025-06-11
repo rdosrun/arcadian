@@ -284,7 +284,7 @@ function display_record(number) {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'sales-orders' ){
-        fetch('/api/sales-orders/'+number).then(res => res.json()).then(data => {
+        fetch('/api/sales-order-lines/'+number).then(res => res.json()).then(data => {
             jsonObj = data;
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
