@@ -149,23 +149,23 @@ function Search(){
 
     if (tab === 'credit-memos') {
         fetchCreditMemos().then(() => {
-            const filteredMemos = filterMemos(memos, query);
+            const filteredMemos = filterMemos(memos, query,floor, ceiling);
             renderCreditMemos(filteredMemos);
         });
     } else if (tab === 'sales-orders') {
         fetchSalesOrders().then(() => {
-            const filteredOrders = filterSalesOrders(orders, query);
+            const filteredOrders = filterSalesOrders(orders, query, floor, ceiling);
             renderSalesOrders(filteredOrders);
         });
     } else if (tab === 'invoices') {
         fetchInvoices().then(() => {
-            const filteredInvoices = filterInvoices(invoices, query);
+            const filteredInvoices = filterInvoices(invoices, query, floor, ceiling);
             renderInvoices(filteredInvoices);
         });
     }
 }
 
-function filterMemos(memos, query) {
+function filterMemos(memos, query,floor, ceiling) {
     query = query.trim().toLowerCase();
     console.log('Filtering memos with query:', query, memos);
     return memos.filter(memo =>
@@ -177,7 +177,7 @@ function filterMemos(memos, query) {
     );
 }
 
-function filterSalesOrders(orders, query) {
+function filterSalesOrders(orders, query, floor, ceiling) {
     query = query.trim().toLowerCase();
     return orders.filter(order =>
         ((order.orderNumber || '').toLowerCase().includes(query) ||
@@ -188,7 +188,7 @@ function filterSalesOrders(orders, query) {
     );
 }
 
-function filterInvoices(invoices, query) {
+function filterInvoices(invoices, query, floor, ceiling) {
     query = query.trim().toLowerCase();
     return invoices.filter(invoice =>
         ((invoice.invoiceNumber || '').toLowerCase().includes(query) ||
