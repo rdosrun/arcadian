@@ -212,13 +212,28 @@ app.post('/submit-order', async (req, res) => {
         });
 
         const data = await response.json();
-
+                // Write response to file with timestamp
+        try {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
+            fs.writeFileSync(responsePath, JSON.stringify([payload,data], null, 2), 'utf8');
+        } catch (err) {
+            console.error('Error writing response to file:', err);
+        }
         if (response.ok) {
             res.json({ success: true, message: 'Order placed successfully', data });
         } else {
+
             res.status(response.status).json({ success: false, message: 'Failed to place order', data });
         }
     } catch (error) {
+         try {
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
+            fs.writeFileSync(responsePath, JSON.stringify([payload,data], null, 2), 'utf8');
+        } catch (err) {
+            console.error('Error writing response to file:', err);
+        }
         console.error('Error placing order:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
