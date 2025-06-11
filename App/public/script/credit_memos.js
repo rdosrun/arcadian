@@ -100,7 +100,7 @@ function renderCreditMemos(memosToRender = memos) {
             <td>${memo.date}</td>
             <td>$${memo.amount.toFixed(2)}</td>
             <td>${memo.status}</td>
-            <td><button class="details-btn" onclick="display_record('${memo.memoNumber}')">View</button></td>
+            <td><button class="details-btn" onclick="fetch_record('${memo.memoNumber}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -117,7 +117,7 @@ function renderSalesOrders(ordersToRender = orders) {
             <td>${order.date}</td>
             <td>$${order.amount.toFixed(2)}</td>
             <td>${order.status}</td>
-            <td><button class="details-btn" onclick="display_record('${order.interal_id}')">View</button></td>
+            <td><button class="details-btn" onclick="fetch_record('${order.interal_id}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -134,7 +134,7 @@ function renderInvoices(invoicesToRender = invoices) {
             <td>${invoice.date}</td>
             <td>$${invoice.amount.toFixed(2)}</td>
             <td>${invoice.status}</td>
-            <td><button class="details-btn" onclick="display_record('${invoice.invoiceNumber}')">View</button></td>
+            <td><button class="details-btn" onclick="fetch_record('${invoice.invoiceNumber}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -274,28 +274,36 @@ function showTab(tab) {
     Search(); // Trigger search to apply current filters
 }
 
-function display_record(number) {
+function fetch_record(number) {
     console.log('Displaying record for:', number);
     jsonObj = {};
     if( curr_tab === 'credit-memos' ){
         fetch('/api/credit-memos/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
+            display_record(jsonObj);
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'sales-orders' ){
         fetch('/api/sales-order-lines/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
+            display_record(jsonObj);
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'invoices' ){
         fetch('/api/invoices/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
+            display_record(jsonObj);
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
     }
+
+
+}
+
+function display_record(jsonObj) {
     // Create modal background
     const modalBg = document.createElement('div');
     modalBg.style.position = 'fixed';
