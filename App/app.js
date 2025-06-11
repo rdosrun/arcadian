@@ -15,9 +15,6 @@ const fs = require('fs');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var creditMemosRouter = require('./routes/memos/credit_memos');
-var salesOrdersRouter = require('./routes/memos/sales_orders');
-var invoicesRouter = require('./routes/memos/invoices');
 var authRouter = require('./routes/auth');
 var netsuite = require('./routes/backend/netsuite');
 const { get_token} = require('./routes/libs/get_token');
@@ -62,15 +59,6 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadPhotosRouter);
-app.use('/credit-memos', creditMemosRouter);
-app.use('/sales-orders', salesOrdersRouter);
-app.use('/invoices', invoicesRouter);
-
-
-// API endpoints that proxy to the new routers
-app.use('/api/credit-memos', creditMemosRouter);
-app.use('/api/sales-orders', salesOrdersRouter);
-app.use('/api/invoices', invoicesRouter);
 
 app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
@@ -95,77 +83,25 @@ app.get('/item/:upc', async function (req, res) {
     }
 });
 
-// Inventory cache file path
-const inventoryCachePath = path.join(__dirname, 'inventory_cache.json');
-
-// Function to update inventory cache every 5 minutes
-async function updateInventoryCache() {
-    try {
-        let allItems = [];
-        let offset = 0;
-        let hasMore = true;
-        while (hasMore) {
-            const temp = await netsuite.Inventory(offset);
-            const parsed = JSON.parse(temp);
-            if (Array.isArray(parsed.items)) {
-                allItems = allItems.concat(parsed.items);
-                if (parsed.items.length < 1000) {
-                    hasMore = false;
-                } else {
-                    offset += parsed.items.length;
-                }
-            } else {
-                hasMore = false;
-            }
-        }
-        fs.writeFileSync(inventoryCachePath, JSON.stringify({ items: allItems }), 'utf8');
-        console.log(`[Inventory Cache] Updated at ${new Date().toISOString()}`);
-    } catch (err) {
-        console.error('[Inventory Cache] Error updating inventory:', err);
-    }
-}
-
-// Start inventory cache update interval
-setInterval(updateInventoryCache, 5 * 60 * 1000); // every 5 minutes
-// Initial cache update on server start
-updateInventoryCache();
-
 // Mock function to simulate fetching item name by UPC
 async function getItemNameByUPC(upc) {
-    // Try to read from cache file
-    let inventory = [];
-    try {
-        if (fs.existsSync(inventoryCachePath)) {
-            const cache = JSON.parse(fs.readFileSync(inventoryCachePath, 'utf8'));
-            inventory = cache.items || [];
-        } else {
-            // If cache doesn't exist, fallback to direct fetch
-            let j = 0;
-            while (true) {
-                var temp = await netsuite.Inventory(j * 1000);
-                inventory = inventory.concat(JSON.parse(temp).items);
-                if (JSON.parse(temp).items.length < 1000) break;
-                j++;
+    var j =0;
+    while(true){
+        var temp = await netsuite.Inventory(j*1000); // Assume Inventory() returns an array of items
+        inventory = JSON.parse(temp).items;
+        for (var i = 0; i < inventory.length; i++) {
+            if (inventory[i].item_upc_code == upc) {
+                return inventory[i];
             }
         }
-    } catch (err) {
-        console.error('[Inventory Cache] Error reading cache:', err);
-        // fallback to direct fetch
-        let j = 0;
-        while (true) {
-            var temp = await netsuite.Inventory(j * 1000);
-            inventory = inventory.concat(JSON.parse(temp).items);
-            if (JSON.parse(temp).items.length < 1000) break;
-            j++;
+        if (inventory.length < 1000){
+            break;
         }
+            j++;
     }
 
-    for (let i = 0; i < inventory.length; i++) {
-        if (inventory[i].item_upc_code == upc) {
-            return inventory[i];
-        }
-    }
     return null;
+    //return inventory.find(item => item.item_upc_code === upc) || null;
 }
 
 // Serve images or list files in a directory
@@ -241,6 +177,7 @@ app.post('/submit-order', async (req, res) => {
     const year = date.getFullYear();
     const formattedDate = `${month}/${day}/${year}`;
 
+    console.log()
     const payload = {
         customerId: customer.customer_internal_id,
         customerName: customer.customer_company_name,
@@ -260,7 +197,7 @@ app.post('/submit-order', async (req, res) => {
             location: null // grab location from netsuite for each customer
         }))
     };
-    console.log("this is a an order", payload);
+    console.log(payload);
 
     try {
         const newToken = await get_token();
@@ -275,71 +212,16 @@ app.post('/submit-order', async (req, res) => {
 
         const data = await response.json();
 
-        // Write response to file with timestamp
-        try {
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
-            fs.writeFileSync(responsePath, JSON.stringify([payload,data], null, 2), 'utf8');
-        } catch (err) {
-            console.error('Error writing response to file:', err);
-        }
-
         if (response.ok) {
             res.json({ success: true, message: 'Order placed successfully', data });
-            console.log('Order placed successfully:', response);
         } else {
             res.status(response.status).json({ success: false, message: 'Failed to place order', data });
-            console.log('Failed to place order:', response);
         }
     } catch (error) {
-        try {
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const responsePath = path.join(__dirname, 'order_logs', `response_${timestamp}.json`);
-            fs.writeFileSync(responsePath, JSON.stringify([payload,data], null, 2), 'utf8');
-        } catch (err) {
-            console.error('Error writing response to file:', err);
-        }
         console.error('Error placing order:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
-
-// Add endpoint for sales_order_lines
-app.get('/api/sales-order-lines/:id', async (req, res) => {
-    const salesOrderId = req.params.id;
-    try {
-        const data = await netsuite.sales_order_lines(salesOrderId);
-        res.json({ success: true, data: JSON.parse(data) });
-    } catch (error) {
-        console.error('Error fetching sales order lines:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-app.get('/api/Credit-Memo-lines/:id', async (req, res) => {
-    const salesOrderId = req.params.id;
-    try {
-        const data = await netsuite.Credit_Memo_lines(salesOrderId);
-        res.json({ success: true, data: JSON.parse(data) });
-    } catch (error) {
-        console.error('Error fetching sales order lines:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-app.get('/api/Invoices/:id', async (req, res) => {
-    const salesOrderId = req.params.id;
-    try {
-        const data = await netsuite.Invoice_Lines(salesOrderId);
-        res.json({ success: true, data: JSON.parse(data) });
-    } catch (error) {
-        console.error('Error fetching sales order lines:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-
-// Remove or comment out the old endpoints for /api/invoices, /api/sales-orders, /api/credit-memos if present
 
 // Run get_token every hour
 setInterval(() => {
