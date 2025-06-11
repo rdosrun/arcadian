@@ -292,7 +292,7 @@ async function place_order(customer) {
             cart: cart.map(item => ({
                 ID: item.ID,
                 name: item.ID,
-                interal_ID: localStorage.getItem('inventory').find(i => (i.upc === item.ID && i.isinactive =='F'))?.internal_id || '',
+                interal_ID: JSON.parse(localStorage.getItem('inventory')).find(i => (i.upc === item.ID && i.isinactive =='F'))?.internal_id || '',
             })),
             customer: {
                 customer_internal_id: customer.customer_internal_id,
