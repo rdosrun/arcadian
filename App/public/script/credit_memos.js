@@ -280,7 +280,7 @@ function fetch_record(number) {
     console.log('Displaying record for:', number);
     jsonObj = {};
     if( curr_tab === 'credit-memos' ){
-        fetch('/api/credit-memos/'+number).then(res => res.json()).then(data => {
+        fetch('/api/Credit-Memo-lines/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
             display_record(jsonObj);
         }).catch(err => {
@@ -294,7 +294,7 @@ function fetch_record(number) {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'invoices' ){
-        fetch('/api/invoices/'+number).then(res => res.json()).then(data => {
+        fetch('/api/Invoices/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
             display_record(jsonObj);
         }).catch(err => {

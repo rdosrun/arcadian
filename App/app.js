@@ -316,6 +316,29 @@ app.get('/api/sales-order-lines/:id', async (req, res) => {
     }
 });
 
+app.get('/api/Credit-Memo-lines/:id', async (req, res) => {
+    const salesOrderId = req.params.id;
+    try {
+        const data = await netsuite.Credit_Memo_lines(salesOrderId);
+        res.json({ success: true, data: JSON.parse(data) });
+    } catch (error) {
+        console.error('Error fetching sales order lines:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+app.get('/api/Invoices/:id', async (req, res) => {
+    const salesOrderId = req.params.id;
+    try {
+        const data = await netsuite.Invoice_Lines(salesOrderId);
+        res.json({ success: true, data: JSON.parse(data) });
+    } catch (error) {
+        console.error('Error fetching sales order lines:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+
 // Remove or comment out the old endpoints for /api/invoices, /api/sales-orders, /api/credit-memos if present
 
 // Run get_token every hour
