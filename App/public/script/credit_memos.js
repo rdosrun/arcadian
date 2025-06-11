@@ -334,7 +334,7 @@ function display_record(jsonObj) {
     // Close button
     const closeBtn = document.createElement('span');
     closeBtn.textContent = '×';
-    closeBtn.style.position = 'sticky';
+    closeBtn.style.position = 'fixed';
     closeBtn.style.top = '12px';
     closeBtn.style.left = '95%';
     closeBtn.style.fontSize = '28px';
