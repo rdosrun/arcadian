@@ -342,6 +342,8 @@ function display_record(jsonObj) {
     closeBtn.style.cursor = 'pointer';
     closeBtn.style.zIndex = '2';
     closeBtn.style.backgroundColor = 'red';
+    closeBtn.style.width = '45px';
+    closeBtn.style.height = '45px';
     closeBtn.onclick = () => {
         document.body.removeChild(modalBg);
     };
