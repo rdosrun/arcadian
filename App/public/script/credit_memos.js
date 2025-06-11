@@ -334,12 +334,13 @@ function display_record(jsonObj) {
     // Close button
     const closeBtn = document.createElement('span');
     closeBtn.textContent = '×';
-    closeBtn.style.position = 'absolute';
+    closeBtn.style.position = 'sticky';
     closeBtn.style.top = '12px';
     closeBtn.style.right = '18px';
     closeBtn.style.fontSize = '28px';
     closeBtn.style.fontWeight = 'bold';
     closeBtn.style.cursor = 'pointer';
+    closeBtn.style.zIndex = '2';
     closeBtn.onclick = () => {
         document.body.removeChild(modalBg);
     };
