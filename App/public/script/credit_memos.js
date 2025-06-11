@@ -279,19 +279,19 @@ function display_record(number) {
     jsonObj = {};
     if( curr_tab === 'credit-memos' ){
         fetch('/api/credit-memos/'+number).then(res => res.json()).then(data => {
-            jsonObj = data;
+            jsonObj = data.data;
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'sales-orders' ){
         fetch('/api/sales-order-lines/'+number).then(res => res.json()).then(data => {
-            jsonObj = data;
+            jsonObj = data.data;
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'invoices' ){
         fetch('/api/invoices/'+number).then(res => res.json()).then(data => {
-            jsonObj = data;
+            jsonObj = data.data;
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
