@@ -322,7 +322,7 @@ function display_record(jsonObj) {
     modalContent.style.left = '50%';
     modalContent.style.transform = 'translate(-50%, -50%)';
     modalContent.style.background = '#fff';
-    modalContent.style.padding = '30px 0px 0px 40px';
+    modalContent.style.padding = '0px';
     modalContent.style.borderRadius = '8px';
     modalContent.style.boxShadow = '0 4px 24px rgba(0,0,0,0.18)';
     modalContent.style.maxHeight = '80vh';
