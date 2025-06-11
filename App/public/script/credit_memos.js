@@ -274,10 +274,6 @@ function showTab(tab) {
 }
 
 function display_record(number) {
-    if (!jsonObj || !Array.isArray(jsonObj.items) || jsonObj.items.length === 0) {
-        alert("No data to display.");
-        return;
-    }
     jsonObj = {};
     if( curr_tab === 'credit-memos' ){
         fetch('/api/credit-memos/'+jsonObj).then(res => res.json()).then(data => {
