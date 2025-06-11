@@ -43,7 +43,8 @@ async function fetchSalesOrders() {
                 date: item.sales_order_date || '',
                 amount: Number(item.sales_order_total) || 0,
                 status: item.sales_order_status_order_name || '',
-                details: item.sales_order_memo || ''
+                details: item.sales_order_memo || '',
+                interal_id: item.sales_order_internal_id || ''
             }));
             renderSalesOrders();
             return;
@@ -116,7 +117,7 @@ function renderSalesOrders(ordersToRender = orders) {
             <td>${order.date}</td>
             <td>$${order.amount.toFixed(2)}</td>
             <td>${order.status}</td>
-            <td><button class="details-btn" onclick="display_record('${order.orderNumber}')">View</button></td>
+            <td><button class="details-btn" onclick="display_record('${order.interal_id}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
