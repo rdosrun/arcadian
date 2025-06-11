@@ -85,8 +85,6 @@ function renderCreditMemos(memosToRender = memos) {
     if (!table) {
         table = document.createElement('table');
         table.id = 'credit_table';
-        // Optionally, add classes or attributes as needed
-        // Insert the table into the DOM (for example, inside a container)
         const container = document.getElementById('creditMemosTableContainer') || document.body;
         container.appendChild(table);
         // Optionally, add thead/tbody structure if needed
@@ -101,7 +99,7 @@ function renderCreditMemos(memosToRender = memos) {
             <td>${memo.date}</td>
             <td>$${memo.amount.toFixed(2)}</td>
             <td>${memo.status}</td>
-            <td><button class="details-btn" data-memo='${JSON.stringify(memo)}'>View</button></td>
+            <td><button class="details-btn" onclick="display_record('${memo.memoNumber}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -118,7 +116,7 @@ function renderSalesOrders(ordersToRender = orders) {
             <td>${order.date}</td>
             <td>$${order.amount.toFixed(2)}</td>
             <td>${order.status}</td>
-            <td><button class="details-btn" data-order='${JSON.stringify(order)}'>View</button></td>
+            <td><button class="details-btn" onclick="display_record('${order.orderNumber}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -135,7 +133,7 @@ function renderInvoices(invoicesToRender = invoices) {
             <td>${invoice.date}</td>
             <td>$${invoice.amount.toFixed(2)}</td>
             <td>${invoice.status}</td>
-            <td><button class="details-btn" data-invoice='${JSON.stringify(invoice)}'>View</button></td>
+            <td><button class="details-btn" onclick="display_record('${invoice.invoiceNumber}')">View</button></td>
         `;
         tbody.appendChild(tr);
     });
@@ -273,4 +271,121 @@ function showTab(tab) {
         fetchInvoices();
     }
     Search(); // Trigger search to apply current filters
+}
+
+function display_record(number) {
+    if (!jsonObj || !Array.isArray(jsonObj.items) || jsonObj.items.length === 0) {
+        alert("No data to display.");
+        return;
+    }
+    jsonObj = {};
+    if( curr_tab === 'credit-memos' ){
+        fetch('/api/credit-memos/'+jsonObj).then(res => res.json()).then(data => {
+            jsonObj = data.items;
+        }).catch(err => {
+            console.error('Error fetching credit memo:', err);
+        });
+    }else if( curr_tab === 'sales-orders' ){
+        fetch('/api/sales-orders/'+jsonObj).then(res => res.json()).then(data => {
+            jsonObj = data.items;
+        }).catch(err => {
+            console.error('Error fetching credit memo:', err);
+        });
+    }else if( curr_tab === 'invoices' ){
+        fetch('/api/invoices/'+jsonObj).then(res => res.json()).then(data => {
+            jsonObj = data.items;
+        }).catch(err => {
+            console.error('Error fetching credit memo:', err);
+        });
+    }
+    // Create modal background
+    const modalBg = document.createElement('div');
+    modalBg.style.position = 'fixed';
+    modalBg.style.top = '0';
+    modalBg.style.left = '0';
+    modalBg.style.width = '100vw';
+    modalBg.style.height = '100vh';
+    modalBg.style.background = 'rgba(0,0,0,0.4)';
+    modalBg.style.zIndex = '9999';
+    modalBg.id = 'record-modal-bg';
+
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.style.position = 'fixed';
+    modalContent.style.top = '50%';
+    modalContent.style.left = '50%';
+    modalContent.style.transform = 'translate(-50%, -50%)';
+    modalContent.style.background = '#fff';
+    modalContent.style.padding = '30px 40px';
+    modalContent.style.borderRadius = '8px';
+    modalContent.style.boxShadow = '0 4px 24px rgba(0,0,0,0.18)';
+    modalContent.style.maxHeight = '80vh';
+    modalContent.style.overflow = 'auto';
+    modalContent.style.minWidth = '350px';
+    modalContent.style.maxWidth = '90vw';
+    modalContent.id = 'record-modal-content';
+
+    // Close button
+    const closeBtn = document.createElement('span');
+    closeBtn.textContent = '×';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '12px';
+    closeBtn.style.right = '18px';
+    closeBtn.style.fontSize = '28px';
+    closeBtn.style.fontWeight = 'bold';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.onclick = () => {
+        document.body.removeChild(modalBg);
+    };
+    modalContent.appendChild(closeBtn);
+
+    // Table
+    const table = document.createElement('table');
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.style.background = '#fafafa';
+
+    // Table header
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const keys = Object.keys(jsonObj.items[0]);
+    keys.forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = key;
+        th.style.padding = '8px 6px';
+        th.style.background = '#f0f6ff';
+        th.style.borderBottom = '1px solid #e0e0e0';
+        th.style.position = 'sticky';
+        th.style.top = '0';
+        th.style.zIndex = '1';
+        headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    // Table body
+    const tbody = document.createElement('tbody');
+    jsonObj.items.forEach(item => {
+        const row = document.createElement('tr');
+        keys.forEach(key => {
+            const td = document.createElement('td');
+            td.textContent = item[key] !== undefined && item[key] !== null ? item[key] : '';
+            td.style.padding = '8px 6px';
+            td.style.borderBottom = '1px solid #e0e0e0';
+            row.appendChild(td);
+        });
+        tbody.appendChild(row);
+    });
+    table.appendChild(tbody);
+
+    modalContent.appendChild(table);
+    modalBg.appendChild(modalContent);
+    document.body.appendChild(modalBg);
+
+    // Optional: close modal on background click
+    modalBg.onclick = function(e) {
+        if (e.target === modalBg) {
+            document.body.removeChild(modalBg);
+        }
+    };
 }
