@@ -194,7 +194,8 @@ app.post('/submit-order', async (req, res) => {
             quantity: 8, // Adjust quantity as needed
             priceLevel: null, //grab price level from netsuite for each customer
             rate: null, 
-            location: null // grab location from netsuite for each customer
+            location: null, // grab location from netsuite for each customer
+            itemInternalId: item.internalId
         }))
     };
     console.log(payload);

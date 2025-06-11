@@ -285,7 +285,8 @@ function update_inventory(){
                 allInventory = allInventory.concat(data.items.map(item => ({
                     upc: item.item_upc_code,
                     quantity: item.item_total_quanity_on_hand,
-                    isinactive: item.isinactive
+                    isinactive: item.isinactive,
+                    internal_id: item.item_internal_id
                 })));
                 console.log("Current inventory:", allInventory);
                 if (data.hasMore) {
