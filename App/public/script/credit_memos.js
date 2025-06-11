@@ -272,4 +272,5 @@ function showTab(tab) {
     } else if (tab === 'invoices') {
         fetchInvoices();
     }
+    Search(); // Trigger search to apply current filters
 }
