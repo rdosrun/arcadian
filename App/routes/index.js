@@ -80,7 +80,8 @@ router.get('/get_account', function (req, res) {
     res.json({
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
-        account: req.session.account
+        account: req.session.account,
+        client_info: req.body.client_info
     });
 });
 
