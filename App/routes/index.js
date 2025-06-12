@@ -59,7 +59,7 @@ router.post('/auth/callback', async function (req, res, next) {
         if (userExists) {
             console.log('User exists in NetSuite.');
             req.session.isAuthenticated = true;
-            req.session.account = JSON.stringify(decodedToken);
+            req.session.account = decodedToken;
         } else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
