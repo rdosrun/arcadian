@@ -59,7 +59,7 @@ router.post('/auth/callback', async function (req, res, next) {
         if (userExists) {
             console.log('User exists in NetSuite.');
             req.session.isAuthenticated = true;
-            req.session.account = decodedToken;
+            req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
         } else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
@@ -80,8 +80,7 @@ router.get('/get_account', function (req, res) {
     res.json({
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
-        account: req.session.account,
-        client_info: req.body.client_info
+        account: req.session.account
     });
 });
 
