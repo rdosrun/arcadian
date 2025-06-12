@@ -30,6 +30,16 @@ router.get('/', function (req, res, next) {
     });
 });
 
+router.get('/', isAuthenticated, function (req, res, next) {
+    res.render('index', {
+        title: 'MSAL Node & Express Web App',
+        isAuthenticated: req.session.isAuthenticated,
+        username: req.session.account?.username,
+        account: req.session.account
+    });
+}
+);
+
 router.post('/auth/callback', async function (req, res, next) {
     //1 get the token deal with long in 
     /*console.log('Client Info:', req.body.client_info);
@@ -66,9 +76,8 @@ router.post('/auth/callback', async function (req, res, next) {
     // You can add your logic here to process the callback and set session variables
 });
 
-router.get('/views/:page', function (req, res, next) {
-    const page = req.params.page;
-    res.render(page, {
+router.get('/get_account', function (req, res) {
+    res.json({
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
         account: req.session.account
