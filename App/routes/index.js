@@ -57,7 +57,8 @@ router.post('/auth/callback', async function (req, res, next) {
         // Check if the username is in the list of employees
         const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
         if (userExists) {
-            console.log('User exists in NetSuite.');
+            const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
+            console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
             req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
         } else {
