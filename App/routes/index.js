@@ -26,6 +26,7 @@ router.get('/', function (req, res, next) {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
+        account: req.session.account
     });
 });
 
@@ -70,6 +71,7 @@ router.get('/views/:page', function (req, res, next) {
     res.render(page, {
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
+        account: req.session.account
     });
 });
 
