@@ -48,6 +48,7 @@ router.post('/auth/callback', async function (req, res, next) {
         if (userExists) {
             console.log('User exists in NetSuite.');
             req.session.isAuthenticated = true;
+            req.session.account = decodedToken;
         } else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
@@ -55,6 +56,7 @@ router.post('/auth/callback', async function (req, res, next) {
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
+        req.session.account = null;
     }
 
     //2 redirect to default page (index.hbs)
