@@ -53,7 +53,7 @@ router.post('/auth/callback', async function (req, res, next) {
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
         //console.log('Employee List:', employeeList);
-
+        console.log('Decoded Token:', decodedToken);
         // Check if the username is in the list of employees
         const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
         if (userExists) {
