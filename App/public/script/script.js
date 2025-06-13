@@ -21,12 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
    //this one gets called when sign in happens
   async function signIn() {
     try {
-      const loginResponse = await msalInstance.loginPopup({
+      const loginResponse = await msalInstance.loginRedirect({
         scopes: ['User.Read']
       });
       console.log('Login successful:', loginResponse);
       sessionStorage.setItem('msalLoggedIn', true);
       document.getElementById('cart').style.display = 'block';
+
     } catch (error) {
       console.error(error);
     }
