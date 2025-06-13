@@ -189,7 +189,7 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         }
         res.json({ customers : allCustomers });
     } catch (error) {
-        next(error);
+        //next(error);
     }
 });
 
