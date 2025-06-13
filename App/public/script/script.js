@@ -17,6 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const msalInstance = new msal.PublicClientApplication(msalConfig);
+  msalInstance.initialize().then(() => {
+    // Redirect: once login is successful and redirects with tokens, call Graph API
+    msalInstance.handleRedirectPromise().then(handleResponse).catch(err => {
+        console.error(err);
+    });
+})
 
    //this one gets called when sign in happens
   async function signIn() {
@@ -33,6 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
+  
   async function signOut() {
     await msalInstance.logoutPopup();
     sessionStorage.removeItem('msalLoggedIn');
