@@ -41,9 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(error);
     }
   }
-
+  var jwt_token = null;
   function handleResponse(response) {
-    console.log("jwt token response: "+response);
+    jwt_token = response;
+    console.log("jwt token response: "+jwt_token);
   }
 
 
