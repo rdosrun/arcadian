@@ -16,6 +16,10 @@ const fs = require('fs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
+var creditMemosRouter = require('./routes/memos/credit_memos');
+var salesOrdersRouter = require('./routes/memos/sales_orders');
+var invoicesRouter = require('./routes/memos/invoices');
+
 var netsuite = require('./routes/backend/netsuite');
 const { get_token} = require('./routes/libs/get_token');
 var uploadPhotosRouter = require('./routes/upload_photos');
@@ -54,11 +58,23 @@ app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'favicon.i
 app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+
+
+
+
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadPhotosRouter);
+
+// API endpoints that proxy to the new routers
+app.use('/api/credit-memos', creditMemosRouter);
+app.use('/api/sales-orders', salesOrdersRouter);
+app.use('/api/invoices', invoicesRouter);
+
+
+
 
 app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
