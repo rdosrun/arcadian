@@ -178,15 +178,11 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         while (hasMore) {
             const customersPage = await Query_Customers(offset);
             const parsed = JSON.parse(customersPage);
-            if (Array.isArray(parsed.items) && parsed.items.length > 0) {
+            hasMore = parsed.hasMore;
+            if (parsed.items && parsed.items.length > 0) {
                 allCustomers = allCustomers.concat(parsed.items);
                 offset += 1000;
                 // If less than 1000 returned, no more pages
-                if (parsed.items.length < 1000) {
-                    hasMore = false;
-                }
-            } else {
-                hasMore = false;
             }
         }
         res.json({ customers : allCustomers });
