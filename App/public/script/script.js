@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const loginResponse = await msalInstance.loginPopup({
         scopes: ['User.Read']
       });
+      console.log('Login successful:', loginResponse);
       sessionStorage.setItem('msalLoggedIn', true);
       document.getElementById('cart').style.display = 'block';
     } catch (error) {
