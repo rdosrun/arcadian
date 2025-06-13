@@ -33,8 +33,10 @@
         <li><button class="nav-btn" onclick="loadPage('/views/about')">About Us</button></li>
         <li><button class="nav-btn" onclick="loadPage('/views/contact')">Contact</button></li>
         {{#if isAuthenticated}}
-           <li><button class="nav-btn" onclick="loadPage('/retail/re-order')">Re-Order</button></li>
+           <!--<li><button class="nav-btn" onclick="loadPage('/retail/re-order')">Re-Order</button></li-->
+           <li><button class="nav-btn" onclick="loadPage('/views/credit_memos')">Credit memos</button></li>
             <li><button class="nav-btn" onclick="loadPage('/retail/products')">Products</button></li>
+            
         {{/if}}
         {{#unless isAuthenticated}}
           <li><button class="nav-btn" onclick="loadPage('/views/retail/gallery')">Gallery</button></li>
