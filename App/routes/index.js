@@ -187,7 +187,7 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
                 // If less than 1000 returned, no more pages
             }
         }
-        res.json({ customers : allCustomers });
+        res.json({ items : allCustomers });
     } catch (error) {
         //next(error);
     }
