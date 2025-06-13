@@ -69,6 +69,7 @@ router.get('/auth/callback', async function (req, res, next) {
         console.log(err);
         req.session.isAuthenticated = false;
         req.session.account = null;
+        res.redirect('/');
     }
 
     //2 redirect to default page (index.hbs)
