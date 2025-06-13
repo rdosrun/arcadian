@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       return msalInstance.loginRedirect({
         scopes: ['User.Read'],
+        responseMode: 'query'
       });
       /*const loginResponse = await msalInstance.loginRedirect({
         scopes: ['User.Read'],
