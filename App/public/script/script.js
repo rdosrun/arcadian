@@ -27,19 +27,24 @@ document.addEventListener("DOMContentLoaded", () => {
    //this one gets called when sign in happens
   async function signIn() {
     try {
-      const loginResponse = await msalInstance.loginRedirect({
+      return msalInstance.loginRedirect({
         scopes: ['User.Read'],
-        responseMode: 'query'
+      });
+      /*const loginResponse = await msalInstance.loginRedirect({
+        scopes: ['User.Read'],
       });
       console.log('Login successful:', loginResponse);
       sessionStorage.setItem('msalLoggedIn', true);
-      document.getElementById('cart').style.display = 'block';
+      document.getElementById('cart').style.display = 'block';*/
 
     } catch (error) {
       console.error(error);
     }
   }
 
+  function handleResponse(response) {
+    console.log("jwt token response: "+response);
+  }
 
 
   async function signOut() {
