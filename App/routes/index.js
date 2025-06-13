@@ -179,6 +179,8 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
             const customersPage = await Query_Customers(offset);
             const parsed = JSON.parse(customersPage);
             hasMore = parsed.hasMore;
+            console.log('Customers Page:', parsed.hasMore);
+            console.log('Customers Offset:', offset);
             if (parsed.items && parsed.items.length > 0) {
                 allCustomers = allCustomers.concat(parsed.items);
                 offset += 1000;
