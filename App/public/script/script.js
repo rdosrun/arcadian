@@ -28,7 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function signIn() {
     try {
       const loginResponse = await msalInstance.loginRedirect({
-        scopes: ['User.Read']
+        scopes: ['User.Read'],
+        responseMode: 'query'
       });
       console.log('Login successful:', loginResponse);
       sessionStorage.setItem('msalLoggedIn', true);
@@ -40,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  
+
   async function signOut() {
     await msalInstance.logoutPopup();
     sessionStorage.removeItem('msalLoggedIn');
