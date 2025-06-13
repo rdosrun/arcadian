@@ -36,5 +36,13 @@ router.post('/callback', function (req, res, next) {
     console.log('token', token);
     res.render('callback', { token });
 });
+router.get('/callback', function (req, res, next) {
+    // Handle the authentication callback
+    // You can add your logic here to process the callback and set session variables
+    
+    const token = req.query.token; // Assuming the token is passed as a query parameter
+    console.log('token', token);
+    res.render('callback', { token });
+});
 
 module.exports = router;

@@ -40,6 +40,43 @@ router.get('/', isAuthenticated, function (req, res, next) {
 }
 );
 
+router.get('/auth/callback', async function (req, res, next) {
+    
+    //1 get the token deal with long in 
+    console.log('Client Info:', req.body.client_info);
+    const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
+    console.log('Decoded Token:', decodedToken);
+    console.log('Username:', decodedToken.preferred_username);
+    // Check if username exists and get access token
+    try {
+        // Get the list of employees from NetSuite
+        const employees = await get_employees();
+        const employeeList = JSON.parse(employees).items;
+        //console.log('Employee List:', employeeList);
+        console.log('Decoded Token:', decodedToken);
+        // Check if the username is in the list of employees
+        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
+        if (userExists) {
+            const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
+            console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
+            req.session.isAuthenticated = true;
+            req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
+        } else {
+            console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
+            req.session.isAuthenticated = false;
+        }
+    } catch (err) {
+        console.log(err);
+        req.session.isAuthenticated = false;
+        req.session.account = null;
+    }
+
+    //2 redirect to default page (index.hbs)
+    res.redirect('/');
+    // Handle the authentication callback
+    // You can add your logic here to process the callback and set session variables
+});
+
 router.post('/auth/callback', async function (req, res, next) {
     
     //1 get the token deal with long in 
