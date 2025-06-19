@@ -74,7 +74,9 @@ app.use('/api/sales-orders', salesOrdersRouter);
 app.use('/api/invoices', invoicesRouter);
 
 
-
+app.get('/api/enviroment', function(req,res,next){
+    return res.json({BASE_URL: process.env.BASE_URL});
+});
 
 app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
@@ -209,7 +211,7 @@ app.post('/submit-order', async (req, res) => {
             itemUPC: item.ID,
             quantity: 8, // Adjust quantity as needed
             priceLevel: null, //grab price level from netsuite for each customer
-            rate: null, 
+            rate: null,
             location: null, // grab location from netsuite for each customer
             itemInternalId: item.interal_ID
         }))

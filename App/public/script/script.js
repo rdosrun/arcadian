@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchProfile() {
     try {
-        const response = await fetch('/profile', {
+        const response = await fetch('profile', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

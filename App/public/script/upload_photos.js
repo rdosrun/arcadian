@@ -4,7 +4,7 @@ function uploadPhoto() {
     const formData = new FormData();
     formData.append('photo', fileInput.files[0]);
 
-    fetch('/upload', {
+    fetch('upload', {
         method: 'POST',
         body: formData
     })

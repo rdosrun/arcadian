@@ -18,9 +18,9 @@ function update_hats(authorized = false) {
     storeItemsContainer.setAttribute('data-state', selectedState);
     storeItemsContainer.innerHTML = ''; // Clear existing items
 
-   
 
-    fetch("/images/" + selectedState)
+
+    fetch("images/" + selectedState)
         .then(response => response.json())
         .then(data => {
             console.log("Fetched images for state:", selectedState, data);
@@ -33,7 +33,7 @@ function update_hats(authorized = false) {
                 var total_photots =1;
                 var local_inventory = JSON.parse(localStorage.getItem('inventory'));
                 for (var i = 0; i < data.length; i = i + total_photots) {
-                    total_photots = 1; 
+                    total_photots = 1;
                     if(data[i] == null ){
                         console.warn("No data for index:", i);
                         continue; // Skip if no data for this index
@@ -175,7 +175,7 @@ function update_hats(authorized = false) {
             }
         )
         .catch(error => console.error('Error fetching images:', error));
-        
+
 }
 
 function enlargeItem(item, imgSrc, upc) {
@@ -265,7 +265,7 @@ function duplicateElement() {
             storeItems.appendChild(newElement);
         }
         if(i < curr_hats){
-            var x = `/product_images/${state}/${i}.jpg`;
+            var x = `product_images/${state}/${i}.jpg`;
             document.getElementById(i).querySelector("img").src = x;
             document.getElementById(i).style.display = "inline";
         } else {
@@ -278,7 +278,7 @@ function update_inventory(){
     console.log("Updating inventory...");
     let allInventory = [];
     const recursiveFetch = function fetch_inventory(offset=0) {
-        fetch("/inventory?offset=" + offset)
+        fetch("inventory?offset=" + offset)
             .then(response => response.json())
             .then(data => {
                 console.log("Inventory data:", data.items);
