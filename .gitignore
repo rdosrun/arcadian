@@ -16,4 +16,4 @@ App/cache/
 App/images/
 App/images2/
 
-routes/backend/token.txt
+App/routes/backend/token.txt
