@@ -41,19 +41,23 @@ router.get('/', isAuthenticated, function (req, res, next) {
 );
 
 router.get('/auth/callback', async function (req, res, next) {
-    
-    //1 get the token deal with long in 
-    
-    // Check if username exists and get access token
-    try {
 
+    //make jwt_route page
+
+    //make it run a function that send the jwt token to the server
+    //make that function do a res.redirect and preform auth above
+    res.redirect('/jwt.hmtl');
+    // Handle the authentication callback
+    // You can add your logic here to process the callback and set session variables
+});
+router.get('/auth/jwt_route', async function (req,res,next){
+
+
+    try {
         console.log('Client Info:', req.body.client_info);
         const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
         console.log('Decoded Token:', decodedToken);
         console.log('Username:', decodedToken.preferred_username);
-
-
-
         // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
@@ -77,15 +81,14 @@ router.get('/auth/callback', async function (req, res, next) {
 
     }
 
-    //2 redirect to default page (index.hbs)
-    res.redirect('/');
-    // Handle the authentication callback
-    // You can add your logic here to process the callback and set session variables
+
+
 });
 
+
 router.post('/auth/callback', async function (req, res, next) {
-    
-    //1 get the token deal with long in 
+
+    //1 get the token deal with long in
     console.log('Client Info:', req.body.client_info);
 
     //this is where the breaking is happening it's not an nginx issue
