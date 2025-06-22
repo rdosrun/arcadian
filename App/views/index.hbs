@@ -4,21 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arcadian Outfitters</title>
-         <link rel="stylesheet"  type="text/css" href="style/style.css">
-         <link rel="stylesheet"  type="text/css" href="style/headerbar.css">
-         <link rel="stylesheet"  type="text/css" href="style/qr_style.css">
-        <link  rel="stylesheet"  type="text/css" href="style/aboutus.css">
-        <link rel="stylesheet" type="text/css" href="style/credit_memos.css">
-        <script src="script/page_route.js"></script>
+         <link rel="stylesheet"  type="text/css" href="{{base_url}}style/style.css">
+         <link rel="stylesheet"  type="text/css" href="{{base_url}}style/headerbar.css">
+         <link rel="stylesheet"  type="text/css" href="{{base_url}}style/qr_style.css">
+        <link  rel="stylesheet"  type="text/css" href="{{base_url}}style/aboutus.css">
+        <link rel="stylesheet" type="text/css" href="{{base_url}}style/credit_memos.css">
+        <script src="{{base_url}}script/page_route.js"></script>
         <script src="https://alcdn.msauth.net/browser/2.37.0/js/msal-browser.min.js"></script>
         <script src="https://unpkg.com/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-        <script src="script/script.js"></script>
-        <script src="script/image_route.js"></script>
-        <script src="script/scanner.js"></script>
-        <script src="script/store.js"></script>
-        <script src="script/upload_photos.js"></script>
-        <script src="script/credit_memos.js"></script>
+        <script src="{{base_url}}script/script.js"></script>
+        <script src="{{base_url}}script/image_route.js"></script>
+        <script src="{{base_url}}script/scanner.js"></script>
+        <script src="{{base_url}}script/store.js"></script>
+        <script src="{{base_url}}script/upload_photos.js"></script>
+        <script src="{{base_url}}script/credit_memos.js"></script>
     </head>
 <body>
     <!-- Header Bar -->
@@ -29,24 +29,24 @@
 
     <nav class="nav-links" >
       <ul>
-        <li><button class="nav-btn" onclick="loadPage('views/landing')">Home</button></li>
-        <li><button class="nav-btn" onclick="loadPage('views/about')">About Us</button></li>
-        <li><button class="nav-btn" onclick="loadPage('views/contact')">Contact</button></li>
+        <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/landing')">Home</button></li>
+        <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/about')">About Us</button></li>
+        <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/contact')">Contact</button></li>
         {{#if isAuthenticated}}
-           <li><button class="nav-btn" onclick="loadPage('views/credit_memos')">Credit memos</button></li>
-            <li><button class="nav-btn" onclick="loadPage('retail/products')">Products</button></li>
+           <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/credit_memos')">Credit memos</button></li>
+            <li><button class="nav-btn" onclick="loadPage('{{base_url}}retail/products')">Products</button></li>
 
         {{/if}}
         {{#unless isAuthenticated}}
-          <li><button class="nav-btn" onclick="loadPage('views/retail/gallery')">Gallery</button></li>
+          <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/retail/gallery')">Gallery</button></li>
         {{/unless}}
-        <li><button class="nav-btn" onclick="loadPage('views/store_locator')">Store Locator</button></li>
+        <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/store_locator')">Store Locator</button></li>
         </ul>
     </nav>
 
     <div class="switch">
         {{#unless isAuthenticated}}
-        <a href="/auth/signin">
+        <a href="{{base_url}}auth/signin">
           <button>Login with Microsoft</button>
         </a>
         {{/unless}}
@@ -90,13 +90,6 @@ function toggleSidebar() {
  <!-- Google tag (gtag.js) -->
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y0PZ50W1HK"></script>
-
-<script>
-  const basePath = window.location.pathname.startsWith("/test")
-    ? "/test/index.html"
-    : "/index.html";
-  document.getElementById("env-aware-link").href = basePath;
-</script>
 
 <script>
 
