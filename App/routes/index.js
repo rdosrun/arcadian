@@ -81,7 +81,7 @@ router.post('/auth/jwt_route', async function (req,res,next){
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
-            req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
+            req.session.account = matchedEmployee.email;
         } else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
