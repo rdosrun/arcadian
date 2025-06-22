@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
         'Content-Type': 'application/json'
     }
     }).then(function(response) {
+      console.log(response);
         document.documentElement.innerHTML = response;
       }).catch(function(error) {
         console.log('Request failed', error);
