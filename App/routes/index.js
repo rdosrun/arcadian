@@ -60,13 +60,13 @@ router.get('/auth/callback/views/script.js', function (req, res) {
 });
 
 router.post('/auth/jwt_route', async function (req,res,next){
-    console.log("JWT Route Loaded", req.body.idToken);
-    token = JSON.parse(req.body);
+    console.log("JWT Route Loaded", req.body);
+    token = req.body.idToken;
     console.log("JWT Route Loaded", token);
 
     try {
         console.log('Client Info:', token.client_info);
-        const decodedToken = JSON.parse(Buffer.from(token.client_info, 'base64').toString('utf8'));
+        const decodedToken = JSON.parse(Buffer.from(token, 'base64').toString('utf8'));
         console.log('Decoded Token:', decodedToken);
         console.log('Username:', decodedToken.preferred_username);
         // Get the list of employees from NetSuite
@@ -75,14 +75,14 @@ router.post('/auth/jwt_route', async function (req,res,next){
         //console.log('Employee List:', employeeList);
         console.log('Decoded Token:', decodedToken);
         // Check if the username is in the list of employees
-        const userExists = employeeList.some(employee => employee.email === token.account.username);
+        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
         if (userExists) {
-            const matchedEmployee = employeeList.find(employee => employee.email === token.account.username);
+            const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
             req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
         } else {
-            console.log('User'+ token.account.username +'does not exist in NetSuite.');
+            console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
         }
     } catch (err) {
