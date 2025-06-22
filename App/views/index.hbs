@@ -46,7 +46,7 @@
 
     <div class="switch">
         {{#unless isAuthenticated}}
-        <a href="{{base_url}}auth/signin">
+        <a onclick="logIn()">
           <button>Login with Microsoft</button>
         </a>
         {{/unless}}
