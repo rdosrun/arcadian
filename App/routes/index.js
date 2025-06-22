@@ -114,16 +114,23 @@ router.post('/auth/callback', async function (req, res, next) {
         // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
+        const customers = await readAllCustomers();
         //console.log('Employee List:', employeeList);
         console.log('Decoded Token:', decodedToken);
         // Check if the username is in the list of employees
-        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
+        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username) ;
+        const customerExists =  customers.some(customer => customer.email === decodedToken.preferred_username);
         if (userExists) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
-            req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
-        } else {
+            req.session.account =matchedEmployee.email;
+        } else if(customerExists){
+            const matchedCustomer = customers.find(customer => customer.email === decodedToken.preferred_username);
+            console.log('User exists in NetSuite. Matched email:', matchedCustomer.email);
+            req.session.isAuthenticated = true;
+            req.session.account = matchedCustomer.email;
+        }else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
         }
@@ -209,5 +216,39 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         //next(error);
     }
 });
+
+// Function to fetch all customers and store in a JSON file
+async function fetchAndStoreAllCustomers() {
+    let allCustomers = [];
+    let offset = 0;
+    let hasMore = true;
+    while (hasMore) {
+        const customersPage = await Query_Customers(offset);
+        const parsed = JSON.parse(customersPage);
+        hasMore = parsed.hasMore;
+        if (parsed.items && parsed.items.length > 0) {
+            allCustomers = allCustomers.concat(parsed.items);
+            offset += 1000;
+        }
+    }
+    const filePath = path.join(__dirname, '../../customers.json');
+    fs.writeFileSync(filePath, JSON.stringify(allCustomers, null, 2), 'utf8');
+    return allCustomers;
+}
+
+// Function to read and return the whole customers.json file
+function readAllCustomers() {
+    const filePath = path.join(__dirname, '../../customers.json');
+    if (!fs.existsSync(filePath)) return [];
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+}
+
+// Run fetchAndStoreAllCustomers every hour
+setInterval(() => {
+    fetchAndStoreAllCustomers()
+        .then(() => console.log('Customer list updated and stored in customers.json'))
+        .catch(err => console.error('Error updating customer list:', err));
+}, 5 * 60 * 1000); // 5 min in milliseconds
 
 module.exports = router;
