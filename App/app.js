@@ -59,12 +59,13 @@ app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
-	app.use((req, res, next) => {
-		console.log('Original URL:', req.originalUrl);
-		req.url = req.url.replace(/^\/[^/]+/, '') || '/';
-		console.log('Rewritten URL:', req.url);
-  		next();
-	});
+app.use((req, res, next) => {
+  if (req.url.startsWith('/test')) {
+    req.url = req.url.slice(5) || '/'; // remove `/test`, preserve slash
+  }
+  next();
+});
+
 
 
 // Routes
