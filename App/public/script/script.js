@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //console.log("jwt token response: "+jwt_token);
         console.log("JWT View Loaded", jwt_token);
         fetch('https://arcadianoutfitters.com/test/auth/jwt_route', {
-    method: 'POST', // or 'PUT'
+    method: 'get', // or 'PUT'
     headers: {
         'Content-Type': 'application/json'
     },
