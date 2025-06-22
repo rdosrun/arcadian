@@ -63,7 +63,7 @@ router.post('/auth/jwt_route', async function (req,res,next){
     token = req.body;
     console.log("JWT Route Loaded", token);
 
-    try {
+    /*try {
         console.log('Client Info:', req.body.client_info);
         const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
         console.log('Decoded Token:', decodedToken);
@@ -89,7 +89,7 @@ router.post('/auth/jwt_route', async function (req,res,next){
         req.session.isAuthenticated = false;
         req.session.account = null;
 
-    }
+    }*/
 
 
 
