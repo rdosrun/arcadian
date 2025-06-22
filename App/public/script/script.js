@@ -53,7 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
     headers: {
         'Content-Type': 'application/json'
     }
-    });
+    }).then(function(response) {
+        document.documentElement.innerHTML = response;
+      }).catch(function(error) {
+        console.log('Request failed', error);
+      });
     //window.location.reload();;
 
 }
