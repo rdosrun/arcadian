@@ -68,7 +68,6 @@ router.get('/auth/jwt_route', async function (req,res,next){
     console.log("JWT Route Loaded", token);
 
     try {
-        console.log('Client Info:', token.client_info);
         const decodedToken = jwt.decode(token);
         console.log('Decoded Token:', decodedToken);
         console.log('Username:', decodedToken.preferred_username);
