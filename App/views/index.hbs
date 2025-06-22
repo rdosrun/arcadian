@@ -92,6 +92,13 @@ function toggleSidebar() {
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Y0PZ50W1HK"></script>
 
 <script>
+  const basePath = window.location.pathname.startsWith("/test")
+    ? "/test/index.html"
+    : "/index.html";
+  document.getElementById("env-aware-link").href = basePath;
+</script>
+
+<script>
 
   window.dataLayer = window.dataLayer || [];
 
