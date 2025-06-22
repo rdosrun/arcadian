@@ -53,9 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     headers: {
         'Content-Type': 'application/json'
     },
-    body: {
-        'client_info': JSON.stringify(jwt_token)
-      }
+    body: JSON.stringify(jwt_token)
     });
 
 }

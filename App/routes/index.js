@@ -60,7 +60,8 @@ router.get('/auth/callback/views/script.js', function (req, res) {
 });
 
 router.post('/auth/jwt_route', async function (req,res,next){
-
+    token = req.body;
+    console.log("JWT Route Loaded", token);
 
     try {
         console.log('Client Info:', req.body.client_info);
