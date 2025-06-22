@@ -31,6 +31,13 @@ var app = express();
  * Using express-session middleware for persistent user session. Be sure to
  * familiarize yourself with available options. Visit: https://www.npmjs.com/package/express-session
  */
+app.use((req, res, next) => {
+  if (req.url.startsWith('/test')) {
+    req.url = req.url.slice(5) || '/'; // remove `/test`, preserve slash
+  }
+  next();
+});
+
  app.use(session({
     secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
@@ -59,12 +66,7 @@ app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
-app.use((req, res, next) => {
-  if (req.url.startsWith('/test')) {
-    req.url = req.url.slice(5) || '/'; // remove `/test`, preserve slash
-  }
-  next();
-});
+
 
 
 
