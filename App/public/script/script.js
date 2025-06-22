@@ -44,9 +44,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   var jwt_token = null;
   function handleResponse(response) {
+
     jwt_token = response;
-    console.log("jwt token response: "+jwt_token);
-  }
+    //console.log("jwt token response: "+jwt_token);
+        console.log("JWT View Loaded", jwt_token);
+        fetch('https://arcadianoutfitters.com/test/auth/jwt_route', {
+    method: 'POST', // or 'PUT'
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(jwt_token)
+    });
+
+}
 
 
   async function signOut() {
