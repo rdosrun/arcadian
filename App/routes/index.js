@@ -52,6 +52,9 @@ router.get('/auth/callback', async function (req, res, next) {
     // Handle the authentication callback
     // You can add your logic here to process the callback and set session variables
 });
+router.get('/auth/callback/views/jwt', function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/jwt.html'));
+});
 router.get('/auth/jwt_route', async function (req,res,next){
 
 

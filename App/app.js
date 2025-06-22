@@ -51,7 +51,6 @@ app.use((req, res, next) => {
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('auth/callback/views/jwt', path.join(__dirname, 'views/jwt.html'));
 app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
