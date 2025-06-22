@@ -23,6 +23,7 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get('/', function (req, res, next) {
+    console.log("base:"+req.session.isAuthenticated)
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
@@ -33,6 +34,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/', isAuthenticated, function (req, res, next) {
+    console.log("authed:"+req.session.isAuthenticated)
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
