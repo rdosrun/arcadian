@@ -59,7 +59,7 @@ router.get('/auth/callback/views/script.js', function (req, res) {
     res.sendFile(path.join(__dirname, '../public/script/script.js'));
 });
 
-router.get('/auth/jwt_route', async function (req,res,next){
+router.post('/auth/jwt_route', async function (req,res,next){
 
 
     try {
