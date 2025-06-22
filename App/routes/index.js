@@ -88,7 +88,7 @@ router.post('/auth/jwt_route', async function (req,res,next){
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
         }
-        redirect('/');
+        res.redirect('/');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
