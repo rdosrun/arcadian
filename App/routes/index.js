@@ -4,6 +4,7 @@
  */
 
 var express = require('express');
+const jwt = require('jsonwebtoken');
 var router = express.Router();
 var { get_token } = require('./libs/get_token');
 const { get_employees, Inventory, Query_Customers } = require('./backend/netsuite');
@@ -66,7 +67,7 @@ router.post('/auth/jwt_route', async function (req,res,next){
 
     try {
         console.log('Client Info:', token.client_info);
-        const decodedToken = JSON.parse(Buffer.from(token, 'base64').toString('utf8'));
+        const decodedToken = jwt.decode(token);
         console.log('Decoded Token:', decodedToken);
         console.log('Username:', decodedToken.preferred_username);
         // Get the list of employees from NetSuite
