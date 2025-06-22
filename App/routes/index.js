@@ -48,7 +48,7 @@ router.get('/auth/callback', async function (req, res, next) {
 
     //make it run a function that send the jwt token to the server
     //make that function do a res.redirect and preform auth above
-    res.redirect('/views/jwt');
+    res.redirect('views/jwt');
     // Handle the authentication callback
     // You can add your logic here to process the callback and set session variables
 });
