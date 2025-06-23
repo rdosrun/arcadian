@@ -46,6 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleResponse(response) {
 
     jwt_token = response;
+    if(jwt_token==null){
+      return;
+    }
     //console.log("jwt token response: "+jwt_token);
         console.log("JWT View Loaded", jwt_token);
         fetch('https://arcadianoutfitters.com/test/auth/jwt_route?idToken='+jwt_token.idToken, {

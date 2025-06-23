@@ -145,7 +145,9 @@ function toggleCartDisplay() {
 }
 
 // Attach the toggleCartDisplay function to the cart button
-document.getElementById('cart').addEventListener('click', toggleCartDisplay);
+if( document.getElementById('cart') != null ){
+    document.getElementById('cart').addEventListener('click', toggleCartDisplay);
+}
 
 var selectedCustomer = null;
 

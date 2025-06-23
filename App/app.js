@@ -68,11 +68,6 @@ app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'favicon.i
 app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-
-
-
-
-
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
