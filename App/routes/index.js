@@ -195,11 +195,11 @@ router.get('/inventory', isAuthenticated, async function (req, res, next) {
 // Route to query customers
 router.get('/customers', isAuthenticated, async function (req, res, next) {
     try {
-        let allCustomers = [];
+        /*let allCustomers = [];
         let offset = 0;
-        let hasMore = true;
+        let hasMore = true;*/
 
-        while (hasMore) {
+        /*while (hasMore) {
             const customersPage = await Query_Customers(offset);
             const parsed = JSON.parse(customersPage);
             hasMore = parsed.hasMore;
@@ -210,8 +210,8 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
                 offset += 1000;
                 // If less than 1000 returned, no more pages
             }
-        }
-        res.json({ items : allCustomers });
+        }*/
+        res.json({ items : readAllCustomers() });
     } catch (error) {
         //next(error);
     }
