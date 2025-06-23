@@ -7,6 +7,7 @@ require('dotenv').config();
 
 var path = require('path');
 var express = require('express');
+var compression = require('compression');
 var session = require('express-session');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
@@ -26,6 +27,7 @@ var uploadPhotosRouter = require('./routes/upload_photos');
 
 // initialize express
 var app = express();
+app.use(compression());
 
 /**
  * Using express-session middleware for persistent user session. Be sure to
