@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const msalConfig = {
     auth: {
       clientId: '8b1fadc1-8d5e-4543-a2d2-27675cdd49e2',//'95e880e8-e54d-4d01-a26c-052cff7e9592', // Replace with your application ID
-      authority: 'https://login.microsoftonline.com/consumers', // Replace with your tenant ID
+      authority: 'https://login.microsoftonline.com/41567265-9838-44f1-b774-e78fa4c5a97d', // Replace with your tenant ID
       redirectUri: 'https://arcadianoutfitters.com/test/auth/callback/'
     }
   };
