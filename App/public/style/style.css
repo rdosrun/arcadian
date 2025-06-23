@@ -3,7 +3,40 @@
     be used for other files
 
 */
+.store-items {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100vw - 200px;
+            height: 100vh;
+            z-index: -1;
+            padding: 20px;
+            overflow-y: scroll;
+        }
 
+        .item {
+            background-color: #e8e8e8;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 20vw;
+            height: 40vh;
+            z-index: 1;
+        }
+
+        .item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .item .price {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
 /* Initial hidden state for small screens */
 @media screen and (max-width: 768px) {
 
@@ -49,7 +82,37 @@
   }
 }
 
+@media screen and (max-width: 768px) {
+  .store-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important; /* Two columns for small screens */
+    gap: 10px; /* Reduce spacing for smaller viewports */
+    padding: 10px; /* Add padding for better layout on small screens */
+    width: 100%; /* Ensure it spans the full width */
+    height: auto; /* Adjust height to content */
+  }
 
+  .item {
+    width: 100%; /* Items take full width within the grid */
+    height: auto; /* Adjust height to content */
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .item img {
+    max-width: 100%; /* Ensure images are responsive */
+    height: auto; /* Keep aspect ratio */
+  }
+
+  .item .price {
+    font-size: 14px; /* Slightly smaller font for better fit */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .store-items {
+    grid-template-columns: 1fr !important; /* Single column for very small screens */
+  }
+}
 
 @media screen and (max-width: 768px) {
   .hero-section {
