@@ -3,6 +3,10 @@
     be used for other files
 
 */
+
+/* 
+start defualt rules for common items
+*/
 button {
     padding: 10px 20px;
     border: 1px solid #b2b2b2;
@@ -21,6 +25,9 @@ button:hover {
     text-decoration: underline;
 }
 
+/*
+ end default rules for common items 
+ */
 
 
 

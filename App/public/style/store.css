@@ -151,33 +151,33 @@ side bar strat
 */
 
 
-        .sidebar {
-              width: 200px;
-            background-color: #ffffff;
-            padding: 15px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            height: 100vh; /* Make it extend the full height of the viewport */
-            position: sticky; /* Keeps it visible when scrolling */
-            top: 0;
-        }
+.sidebar {
+        width: 200px;
+    background-color: #ffffff;
+    padding: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh; /* Make it extend the full height of the viewport */
+    position: sticky; /* Keeps it visible when scrolling */
+    top: 0;
+}
 
-        .sidebar h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
+.sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
 
-        .sidebar label {
-            display: block;
-            margin-bottom: 8px;
-        }
+.sidebar label {
+    display: block;
+    margin-bottom: 8px;
+}
 
-        .main-content {
-            top: 0;
-            left: 0;
-            height: fit-content;
-            min-height: 100vh;
-            padding: 20px;
-        }
+.main-content {
+    top: 0;
+    left: 0;
+    height: fit-content;
+    min-height: 100vh;
+    padding: 20px;
+}
 /*
 side bar end
 */
