@@ -76,6 +76,7 @@
 /* Initial hidden state for small screens */
 @media screen and (max-width: 768px) {
 
+    /* select state section*/
  #checkbox-container {
     display: none; /* Hidden by default */
   }
@@ -109,6 +110,33 @@
     display: flex !important;
     flex-direction: column;
   }
+  /* end state select*/
+
+  /* store picutes */
+  .store-items {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important; /* Two columns for small screens */
+    gap: 10px; /* Reduce spacing for smaller viewports */
+    padding: 10px; /* Add padding for better layout on small screens */
+    width: 100%; /* Ensure it spans the full width */
+    height: auto; /* Adjust height to content */
+  }
+
+  .item {
+    width: 100%; /* Items take full width within the grid */
+    height: auto; /* Adjust height to content */
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+
+  .item img {
+    max-width: 100%; /* Ensure images are responsive */
+    height: auto; /* Keep aspect ratio */
+  }
+
+  .item .price {
+    font-size: 14px; /* Slightly smaller font for better fit */
+  }
+    /* end store pictures */
 }
 
 /* Ensure the button is hidden on larger screens */

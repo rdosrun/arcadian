@@ -46,3 +46,72 @@ ul {
 ul li {
     margin-bottom: 5px;
 }
+
+
+.contact-form-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.contact-form-container input,
+.contact-form-container textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.contact-form-container button {
+}
+
+.contact-form-container button:hover {
+    background-color: #45a049;
+}
+
+@media screen and (max-width: 768px) {
+  .contact-form-container {
+    padding: 10px; /* Reduce padding for smaller screens */
+    width: 100%; /* Full width for smaller devices */
+    box-sizing: border-box; /* Include padding and border in the width */
+  }
+
+  .contact-form-container h2 {
+    font-size: 1.5rem; /* Adjust font size for headings */
+    text-align: center; /* Center-align heading */
+  }
+
+  .contact-form-container input,
+  .contact-form-container textarea {
+    width: 100%; /* Ensure inputs and textareas span the full width */
+    font-size: 1rem; /* Adjust font size */
+    padding: 0.75rem; /* Comfortable padding */
+  }
+
+  .contact-form-container button {
+    width: 100%; /* Make button full width */
+    padding: 10px; /* Adjust padding for smaller screens */
+    font-size: 1rem; /* Adjust font size */
+    margin-top: 1rem; /* Add spacing above the button */
+    background-color: #007BFF; /* Ensure color contrast is maintained */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .contact-form-container button:hover {
+    background-color: #0056b3; /* Slightly darker on hover */
+  }
+
+  .info-section {
+    width: 100%; /* Make info section full width */
+    margin-bottom: 20px; /* Add spacing below the info section */
+  }
+.main-container {
+    width: 100%;
+    display: inline;
+}
+
+}
+
