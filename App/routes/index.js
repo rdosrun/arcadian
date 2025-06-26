@@ -208,25 +208,19 @@ router.get('/inventory', isAuthenticated, async function (req, res, next) {
 // Route to query customers
 router.get('/customers', isAuthenticated, async function (req, res, next) {
     try {
-        /*let allCustomers = [];
-        let offset = 0;
-        let hasMore = true;*/
-
-        /*while (hasMore) {
-            const customersPage = await Query_Customers(offset);
-            const parsed = JSON.parse(customersPage);
-            hasMore = parsed.hasMore;
-            console.log('Customers Page:', parsed.hasMore);
-            console.log('Customers Offset:', offset);
-            if (parsed.items && parsed.items.length > 0) {
-                allCustomers = allCustomers.concat(parsed.items);
-                offset += 1000;
-                // If less than 1000 returned, no more pages
-            }
-        }*/
-        res.json({ items : readAllCustomers() });
+        let customers = readAllCustomers();
+        
+        // If user is not an employee, filter customers to only show related customers
+        if (!req.session.isEmployee && req.session.relatedCustomers) {
+            const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+            customers = customers.filter(customer => 
+                relatedCustomerIds.includes(customer.id)
+            );
+        }
+        
+        res.json({ items: customers });
     } catch (error) {
-        //next(error);
+        next(error);
     }
 });
 
