@@ -124,12 +124,25 @@ router.post('/auth/callback', async function (req, res, next) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
-            req.session.account =matchedEmployee.email;
+            req.session.account = matchedEmployee.email;
+            req.session.isEmployee = true;
         } else if(customerExists){
             const matchedCustomer = customers.find(customer => customer.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedCustomer.email);
+            
+            // Find all customers that share the same parent ID
+            const parentId = matchedCustomer.parent || matchedCustomer.id; // Use parent ID if exists, otherwise use own ID
+            const relatedCustomers = customers.filter(customer => 
+                customer.parent === parentId || customer.id === parentId
+            );
+            
             req.session.isAuthenticated = true;
             req.session.account = matchedCustomer.email;
+            req.session.isEmployee = false;
+            req.session.customer_id = matchedCustomer.id;
+            req.session.relatedCustomers = relatedCustomers;
+            
+            console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
         }else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
