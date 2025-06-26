@@ -19,13 +19,19 @@ function addToCart(button) {
             data => {
                 var inventory = JSON.parse(localStorage.getItem('inventory'));
                 console.log(data);
+                var found_inventory = false;
                 for( let i =0;i<inventory.length;i++){
                     if(inventory[i].upc == itemID){
                         if(inventory[i].quantity <= 0 || inventory[i].quantity == undefined){
-                            alert("Item is out of stock. Please select another item.");
-                            return;
+                            
+                        }else{
+                            found_inventory = true;
                         }
                     }
+                }
+                if(!found_inventory){
+                    alert("Item is out of stock. Please select another item.");
+                            return;
                 }
                 if(data.results.item_display_name == undefined){
                     cart.push({ name: "", ID: itemID,State:"" });
