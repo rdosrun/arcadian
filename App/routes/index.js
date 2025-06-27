@@ -248,7 +248,13 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         if (!req.session.isEmployee) {
             const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
             for (let i = 0; i < customers.length; i++) {
-                if( relatedCustomerIds.includes(customers[i].id) || customers[i].id === req.session.customer_id) {
+                if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
+                    if( customers[i].id === req.session.customer_id) {
+                        //console.log('Customer ID:', customers[i].id, 'is the current customer');
+                        ret_customers.push(customers[i]);
+                    }
+                }
+                else if( relatedCustomerIds.includes(customers[i].id) || customers[i].id === req.session.customer_id) {
                     //console.log('Customer ID:', customers[i].id, 'is in related customers');
                     ret_customers.push(customers[i]);
                 }
