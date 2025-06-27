@@ -117,14 +117,14 @@ router.get('/auth/jwt_route', async function (req,res,next){
             console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
             console.log('Related customer emails:', relatedCustomers.map(c => c.customer_email));
         }
-        res.redirect('/test/');
+        res.redirect('/');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
         req.session.account = null;
-        res.redirect('/test/');
+        res.redirect('/');
     }
-    //res.redirect('/test/');
+    //res.redirect('/');
 
 
 });
