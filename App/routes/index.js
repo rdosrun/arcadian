@@ -247,13 +247,19 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         // If user is not an employee, filter customers to only show related customers
         if (!req.session.isEmployee && req.session.relatedCustomers) {
             const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
-            ret_customers = customers.filter(customer => 
-                relatedCustomerIds.includes(customer.id)
-            );
+            for (let i = 0; i < customers.length; i++) {
+                if( relatedCustomerIds.includes(customers[i].id) || customers[i].id === req.session.customer_id) {
+                    //console.log('Customer ID:', customers[i].id, 'is in related customers');
+                    ret_customers.push(customers[i]);
+                }
+            }
+            console.log('Returning customers:', ret_customers.length);
+            
+            res.json({ items: ret_customers });
+        }else if (req.session.isEmployee) {
+            console.log('Returning customers:', customers.length);
+            res.json({ items: customers });
         }
-        console.log('Returning customers:', ret_customers.length);
-        
-        res.json({ items: ret_customers });
     } catch (error) {
         next(error);
     }
