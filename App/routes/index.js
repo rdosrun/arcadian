@@ -245,7 +245,7 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         let customers = readAllCustomers();
         var ret_customers = [];
         // If user is not an employee, filter customers to only show related customers
-        if (!req.session.isEmployee && req.session.relatedCustomers) {
+        if (!req.session.isEmployee) {
             const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
             for (let i = 0; i < customers.length; i++) {
                 if( relatedCustomerIds.includes(customers[i].id) || customers[i].id === req.session.customer_id) {
