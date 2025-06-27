@@ -243,16 +243,17 @@ router.get('/inventory', isAuthenticated, async function (req, res, next) {
 router.get('/customers', isAuthenticated, async function (req, res, next) {
     try {
         let customers = readAllCustomers();
+        var ret_customers = [];
         // If user is not an employee, filter customers to only show related customers
         if (!req.session.isEmployee && req.session.relatedCustomers) {
             const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
-            customers = customers.filter(customer => 
+            ret_customers = customers.filter(customer => 
                 relatedCustomerIds.includes(customer.id)
             );
         }
-        console.log('Returning customers:', customers.length);
+        console.log('Returning customers:', ret_customers.length);
         
-        res.json({ items: customers });
+        res.json({ items: ret_customers });
     } catch (error) {
         next(error);
     }
