@@ -29,6 +29,7 @@ router.get('/', function (req, res, next) {
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
         account: req.session.account,
+        employee: req.session.isEmployee || false,
         base_url: ""
     });
 });
@@ -40,6 +41,7 @@ router.get('/', isAuthenticated, function (req, res, next) {
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
         account: req.session.account,
+        employee: req.session.isEmployee || false,
         base_url: ""
     });
 }
