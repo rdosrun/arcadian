@@ -92,9 +92,12 @@ router.get('/auth/jwt_route', async function (req,res,next){
             
             // Find all customers that share the same parent ID
             const parentId = matchedCustomer.parent || matchedCustomer.id; // Use parent ID if exists, otherwise use own ID
-            const relatedCustomers = customers.filter(customer => 
-                customer.parent === parentId || customer.id === parentId
-            );
+            if(parentId === null || parentId === undefined) {
+            }else{
+                const relatedCustomers = customers.filter(customer => 
+                    customer.parent === parentId || customer.id === parentId
+                );
+            }
             
             req.session.isAuthenticated = true;
             req.session.account = matchedCustomer.customer_email;
