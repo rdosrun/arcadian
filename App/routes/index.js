@@ -249,17 +249,17 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         if (!req.session.isEmployee) {
             if(!req.session.relatedCustomers || req.session.relatedCustomers.length === 0) {
             }else{
-                relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+                relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.customer_email);
             }
             for (let i = 0; i < customers.length; i++) {
                 if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
-                    if( customers[i].id === req.session.customer_id) {
-                        console.log('Customer ID1:', customers[i].id, 'is the current customer');
+                    if( customers[i].customer_email === req.session.customer_id) {
+                        console.log('Customer ID1:', customers[i].customer_email, 'is the current customer');
                         ret_customers.push(customers[i]);
                     }
                 }
-                else if( relatedCustomerIds.includes(customers[i].id) || customers[i].id === req.session.customer_id) {
-                    console.log('Customer ID2:', customers[i].id, 'is in related customers');
+                else if( relatedCustomerIds.includes(customers[i].customer_email) || customers[i].customer_email === req.session.customer_id) {
+                    console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
                     ret_customers.push(customers[i]);
                 }
             }
