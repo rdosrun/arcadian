@@ -244,9 +244,13 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
     try {
         let customers = readAllCustomers();
         var ret_customers = [];
+        var relatedCustomerIds = null;
         // If user is not an employee, filter customers to only show related customers
         if (!req.session.isEmployee) {
-            const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+            if(!req.session.relatedCustomers || req.session.relatedCustomers.length === 0) {
+            }else{
+                relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+            }
             for (let i = 0; i < customers.length; i++) {
                 if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
                     if( customers[i].id === req.session.customer_id) {
