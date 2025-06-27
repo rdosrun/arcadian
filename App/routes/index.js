@@ -119,7 +119,7 @@ router.post('/auth/callback', async function (req, res, next) {
         console.log('Decoded Token:', decodedToken);
         // Check if the username is in the list of employees
         const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username) ;
-        const customerExists =  customers.some(customer => customer.email === decodedToken.preferred_username);
+        const customerExists =  customers.some(customer => customer.customer_email === decodedToken.preferred_username);
         if (userExists) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
