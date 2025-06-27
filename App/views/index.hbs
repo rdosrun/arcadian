@@ -29,9 +29,10 @@
         <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/about')">About Us</button></li>
         <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/contact')">Contact</button></li>
         {{#if isAuthenticated}}
-           <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/credit_memos')">Credit memos</button></li>
-            <li><button class="nav-btn" onclick="loadPage('{{base_url}}retail/products')">Products</button></li>
-
+          {{#if employee}}
+            <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/credit_memos')">Credit memos</button></li>
+          {{/if}}
+          <li><button class="nav-btn" onclick="loadPage('{{base_url}}retail/products')">Products</button></li>
         {{/if}}
         {{#unless isAuthenticated}}
           <li><button class="nav-btn" onclick="loadPage('{{base_url}}views/retail/gallery')">Gallery</button></li>

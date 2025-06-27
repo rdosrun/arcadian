@@ -29,6 +29,7 @@ router.get('/', function (req, res, next) {
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
         account: req.session.account,
+        employee: req.session.isEmployee || false,
         base_url: ""
     });
 });
@@ -40,6 +41,7 @@ router.get('/', isAuthenticated, function (req, res, next) {
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
         account: req.session.account,
+        employee: req.session.isEmployee || false,
         base_url: ""
     });
 }
@@ -69,32 +71,60 @@ router.get('/auth/jwt_route', async function (req,res,next){
 
     try {
         const decodedToken = jwt.decode(token);
-        console.log('Decoded Token:', decodedToken);
-        console.log('Username:', decodedToken.preferred_username);
-        // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
+        const customers = await readAllCustomers();
         //console.log('Employee List:', employeeList);
         console.log('Decoded Token:', decodedToken);
+        //console.log('All customers being checked:', customers.map(c => ({ id: c.id, email: c.customer_email, parent: c.parent })));
         // Check if the username is in the list of employees
-        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
+        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username) ;
+        const customerExists =  customers.some(customer => customer.customer_email === decodedToken.preferred_username);
         if (userExists) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
             req.session.account = matchedEmployee.email;
-        } else {
-            console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
-            req.session.isAuthenticated = false;
+            req.session.isEmployee = true;
+        } else if(customerExists){
+            const matchedCustomer = customers.find(customer => customer.customer_email === decodedToken.preferred_username);
+            console.log('Customer found - Email:', matchedCustomer.customer_email);
+            console.log('Customer found - ID:', matchedCustomer.id);
+            console.log('Customer found - Parent ID:', matchedCustomer.parent);
+            
+            // Find all customers that share the same parent ID
+            const parentId = matchedCustomer.parent || matchedCustomer.id; // Use parent ID if exists, otherwise use own ID
+            relatedCustomers = [];
+            if(parentId === null || parentId === undefined) {
+                req.session.isAuthenticated = true;
+                req.session.account = matchedCustomer.customer_email;
+                req.session.isEmployee = false;
+                req.session.customer_id = matchedCustomer.id;
+
+            }else{
+                const relatedCustomers = customers.filter(customer => 
+                    customer.parent === parentId || customer.id === parentId
+                );
+                req.session.isAuthenticated = true;
+                req.session.account = matchedCustomer.customer_email;
+                req.session.isEmployee = false;
+                req.session.customer_id = matchedCustomer.id;
+                req.session.relatedCustomers = relatedCustomers;
+            }
+            
+            
+            
+            console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
+            console.log('Related customer emails:', relatedCustomers.map(c => c.customer_email));
         }
         res.redirect('/test/');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
         req.session.account = null;
-
+        res.redirect('/test/');
     }
-
+    //res.redirect('/test/');
 
 
 });
@@ -117,9 +147,12 @@ router.post('/auth/callback', async function (req, res, next) {
         const customers = await readAllCustomers();
         //console.log('Employee List:', employeeList);
         console.log('Decoded Token:', decodedToken);
+        console.log('All customers being checked:', customers.map(c => ({ id: c.id, email: c.customer_email, parent: c.parent })));
         // Check if the username is in the list of employees
         const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username) ;
-        const customerExists =  customers.some(customer => customer.email === decodedToken.preferred_username);
+        const customerExists =  customers.some(customer => customer.customer_email === decodedToken.preferred_username);
+        console.log('Checking customer existence for email:', decodedToken.preferred_username);
+        console.log('Customer exists:', customerExists);
         if (userExists) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
@@ -127,8 +160,10 @@ router.post('/auth/callback', async function (req, res, next) {
             req.session.account = matchedEmployee.email;
             req.session.isEmployee = true;
         } else if(customerExists){
-            const matchedCustomer = customers.find(customer => customer.email === decodedToken.preferred_username);
-            console.log('User exists in NetSuite. Matched email:', matchedCustomer.email);
+            const matchedCustomer = customers.find(customer => customer.customer_email === decodedToken.preferred_username);
+            console.log('Customer found - Email:', matchedCustomer.customer_email);
+            console.log('Customer found - ID:', matchedCustomer.id);
+            console.log('Customer found - Parent ID:', matchedCustomer.parent);
             
             // Find all customers that share the same parent ID
             const parentId = matchedCustomer.parent || matchedCustomer.id; // Use parent ID if exists, otherwise use own ID
@@ -137,12 +172,13 @@ router.post('/auth/callback', async function (req, res, next) {
             );
             
             req.session.isAuthenticated = true;
-            req.session.account = matchedCustomer.email;
+            req.session.account = matchedCustomer.customer_email;
             req.session.isEmployee = false;
             req.session.customer_id = matchedCustomer.id;
             req.session.relatedCustomers = relatedCustomers;
             
             console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
+            console.log('Related customer emails:', relatedCustomers.map(c => c.customer_email));
         }else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
@@ -209,16 +245,37 @@ router.get('/inventory', isAuthenticated, async function (req, res, next) {
 router.get('/customers', isAuthenticated, async function (req, res, next) {
     try {
         let customers = readAllCustomers();
-        
+        var ret_customers = [];
+        var relatedCustomerIds = null;
         // If user is not an employee, filter customers to only show related customers
-        if (!req.session.isEmployee && req.session.relatedCustomers) {
-            const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
-            customers = customers.filter(customer => 
-                relatedCustomerIds.includes(customer.id)
-            );
+        if (!req.session.isEmployee) {
+            if(!req.session.relatedCustomers || req.session.relatedCustomers.length === 0) {
+            }else{
+                relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.customer_email);
+            }
+            for (let i = 0; i < customers.length; i++) {
+                if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
+                    if( customers[i].customer_email === req.session.customer_id) {
+                        console.log('Customer ID1:', customers[i].customer_email, 'is the current customer');
+                        if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
+                            ret_customers.push(customers[i]);
+                        }
+                    }
+                }
+                else if( relatedCustomerIds.includes(customers[i].customer_email) || customers[i].customer_email === req.session.customer_id) {
+                    console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
+                    if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
+                        ret_customers.push(customers[i]);
+                    }
+                }
+            }
+            console.log('Returning customers:', ret_customers.length);
+            
+            res.json({ items: ret_customers });
+        }else if (req.session.isEmployee) {
+            console.log('Returning customers:', customers.length);
+            res.json({ items: customers });
         }
-        
-        res.json({ items: customers });
     } catch (error) {
         next(error);
     }
