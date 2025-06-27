@@ -255,12 +255,16 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
                 if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
                     if( customers[i].customer_email === req.session.customer_id) {
                         console.log('Customer ID1:', customers[i].customer_email, 'is the current customer');
-                        ret_customers.push(customers[i]);
+                        if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
+                            ret_customers.push(customers[i]);
+                        }
                     }
                 }
                 else if( relatedCustomerIds.includes(customers[i].customer_email) || customers[i].customer_email === req.session.customer_id) {
                     console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
-                    ret_customers.push(customers[i]);
+                    if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
+                        ret_customers.push(customers[i]);
+                    }
                 }
             }
             console.log('Returning customers:', ret_customers.length);
