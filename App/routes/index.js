@@ -254,12 +254,12 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
             for (let i = 0; i < customers.length; i++) {
                 if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
                     if( customers[i].id === req.session.customer_id) {
-                        //console.log('Customer ID:', customers[i].id, 'is the current customer');
+                        console.log('Customer ID1:', customers[i].id, 'is the current customer');
                         ret_customers.push(customers[i]);
                     }
                 }
                 else if( relatedCustomerIds.includes(customers[i].id) || customers[i].id === req.session.customer_id) {
-                    //console.log('Customer ID:', customers[i].id, 'is in related customers');
+                    console.log('Customer ID2:', customers[i].id, 'is in related customers');
                     ret_customers.push(customers[i]);
                 }
             }
