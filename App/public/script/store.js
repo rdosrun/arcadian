@@ -15,7 +15,7 @@ function addToCart(button) {
         itemID = itemID + ".";
     }
     try{
-        let name = fetch("/item/"+itemID).then(response => response.json()).then(
+        let name = fetch("item/"+itemID).then(response => response.json()).then(
             data => {
                 var inventory = JSON.parse(localStorage.getItem('inventory'));
                 console.log(data);
@@ -38,7 +38,7 @@ function addToCart(button) {
                 }else{
                     cart.push({ name: data.results.item_display_name, ID: itemID, State: document.querySelector('input[name="state"]:checked').value });
                 }
-                
+
                 updateCart();
             }
         );
@@ -47,10 +47,10 @@ function addToCart(button) {
         return;
     }
     // Add the item to the cart
-    
+
 
     // Update the cart display
-    
+
 }
 
 async function addToCartManual(upc) {
@@ -60,7 +60,7 @@ async function addToCartManual(upc) {
     }
 
     try {
-        fetch("/item/" + upc).then(response => 
+        fetch("item/" + upc).then(response =>
             response.json().then(data => ({
                 data: data,
                 status: response.status
@@ -151,12 +151,14 @@ function toggleCartDisplay() {
 }
 
 // Attach the toggleCartDisplay function to the cart button
-document.getElementById('cart').addEventListener('click', toggleCartDisplay);
+if( document.getElementById('cart') != null ){
+    document.getElementById('cart').addEventListener('click', toggleCartDisplay);
+}
 
 var selectedCustomer = null;
 
 async function checkout() {
-    const customers = await fetch('/customers')
+    const customers = await fetch('customers')
         .then(response => response.json())
         .catch(error => {
             console.error('Error fetching customers:', error);
@@ -172,7 +174,7 @@ function displayCustomerModal(customers) {
     const modal = document.getElementById('customer-modal');
     const customerList = document.getElementById('customer-list');
     customerList.innerHTML = '';
-    
+
     customers.forEach(customer => {
             const li = document.createElement('li');
             const button = document.createElement('button');
@@ -306,7 +308,7 @@ async function place_order(customer) {
             }
         };
 
-        const response = await fetch('/submit-order', {
+        const response = await fetch('submit-order', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

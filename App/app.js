@@ -7,6 +7,7 @@ require('dotenv').config();
 
 var path = require('path');
 var express = require('express');
+var compression = require('compression');
 var session = require('express-session');
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
@@ -26,11 +27,20 @@ var uploadPhotosRouter = require('./routes/upload_photos');
 
 // initialize express
 var app = express();
+app.use(compression());
 
 /**
  * Using express-session middleware for persistent user session. Be sure to
  * familiarize yourself with available options. Visit: https://www.npmjs.com/package/express-session
  */
+app.use((req, res, next) => {
+  if (req.url.startsWith('/test')) {
+    req.url = req.url.slice(5) || '/'; // remove `/test`, preserve slash
+  }
+  console.log("Request URL: " + req.url);
+  next();
+});
+
  app.use(session({
     secret: process.env.EXPRESS_SESSION_SECRET,
     resave: false,
@@ -42,7 +52,7 @@ var app = express();
 }));
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));3
 app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
@@ -58,10 +68,6 @@ app.use('/favicon.ico', express.static(path.join(__dirname, 'public', 'favicon.i
 app.use('/views', express.static(path.join(__dirname, 'views')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-
-
-
-
 // Routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -74,7 +80,9 @@ app.use('/api/sales-orders', salesOrdersRouter);
 app.use('/api/invoices', invoicesRouter);
 
 
-
+app.get('/api/enviroment', function(req,res,next){
+    return res.json({BASE_URL: process.env.BASE_URL});
+});
 
 app.get('/views/:page', function (req, res, next) {
     const page = req.params.page + '.html';
@@ -209,7 +217,7 @@ app.post('/submit-order', async (req, res) => {
             itemUPC: item.ID,
             quantity: 8, // Adjust quantity as needed
             priceLevel: null, //grab price level from netsuite for each customer
-            rate: null, 
+            rate: null,
             location: null, // grab location from netsuite for each customer
             itemInternalId: item.interal_ID
         }))

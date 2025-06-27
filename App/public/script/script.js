@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const msalConfig = {
     auth: {
-      clientId: '75c7b466-6b7e-4815-bf6b-8627cb7d1db8',//'95e880e8-e54d-4d01-a26c-052cff7e9592', // Replace with your application ID
-      authority: 'https://login.microsoftonline.com/consumers', // Replace with your tenant ID
-      redirectUri: 'https://arcadianoutfitters.com/auth/callback/'
+      clientId: '8b1fadc1-8d5e-4543-a2d2-27675cdd49e2',//'95e880e8-e54d-4d01-a26c-052cff7e9592', // Replace with your application ID
+      authority: 'https://login.microsoftonline.com/41567265-9838-44f1-b774-e78fa4c5a97d', // Replace with your tenant ID
+      redirectUri: 'https://arcadianoutfitters.com/test/auth/callback/'
     }
   };
 
@@ -44,9 +44,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   var jwt_token = null;
   function handleResponse(response) {
+
     jwt_token = response;
-    console.log("jwt token response: "+jwt_token);
-  }
+    if(jwt_token==null){
+      return;
+    }
+    //console.log("jwt token response: "+jwt_token);
+        console.log("JWT View Loaded", jwt_token);
+        fetch('https://arcadianoutfitters.com/test/auth/jwt_route?idToken='+jwt_token.idToken, {
+    method: 'get', // or 'PUT'
+    headers: {
+        'Content-Type': 'application/json'
+    }
+    }).then(response => response.text())
+    .then(function(response) {
+        document.documentElement.innerHTML = response;
+      }).catch(function(error) {
+        console.log('Request failed', error);
+      });
+    //window.location.reload();;
+
+}
 
 
   async function signOut() {
@@ -64,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchProfile() {
     try {
-        const response = await fetch('/profile', {
+        const response = await fetch('profile', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

@@ -4,6 +4,7 @@
  */
 
 var express = require('express');
+const jwt = require('jsonwebtoken');
 var router = express.Router();
 var { get_token } = require('./libs/get_token');
 const { get_employees, Inventory, Query_Customers } = require('./backend/netsuite');
@@ -22,38 +23,54 @@ function isAuthenticated(req, res, next) {
 }
 
 router.get('/', function (req, res, next) {
+    console.log("base:"+req.session.isAuthenticated)
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
-        account: req.session.account
+        account: req.session.account,
+        base_url: ""
     });
 });
 
 router.get('/', isAuthenticated, function (req, res, next) {
+    console.log("authed:"+req.session.isAuthenticated)
     res.render('index', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,
-        account: req.session.account
+        account: req.session.account,
+        base_url: ""
     });
 }
 );
 
 router.get('/auth/callback', async function (req, res, next) {
-    
-    //1 get the token deal with long in 
-    
-    // Check if username exists and get access token
-    try {
 
-        console.log('Client Info:', req.body.client_info);
-        const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
+    //make jwt_route page
+
+    //make it run a function that send the jwt token to the server
+    //make that function do a res.redirect and preform auth above
+    res.redirect('views/jwt');
+    // Handle the authentication callback
+    // You can add your logic here to process the callback and set session variables
+});
+router.get('/auth/callback/views/jwt', function (req, res) {
+    res.sendFile(path.join(__dirname, '../views/jwt.html'));
+});
+router.get('/auth/callback/views/script.js', function (req, res) {
+    res.sendFile(path.join(__dirname, '../public/script/script.js'));
+});
+
+router.get('/auth/jwt_route', async function (req,res,next){
+    console.log("JWT Route Loaded", req.query);
+    token = req.query.idToken;
+    console.log("JWT Route Loaded", token);
+
+    try {
+        const decodedToken = jwt.decode(token);
         console.log('Decoded Token:', decodedToken);
         console.log('Username:', decodedToken.preferred_username);
-
-
-
         // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
@@ -65,11 +82,12 @@ router.get('/auth/callback', async function (req, res, next) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
-            req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
+            req.session.account = matchedEmployee.email;
         } else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
         }
+        res.redirect('/test/');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
@@ -77,15 +95,14 @@ router.get('/auth/callback', async function (req, res, next) {
 
     }
 
-    //2 redirect to default page (index.hbs)
-    res.redirect('/');
-    // Handle the authentication callback
-    // You can add your logic here to process the callback and set session variables
+
+
 });
 
+
 router.post('/auth/callback', async function (req, res, next) {
-    
-    //1 get the token deal with long in 
+
+    //1 get the token deal with long in
     console.log('Client Info:', req.body.client_info);
 
     //this is where the breaking is happening it's not an nginx issue
@@ -97,16 +114,36 @@ router.post('/auth/callback', async function (req, res, next) {
         // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
+        const customers = await readAllCustomers();
         //console.log('Employee List:', employeeList);
         console.log('Decoded Token:', decodedToken);
         // Check if the username is in the list of employees
-        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
+        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username) ;
+        const customerExists =  customers.some(customer => customer.email === decodedToken.preferred_username);
         if (userExists) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
-            req.session.account = Buffer.from(req.body.client_info, 'base64').toString('utf8');
-        } else {
+            req.session.account = matchedEmployee.email;
+            req.session.isEmployee = true;
+        } else if(customerExists){
+            const matchedCustomer = customers.find(customer => customer.email === decodedToken.preferred_username);
+            console.log('User exists in NetSuite. Matched email:', matchedCustomer.email);
+            
+            // Find all customers that share the same parent ID
+            const parentId = matchedCustomer.parent || matchedCustomer.id; // Use parent ID if exists, otherwise use own ID
+            const relatedCustomers = customers.filter(customer => 
+                customer.parent === parentId || customer.id === parentId
+            );
+            
+            req.session.isAuthenticated = true;
+            req.session.account = matchedCustomer.email;
+            req.session.isEmployee = false;
+            req.session.customer_id = matchedCustomer.id;
+            req.session.relatedCustomers = relatedCustomers;
+            
+            console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
+        }else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
         }
@@ -171,26 +208,54 @@ router.get('/inventory', isAuthenticated, async function (req, res, next) {
 // Route to query customers
 router.get('/customers', isAuthenticated, async function (req, res, next) {
     try {
-        let allCustomers = [];
-        let offset = 0;
-        let hasMore = true;
-
-        while (hasMore) {
-            const customersPage = await Query_Customers(offset);
-            const parsed = JSON.parse(customersPage);
-            hasMore = parsed.hasMore;
-            console.log('Customers Page:', parsed.hasMore);
-            console.log('Customers Offset:', offset);
-            if (parsed.items && parsed.items.length > 0) {
-                allCustomers = allCustomers.concat(parsed.items);
-                offset += 1000;
-                // If less than 1000 returned, no more pages
-            }
+        let customers = readAllCustomers();
+        
+        // If user is not an employee, filter customers to only show related customers
+        if (!req.session.isEmployee && req.session.relatedCustomers) {
+            const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+            customers = customers.filter(customer => 
+                relatedCustomerIds.includes(customer.id)
+            );
         }
-        res.json({ items : allCustomers });
+        
+        res.json({ items: customers });
     } catch (error) {
-        //next(error);
+        next(error);
     }
 });
+
+// Function to fetch all customers and store in a JSON file
+async function fetchAndStoreAllCustomers() {
+    let allCustomers = [];
+    let offset = 0;
+    let hasMore = true;
+    while (hasMore) {
+        const customersPage = await Query_Customers(offset);
+        const parsed = JSON.parse(customersPage);
+        hasMore = parsed.hasMore;
+        if (parsed.items && parsed.items.length > 0) {
+            allCustomers = allCustomers.concat(parsed.items);
+            offset += 1000;
+        }
+    }
+    const filePath = path.join(__dirname, '../../customers.json');
+    fs.writeFileSync(filePath, JSON.stringify(allCustomers, null, 2), 'utf8');
+    return allCustomers;
+}
+
+// Function to read and return the whole customers.json file
+function readAllCustomers() {
+    const filePath = path.join(__dirname, '../../customers.json');
+    if (!fs.existsSync(filePath)) return [];
+    const data = fs.readFileSync(filePath, 'utf8');
+    return JSON.parse(data);
+}
+
+// Run fetchAndStoreAllCustomers every hour
+setInterval(() => {
+    fetchAndStoreAllCustomers()
+        .then(() => console.log('Customer list updated and stored in customers.json'))
+        .catch(err => console.error('Error updating customer list:', err));
+}, 5 * 60 * 1000); // 5 min in milliseconds
 
 module.exports = router;
