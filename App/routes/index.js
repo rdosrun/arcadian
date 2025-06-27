@@ -63,38 +63,63 @@ router.get('/auth/callback/views/script.js', function (req, res) {
 });
 
 router.get('/auth/jwt_route', async function (req,res,next){
-    console.log("JWT Route Loaded", req.query);
-    token = req.query.idToken;
-    console.log("JWT Route Loaded", token);
+        //1 get the token deal with long in
+    console.log('Client Info:', req.body.client_info);
 
+    //this is where the breaking is happening it's not an nginx issue
+    const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
+    console.log('Decoded Token:', decodedToken);
+    console.log('Username:', decodedToken.preferred_username);
+    // Check if username exists and get access token
     try {
-        const decodedToken = jwt.decode(token);
-        console.log('Decoded Token:', decodedToken);
-        console.log('Username:', decodedToken.preferred_username);
         // Get the list of employees from NetSuite
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
+        const customers = await readAllCustomers();
         //console.log('Employee List:', employeeList);
         console.log('Decoded Token:', decodedToken);
+        console.log('All customers being checked:', customers.map(c => ({ id: c.id, email: c.customer_email, parent: c.parent })));
         // Check if the username is in the list of employees
-        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username);
+        const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username) ;
+        const customerExists =  customers.some(customer => customer.customer_email === decodedToken.preferred_username);
+        console.log('Checking customer existence for email:', decodedToken.preferred_username);
+        console.log('Customer exists:', customerExists);
         if (userExists) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
             req.session.isAuthenticated = true;
             req.session.account = matchedEmployee.email;
-        } else {
+            req.session.isEmployee = true;
+        } else if(customerExists){
+            const matchedCustomer = customers.find(customer => customer.customer_email === decodedToken.preferred_username);
+            console.log('Customer found - Email:', matchedCustomer.customer_email);
+            console.log('Customer found - ID:', matchedCustomer.id);
+            console.log('Customer found - Parent ID:', matchedCustomer.parent);
+            
+            // Find all customers that share the same parent ID
+            const parentId = matchedCustomer.parent || matchedCustomer.id; // Use parent ID if exists, otherwise use own ID
+            const relatedCustomers = customers.filter(customer => 
+                customer.parent === parentId || customer.id === parentId
+            );
+            
+            req.session.isAuthenticated = true;
+            req.session.account = matchedCustomer.customer_email;
+            req.session.isEmployee = false;
+            req.session.customer_id = matchedCustomer.id;
+            req.session.relatedCustomers = relatedCustomers;
+            
+            console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
+            console.log('Related customer emails:', relatedCustomers.map(c => c.customer_email));
+        }else {
             console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
             req.session.isAuthenticated = false;
         }
-        res.redirect('/test/');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
         req.session.account = null;
-
     }
-
+    res.redirect('/test/');
 
 
 });
