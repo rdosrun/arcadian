@@ -112,7 +112,7 @@ router.get('/auth/jwt_route', async function (req,res,next){
         console.log(err);
         req.session.isAuthenticated = false;
         req.session.account = null;
-
+        res.redirect('/test/');
     }
     //res.redirect('/test/');
 
