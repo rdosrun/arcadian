@@ -63,16 +63,12 @@ router.get('/auth/callback/views/script.js', function (req, res) {
 });
 
 router.get('/auth/jwt_route', async function (req,res,next){
-        //1 get the token deal with long in
-    console.log('Client Info:', req.body.client_info);
+    console.log("JWT Route Loaded", req.query);
+    token = req.query.idToken;
+    console.log("JWT Route Loaded", token);
 
-    //this is where the breaking is happening it's not an nginx issue
-    const decodedToken = JSON.parse(Buffer.from(req.body.client_info, 'base64').toString('utf8'));
-    console.log('Decoded Token:', decodedToken);
-    console.log('Username:', decodedToken.preferred_username);
-    // Check if username exists and get access token
     try {
-        // Get the list of employees from NetSuite
+        const decodedToken = jwt.decode(token);
         const employees = await get_employees();
         const employeeList = JSON.parse(employees).items;
         const customers = await readAllCustomers();
@@ -110,14 +106,13 @@ router.get('/auth/jwt_route', async function (req,res,next){
             
             console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
             console.log('Related customer emails:', relatedCustomers.map(c => c.customer_email));
-        }else {
-            console.log('User'+ decodedToken.preferred_username +'does not exist in NetSuite.');
-            req.session.isAuthenticated = false;
         }
+        res.redirect('/test/');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
         req.session.account = null;
+
     }
     res.redirect('/test/');
 
