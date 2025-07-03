@@ -68,21 +68,21 @@ router.post('/auth/email-login', async function (req, res, next) {
                 req.session.isEmployee = true;
             } else if (customerExists) {
                 const matchedCustomer = customers.find(customer => customer.customer_email === email);
-                const parentId = matchedCustomer.parent || matchedCustomer.id;
+                const parentId = matchedCustomer.parent || matchedCustomer.customer_internal_id;
                 
                 if (parentId === null || parentId === undefined) {
                     req.session.isAuthenticated = true;
                     req.session.account = matchedCustomer.customer_email;
                     req.session.isEmployee = false;
-                    req.session.customer_id = matchedCustomer.id;
+                    req.session.customer_id = matchedCustomer.customer_internal_id;
                 } else {
                     const relatedCustomers = customers.filter(customer => 
-                        customer.parent === parentId || customer.id === parentId
+                        customer.parent === parentId || customer.customer_internal_id === parentId
                     );
                     req.session.isAuthenticated = true;
                     req.session.account = matchedCustomer.customer_email;
                     req.session.isEmployee = false;
-                    req.session.customer_id = matchedCustomer.id;
+                    req.session.customer_id = matchedCustomer.customer_internal_id;
                     req.session.relatedCustomers = relatedCustomers;
                 }
             }
@@ -328,7 +328,7 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
             }
             for (let i = 0; i < customers.length; i++) {
                 if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
-                    if( customers[i].customer_email === req.session.account) {
+                    if( customers[i].customer_internal_id === req.session.customer_id) {
                         console.log('Customer ID1:', customers[i].customer_email, 'is the current customer');
                         if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
                             ret_customers.push(customers[i]);
