@@ -86,7 +86,7 @@ router.post('/auth/email-login', async function (req, res, next) {
                 }
             }
             
-            res.redirect('/');
+            res.redirect('/test');
         } else {
             res.render('email-signin', {
                 title: 'MSAL Node & Express Web App',
