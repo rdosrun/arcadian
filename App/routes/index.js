@@ -59,6 +59,7 @@ router.post('/auth/email-login', async function (req, res, next) {
             
             const userExists = employeeList.some(employee => employee.email === email);
             const customerExists = customers.some(customer => customer.customer_email === email);
+
             
             if (userExists) {
                 const matchedEmployee = employeeList.find(employee => employee.email === email);
@@ -327,14 +328,14 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
             }
             for (let i = 0; i < customers.length; i++) {
                 if(relatedCustomerIds === null || relatedCustomerIds === undefined || relatedCustomerIds.length === 0) {
-                    if( customers[i].customer_email === req.session.customer_id) {
+                    if( customers[i].customer_email === req.session.account) {
                         console.log('Customer ID1:', customers[i].customer_email, 'is the current customer');
                         if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
                             ret_customers.push(customers[i]);
                         }
                     }
                 }
-                else if( relatedCustomerIds.includes(customers[i].customer_email) || customers[i].customer_email === req.session.customer_id) {
+                else if( relatedCustomerIds.includes(customers[i].customer_email) || customers[i].customer_email === req.session.account) {
                     console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
                     if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
                         ret_customers.push(customers[i]);
