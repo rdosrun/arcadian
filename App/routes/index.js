@@ -75,6 +75,7 @@ router.post('/auth/email-login', async function (req, res, next) {
                     req.session.account = matchedCustomer.customer_email;
                     req.session.isEmployee = false;
                     req.session.customer_id = matchedCustomer.customer_internal_id;
+                    req.session.parentId = matchedCustomer.customer_parent_customer_internal_id;
                 } else {
                     const relatedCustomers = customers.filter(customer => 
                         customer.parent === parentId || customer.customer_internal_id === parentId
@@ -84,6 +85,7 @@ router.post('/auth/email-login', async function (req, res, next) {
                     req.session.isEmployee = false;
                     req.session.customer_id = matchedCustomer.customer_internal_id;
                     req.session.relatedCustomers = relatedCustomers;
+                    req.session.parentId = matchedCustomer.customer_parent_customer_internal_id;
                 }
             }
             
@@ -321,6 +323,7 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
         var ret_customers = [];
         var relatedCustomerIds = null;
         // If user is not an employee, filter customers to only show related customers
+        //req.session.parentId = matchedCustomer.customer_parent_customer_internal_id;
         if (!req.session.isEmployee) {
             if(!req.session.relatedCustomers || req.session.relatedCustomers.length === 0) {
             }else{
@@ -334,8 +337,7 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
                             ret_customers.push(customers[i]);
                         }
                     }
-                }
-                else if( relatedCustomerIds.includes(customers[i].customer_email) || customers[i].customer_email === req.session.account) {
+                } else if( customers[i].customer_parent_customer_internal_id === req.session.parentId) {
                     console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
                     if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
                         ret_customers.push(customers[i]);
