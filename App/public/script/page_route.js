@@ -8,13 +8,13 @@ function loadPage(route) {
             document.getElementById("main-page").innerHTML = html
         }).then(() => {
 
-            if (route == "/views/re-order") {
+            if (route == "views/re-order") {
             StartScanner();
             }
-            if (route == "/retail/products") {
+            if (route == "retail/products") {
                 // Dynamically load image_route.js if not already loaded
                 if (!window.update_hats) {
-                    loadScriptDynamically("/script/image_route.js");
+                    loadScriptDynamically("script/image_route.js");
                 }
                 // Call update_hats after a short delay to ensure the script is loaded
                 setTimeout(() => {
@@ -24,9 +24,9 @@ function loadPage(route) {
                     }
                 }, 200);
             }
-            if(route == "/views/retail/gallery"){
+            if(route == "views/retail/gallery"){
                 if (!window.update_hats) {
-                    loadScriptDynamically("/script/image_route.js");
+                    loadScriptDynamically("script/image_route.js");
                 }
                 // Call update_hats after a short delay to ensure the script is loaded
                 setTimeout(() => {
@@ -36,7 +36,7 @@ function loadPage(route) {
                     }
                 }, 200);
             }
-            if(route == "/views/credit_memos"){
+            if(route == "views/credit_memos"){
                 showTab('credit-memos');
             }
         });
@@ -115,7 +115,7 @@ function duplicateElement() {
             storeItems.appendChild(newElement);
         }
         if(i<curr_hats){
-            var x = "/images/Hat_Pictures/"+state+"/"+i+".jpg";
+            var x = "images/Hat_Pictures/"+state+"/"+i+".jpg";
             console.log(x);
             document.getElementById(i).querySelector("img").src = x;
             document.getElementById(i).style.display = "inline";

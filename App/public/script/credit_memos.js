@@ -9,7 +9,7 @@ var invoices = [];
 // Fetch credit memos from backend API
 async function fetchCreditMemos() {
     try {
-        const res = await fetch('/api/credit-memos');
+        const res = await fetch('api/credit-memos');
         const json = await res.json();
         console.log('Fetched credit memos:', json);
         if (json.success && Array.isArray(json.data.items)) {
@@ -34,7 +34,7 @@ async function fetchCreditMemos() {
 
 async function fetchSalesOrders() {
     try {
-        const res = await fetch('/api/sales-orders');
+        const res = await fetch('api/sales-orders');
         const json = await res.json();
         console.log('Fetched sales orders:', json);
         if (json.success && Array.isArray(json.data.items)) {
@@ -59,7 +59,7 @@ async function fetchSalesOrders() {
 
 async function fetchInvoices() {
     try {
-        const res = await fetch('/api/invoices');
+        const res = await fetch('api/invoices');
         const json = await res.json();
         console.log('Fetched invoices:', json);
         if (json.success && Array.isArray(json.data.items)) {
@@ -198,7 +198,7 @@ function filterInvoices(invoices, query, floor, ceiling) {
         (invoice.amount >= parseFloat(floor) || isNaN(parseFloat(floor))) &&
         (invoice.amount <= parseFloat(ceiling) || isNaN(parseFloat(ceiling)))
     );
-} 
+}
 
 
 function showMemoDetails(memo) {
@@ -280,21 +280,21 @@ function fetch_record(number) {
     console.log('Displaying record for:', number);
     jsonObj = {};
     if( curr_tab === 'credit-memos' ){
-        fetch('/api/Credit-Memo-lines/'+number).then(res => res.json()).then(data => {
+        fetch('api/Credit-Memo-lines/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
             display_record(jsonObj);
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'sales-orders' ){
-        fetch('/api/sales-order-lines/'+number).then(res => res.json()).then(data => {
+        fetch('api/sales-order-lines/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
             display_record(jsonObj);
         }).catch(err => {
             console.error('Error fetching credit memo:', err);
         });
     }else if( curr_tab === 'invoices' ){
-        fetch('/api/Invoices/'+number).then(res => res.json()).then(data => {
+        fetch('api/Invoices/'+number).then(res => res.json()).then(data => {
             jsonObj = data.data;
             display_record(jsonObj);
         }).catch(err => {

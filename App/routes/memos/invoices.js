@@ -40,9 +40,22 @@ router.get('/', async (req, res) => {
   if (Date.now() - lastFetchTime > CACHE_DURATION_MS) {
     await refreshInvoicesCache();
   }
+  
+  let invoices = JSON.parse(invoicesCache).items;
+  
+  // If user is not an employee, filter invoices by related customers
+  if (!req.session.isEmployee && req.session.relatedCustomers) {
+    const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+    invoices = invoices.filter(invoice => 
+      relatedCustomerIds.includes(invoice.customer_id) || 
+      relatedCustomerIds.includes(invoice.customerId) ||
+      relatedCustomerIds.includes(invoice.customer)
+    );
+  }
+  
   res.json({
     success: true,
-    data: { items: JSON.parse(invoicesCache).items }
+    data: { items: invoices }
   });
 });
 

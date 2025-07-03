@@ -40,9 +40,22 @@ router.get('/', async (req, res) => {
   if (Date.now() - lastFetchTime > CACHE_DURATION_MS) {
     await refreshSalesOrdersCache();
   }
+  
+  let salesOrders = JSON.parse(salesOrdersCache).items;
+  
+  // If user is not an employee, filter sales orders by related customers
+  if (!req.session.isEmployee && req.session.relatedCustomers) {
+    const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+    salesOrders = salesOrders.filter(order => 
+      relatedCustomerIds.includes(order.customer_id) || 
+      relatedCustomerIds.includes(order.customerId) ||
+      relatedCustomerIds.includes(order.customer)
+    );
+  }
+  
   res.json({
     success: true,
-    data: { items: JSON.parse(salesOrdersCache).items }
+    data: { items: salesOrders }
   });
 });
 

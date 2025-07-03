@@ -40,9 +40,22 @@ router.get('/', async (req, res) => {
   if (Date.now() - lastFetchTime > CACHE_DURATION_MS) {
     await refreshCreditMemosCache();
   }
+  
+  let creditMemos = JSON.parse(creditMemosCache).items;
+  
+  // If user is not an employee, filter credit memos by related customers
+  if (!req.session.isEmployee && req.session.relatedCustomers) {
+    const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
+    creditMemos = creditMemos.filter(memo => 
+      relatedCustomerIds.includes(memo.customer_id) || 
+      relatedCustomerIds.includes(memo.customerId) ||
+      relatedCustomerIds.includes(memo.customer)
+    );
+  }
+  
   res.json({
     success: true,
-    data: { items: JSON.parse(creditMemosCache).items }
+    data: { items: creditMemos }
   });
 });
 
