@@ -221,6 +221,7 @@
                     if (result.success) {
                         successMessage.textContent = 'Login successful! Redirecting...';
                         successMessage.style.display = 'block';
+                        console.log('Login successful:', result);
                         
                         // Redirect to home page after short delay
                         setTimeout(() => {
