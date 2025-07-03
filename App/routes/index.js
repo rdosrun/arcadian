@@ -11,6 +11,7 @@ const { get_employees, Inventory, Query_Customers } = require('./backend/netsuit
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');
+const csv = require('csv-parser'); // Add this import for CSV parsing
 
 // Custom middleware to check if user is authenticated
 function isAuthenticated(req, res, next) {
@@ -34,15 +35,76 @@ router.get('/', function (req, res, next) {
     });
 });
 
-/*router.get('/views/email-signin', function (req, res, next) {
+router.get('/auth/email-login', function (req, res, next) {
     console.log("base:"+req.session.isAuthenticated)
     res.render('email-signin', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,    
     });
-});*/
+});
 
+// Add POST route for email login form submission
+router.post('/auth/email-login', async function (req, res, next) {
+    const { email, password } = req.body;
+    
+    try {
+        const isValidUser = await validateEmailPassword(email, password);
+        
+        if (isValidUser) {
+            // Check if user is employee or customer
+            const employees = await get_employees();
+            const employeeList = JSON.parse(employees).items;
+            const customers = await readAllCustomers();
+            
+            const userExists = employeeList.some(employee => employee.email === email);
+            const customerExists = customers.some(customer => customer.customer_email === email);
+            
+            if (userExists) {
+                const matchedEmployee = employeeList.find(employee => employee.email === email);
+                req.session.isAuthenticated = true;
+                req.session.account = matchedEmployee.email;
+                req.session.isEmployee = true;
+            } else if (customerExists) {
+                const matchedCustomer = customers.find(customer => customer.customer_email === email);
+                const parentId = matchedCustomer.parent || matchedCustomer.id;
+                
+                if (parentId === null || parentId === undefined) {
+                    req.session.isAuthenticated = true;
+                    req.session.account = matchedCustomer.customer_email;
+                    req.session.isEmployee = false;
+                    req.session.customer_id = matchedCustomer.id;
+                } else {
+                    const relatedCustomers = customers.filter(customer => 
+                        customer.parent === parentId || customer.id === parentId
+                    );
+                    req.session.isAuthenticated = true;
+                    req.session.account = matchedCustomer.customer_email;
+                    req.session.isEmployee = false;
+                    req.session.customer_id = matchedCustomer.id;
+                    req.session.relatedCustomers = relatedCustomers;
+                }
+            }
+            
+            res.redirect('/');
+        } else {
+            res.render('email-signin', {
+                title: 'MSAL Node & Express Web App',
+                isAuthenticated: false,
+                username: null,
+                error: 'Invalid email or password'
+            });
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        res.render('email-signin', {
+            title: 'MSAL Node & Express Web App',
+            isAuthenticated: false,
+            username: null,
+            error: 'Login failed. Please try again.'
+        });
+    }
+});
 
 router.get('/', isAuthenticated, function (req, res, next) {
     console.log("authed:"+req.session.isAuthenticated)
@@ -316,6 +378,40 @@ function readAllCustomers() {
     if (!fs.existsSync(filePath)) return [];
     const data = fs.readFileSync(filePath, 'utf8');
     return JSON.parse(data);
+}
+
+// Function to validate email and password from CSV
+function validateEmailPassword(email, password) {
+    return new Promise((resolve, reject) => {
+        const csvPath = path.join(__dirname, '../../users.csv'); // Adjust path as needed
+        
+        if (!fs.existsSync(csvPath)) {
+            console.error('CSV file not found:', csvPath);
+            resolve(false);
+            return;
+        }
+        
+        const users = [];
+        fs.createReadStream(csvPath)
+            .pipe(csv({ headers: false })) // Assuming no headers, first column is email, second is password
+            .on('data', (row) => {
+                const columns = Object.values(row);
+                if (columns.length >= 2) {
+                    users.push({
+                        email: columns[0].trim(),
+                        password: columns[1].trim()
+                    });
+                }
+            })
+            .on('end', () => {
+                const user = users.find(u => u.email === email && u.password === password);
+                resolve(!!user);
+            })
+            .on('error', (error) => {
+                console.error('Error reading CSV:', error);
+                reject(error);
+            });
+    });
 }
 
 // Run fetchAndStoreAllCustomers every hour
