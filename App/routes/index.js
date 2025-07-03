@@ -34,14 +34,14 @@ router.get('/', function (req, res, next) {
     });
 });
 
-router.get('/views/email-signin', function (req, res, next) {
+/*router.get('/views/email-signin', function (req, res, next) {
     console.log("base:"+req.session.isAuthenticated)
     res.render('email-signin', {
         title: 'MSAL Node & Express Web App',
         isAuthenticated: req.session.isAuthenticated,
         username: req.session.account?.username,    
     });
-});
+});*/
 
 
 router.get('/', isAuthenticated, function (req, res, next) {
