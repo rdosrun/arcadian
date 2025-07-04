@@ -200,7 +200,7 @@
                 successMessage.style.display = 'none';
                 
                 try {
-                    const response = await fetch('/test/auth/email-login', {
+                    const response = await fetch('/auth/email-login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -216,7 +216,7 @@
                         
                         // Redirect to home page after short delay
                         setTimeout(() => {
-                            window.location.href = '/test';
+                            window.location.href = '/';
                         }, 1500);
                     } else {
                         errorMessage.textContent = response.message || 'Login failed. Please check your credentials.';
