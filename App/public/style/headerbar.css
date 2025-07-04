@@ -4,6 +4,10 @@
     display: none;
   }
 }
+.logo {
+    margin-bottom: 10px;
+    max-height: 10vh;
+  }
 @media screen and (max-width: 1000px) {
   .header-bar {
     flex-direction: column;
