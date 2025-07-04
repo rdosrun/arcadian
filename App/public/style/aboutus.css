@@ -4,7 +4,7 @@ width: 100vw;
 position: absolute;
 overflow: hidden;
 filter: blur(8px);
-background-color: sandybrown;
+background-color: darkgray;
 }
 /* Main Content Styles */
 main {
