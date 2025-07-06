@@ -75,15 +75,17 @@ router.post('/auth/email-login', async function (req, res, next) {
                         console.log('Customer parent:', customer.customer_parent_customer_internal_id, 'Customer internal ID:', customer.customer_internal_id);
                         var parentMatch = customer.customer_parent_customer_internal_id && customer.customer_parent_customer_internal_id === parentId;
                         var customerMatch = customer.customer_internal_id && customer.customer_internal_id === parentId;
-                        console.log('Parent Match:', parentMatch, 'Customer Match:', customerMatch);
+                        
                         if(parentMatch === null || parentMatch === undefined) {
                             parentMatch = false;
                         }
                         if(customerMatch === null || customerMatch === undefined) {
                             customerMatch = false;
                         }
+                        console.log('Parent Match:', parentMatch, 'Customer Match:', customerMatch);
                         return (parentMatch) || (customerMatch);
                     });
+                    console.log('Related Customers:', relatedCustomers.length);
                     req.session.isAuthenticated = true;
                     req.session.account = matchedCustomer.customer_email;
                     req.session.isEmployee = false;
@@ -345,7 +347,7 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
                             ret_customers.push(customers[i]);
                         }
                     }
-                } else if( customers[i].customer_parent_customer_internal_id === req.session.parentId) {
+                } else if( customers[i].customer_parent_customer_internal_id && customers[i].customer_parent_customer_internal_id === req.session.parentId) {
                     console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
                     if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
                         ret_customers.push(customers[i]);
