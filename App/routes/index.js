@@ -72,8 +72,11 @@ router.post('/auth/email-login', async function (req, res, next) {
                 } else {
                     console.log('Parent ID:', parentId);
                     const relatedCustomers = customers.filter(customer => {
-                        console.log('Customer parent:', customer.parent, 'Customer internal ID:', customer.customer_internal_id);
-                        return (customer.parent && customer.parent === parentId) || (customer.customer_internal_id && customer.customer_internal_id === parentId);
+                        console.log('Customer parent:', customer.customer_parent_customer_internal_id, 'Customer internal ID:', customer.customer_internal_id);
+                        var parentMatch = customer.customer_parent_customer_internal_id && customer.customer_parent_customer_internal_id === parentId;
+                        var customerMatch = customer.customer_internal_id && customer.customer_internal_id === parentId;
+                        console.log('Parent Match:', parentMatch, 'Customer Match:', customerMatch);
+                        return (parentMatch) || (customerMatch);
                     });
                     req.session.isAuthenticated = true;
                     req.session.account = matchedCustomer.customer_email;
