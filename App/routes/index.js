@@ -58,7 +58,7 @@ router.post('/auth/email-login', async function (req, res, next) {
             const customers = await readAllCustomers();
             
             const userExists = employeeList.some(employee => employee.email === email);
-            const customerExists = customers.some(customer => customer.customer_email === email);
+            const customerExists = customers.some(customer => customer.customer_email.toLowerCase() === email);
 
             
             if (userExists) {
