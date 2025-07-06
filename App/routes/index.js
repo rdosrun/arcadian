@@ -151,13 +151,14 @@ router.get('/auth/jwt_route', async function (req,res,next){
         const customers = await readAllCustomers();
         //console.log('Employee List:', employeeList);
         console.log('Decoded Token:', decodedToken);
-        console.log("employeeList:", employeeList);
-        console.log("customers:", customers);
+        /*console.log("employeeList:", employeeList);
+        console.log("customers:", customers);*/
         //console.log('All customers being checked:', customers.map(c => ({ id: c.id, email: c.customer_email, parent: c.parent })));
         // Check if the username is in the list of employees
         const userExists = employeeList.some(employee => employee.email === decodedToken.preferred_username) ;
         const customerExists =  customers.some(customer => customer.customer_email === decodedToken.preferred_username);
-        
+        console.log("userExists:", userExists);
+        console.log("customerExists:", customerExists);
         if (userExists) {
             const matchedEmployee = employeeList.find(employee => employee.email === decodedToken.preferred_username);
             console.log('User exists in NetSuite. Matched email:', matchedEmployee.email);
