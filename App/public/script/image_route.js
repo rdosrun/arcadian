@@ -289,11 +289,11 @@ function update_inventory(){
                         continue;
                     }
                     allInventory.push({ 
-                        upc: item.item_upc_code,
-                        quantity: item.item_total_quanity_on_hand,
-                        isinactive: item.isinactive,
-                        internal_id: item.item_internal_id,
-                        location: item.item_location_name
+                        upc: data.items[i].item_upc_code,
+                        quantity: data.items[i].item_total_quanity_on_hand,
+                        isinactive: data.items[i].isinactive,
+                        internal_id: data.items[i].item_internal_id,
+                        location: data.items[i].item_location_name
                     });
                 }
                 /*allInventory = allInventory.concat(data.items.map(item => ({
