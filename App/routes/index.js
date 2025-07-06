@@ -89,7 +89,7 @@ router.post('/auth/email-login', async function (req, res, next) {
                 }
             }
             
-            res.redirect('/test');
+            res.redirect('/');
         } else {
             res.render('email-signin', {
                 title: 'MSAL Node & Express Web App',
@@ -196,7 +196,7 @@ router.get('/auth/jwt_route', async function (req,res,next){
             console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
             console.log('Related customer emails:', relatedCustomers.map(c => c.customer_email));
         }
-        res.redirect('/test');
+        res.redirect('/');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;

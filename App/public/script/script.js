@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     auth: {
       clientId: '8b1fadc1-8d5e-4543-a2d2-27675cdd49e2',//'95e880e8-e54d-4d01-a26c-052cff7e9592', // Replace with your application ID
       authority: 'https://login.microsoftonline.com/common', // Replace with your tenant ID
-      redirectUri: 'https://arcadianoutfitters.com/test/auth/callback/'
+      redirectUri: 'https://arcadianoutfitters.com/auth/callback/'
     }
   };
 
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     //console.log("jwt token response: "+jwt_token);
         console.log("JWT View Loaded", jwt_token);
-        fetch('https://arcadianoutfitters.com/test/auth/jwt_route?idToken='+jwt_token.idToken, {
+        fetch('https://arcadianoutfitters.com/auth/jwt_route?idToken='+jwt_token.idToken, {
     method: 'get', // or 'PUT'
     headers: {
         'Content-Type': 'application/json'
