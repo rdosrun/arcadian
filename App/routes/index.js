@@ -347,10 +347,18 @@ router.get('/customers', isAuthenticated, async function (req, res, next) {
                             ret_customers.push(customers[i]);
                         }
                     }
-                } else if( customers[i].customer_parent_customer_internal_id && customers[i].customer_parent_customer_internal_id === req.session.parentId) {
-                    console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
-                    if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
-                        ret_customers.push(customers[i]);
+                } else {
+                    if( customers[i].customer_internal_id === req.session.customer_id) {
+                        console.log('Customer ID1:', customers[i].customer_email, 'is the current customer');
+                        if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
+                            ret_customers.push(customers[i]);
+                        }
+                    }
+                    else if( customers[i].customer_parent_customer_internal_id && customers[i].customer_parent_customer_internal_id === req.session.parentId) {
+                        console.log('Customer ID2:', customers[i].customer_email, 'is in related customers');
+                        if(customers[i].customer_email !== null && customers[i].customer_email !== undefined) {
+                            ret_customers.push(customers[i]);
+                        }
                     }
                 }
             }
