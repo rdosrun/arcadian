@@ -55,11 +55,12 @@ router.post('/auth/email-login', async function (req, res, next) {
             // Check if user is employee or customer
             const customers = await readAllCustomers();
             console.log('Checking customer existence for email:', email);
-            const customerExists = customers.some(customer => customer.customer_email.toLowerCase() === email.toLowerCase());
+            console.log()
+            const customerExists = customers.some(customer => customer.customer_email && customer.customer_email.toLowerCase() === email.toLowerCase());
 
             
             if (customerExists) {
-                const matchedCustomer = customers.find(customer => customer.customer_email.toLowerCase() === email.toLowerCase());
+                const matchedCustomer = customers.find(customer => customer.customer_email && customer.customer_email.toLowerCase() === email.toLowerCase());
                 const parentId = matchedCustomer.parent || matchedCustomer.customer_internal_id;
                 
                 if (parentId === null || parentId === undefined) {
