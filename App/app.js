@@ -37,7 +37,7 @@ app.use((req, res, next) => {
   if (req.url.startsWith('/test')) {
     req.url = req.url.slice(5) || '/'; // remove `/test`, preserve slash
   }
-  console.log("Request URL: " + req.url);
+  //console.log("Request URL: " + req.url);
   next();
 });
 
