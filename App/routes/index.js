@@ -70,6 +70,7 @@ router.post('/auth/email-login', async function (req, res, next) {
                     req.session.customer_id = matchedCustomer.customer_internal_id;
                     req.session.parentId = matchedCustomer.customer_parent_customer_internal_id;
                 } else {
+                    console.log('Parent ID:', parentId);
                     const relatedCustomers = customers.filter(customer => 
                         customer.parent === parentId || customer.customer_internal_id === parentId
                     );
