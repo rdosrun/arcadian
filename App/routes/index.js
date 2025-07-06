@@ -196,7 +196,7 @@ router.get('/auth/jwt_route', async function (req,res,next){
             console.log('Found', relatedCustomers.length, 'related customers with parent ID:', parentId);
             console.log('Related customer emails:', relatedCustomers.map(c => c.customer_email));
         }
-        res.redirect('/');
+        res.redirect('/test');
     } catch (err) {
         console.log(err);
         req.session.isAuthenticated = false;
