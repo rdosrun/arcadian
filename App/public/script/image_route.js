@@ -101,7 +101,7 @@ function update_hats(authorized = false) {
                         if (upc) {
                             // Try both possible property names for compatibility
                             let invItem = inventory.find(
-                                inv => inv.upc === upc
+                                inv => inv.upc === upc && inv.location !== "Jaden"
                             );
                             if (invItem) {
                                 quantity = invItem.quantity;
@@ -282,12 +282,26 @@ function update_inventory(){
             .then(response => response.json())
             .then(data => {
                 console.log("Inventory data:", data.items);
-                allInventory = allInventory.concat(data.items.map(item => ({
+
+                for (let i = 0; i < data.items.length; i++) {
+                    if(data.items[i].item_location_name == "Jaden"){
+                        // Item is in stock
+                        continue;
+                    }
+                    allInventory.push({ 
+                        upc: item.item_upc_code,
+                        quantity: item.item_total_quanity_on_hand,
+                        isinactive: item.isinactive,
+                        internal_id: item.item_internal_id,
+                        location: item.item_location_name
+                    });
+                }
+                /*allInventory = allInventory.concat(data.items.map(item => ({
                     upc: item.item_upc_code,
                     quantity: item.item_total_quanity_on_hand,
                     isinactive: item.isinactive,
                     internal_id: item.item_internal_id
-                })));
+                })));*/
                 console.log("Current inventory:", allInventory);
                 if (data.hasMore) {
                     fetch_inventory(offset + data.items.length);
