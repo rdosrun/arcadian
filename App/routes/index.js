@@ -235,10 +235,10 @@ router.post('/auth/callback', async function (req, res, next) {
         console.log('All customers being checked:', customers.map(c => ({ id: c.id, email: c.customer_email, parent: c.parent })));
         // Check if the username is in the list of employees
         const userExists = employeeList.some(employee => {
-            console.log('Checking employee email:', employee.email.toLowerCase(), 'against token username:', decodedToken.preferred_username.toLowerCase());
+            //console.log('Checking employee email:', employee.email.toLowerCase(), 'against token username:', decodedToken.preferred_username.toLowerCase());
             return employee.email && employee.email.toLowerCase() === decodedToken.preferred_username.toLowerCase();
         });
-        const customerExists =  customers.some(customer => customer.customer_email === decodedToken.preferred_username);
+        const customerExists =  customers.some(customer => customer.customer_email && customer.customer_email.toLowerCase() === decodedToken.preferred_username.toLowerCase());
         console.log('Checking customer existence for email:', decodedToken.preferred_username);
         console.log('Customer exists:', customerExists);
         if (userExists) {
@@ -248,7 +248,7 @@ router.post('/auth/callback', async function (req, res, next) {
             req.session.account = matchedEmployee.email;
             req.session.isEmployee = true;
         } else if(customerExists){
-            const matchedCustomer = customers.find(customer => customer.customer_email === decodedToken.preferred_username);
+            const matchedCustomer = customers.find(customer => customer.customer_email && customer.customer_email.toLowerCase() === decodedToken.preferred_username.toLowerCase());
             console.log('Customer found - Email:', matchedCustomer.customer_email);
             console.log('Customer found - ID:', matchedCustomer.id);
             console.log('Customer found - Parent ID:', matchedCustomer.parent);
