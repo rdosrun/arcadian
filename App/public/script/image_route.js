@@ -288,6 +288,10 @@ function update_inventory(){
                         // Item is in stock
                         continue;
                     }
+                    if(data.items[i].isinactive == "T"){
+                        // Item is inactive, skip it
+                        continue;
+                    }
                     allInventory.push({ 
                         upc: data.items[i].item_upc_code,
                         quantity: data.items[i].item_total_quanity_on_hand,
