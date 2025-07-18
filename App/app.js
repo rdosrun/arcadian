@@ -209,7 +209,7 @@ app.post('/submit-order', async (req, res) => {
         shipDate: formattedDate,
         fulfillmentLocation: 1,
         poNumber: "PO12345",
-        memo: "This is a new sales order",
+        memo: "Thank you for your business!",
         billToSelected: null,
         shipToSelected: null,
         items: cart.map(item => ({
