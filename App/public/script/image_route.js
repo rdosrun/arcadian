@@ -294,7 +294,7 @@ function update_inventory(){
                     }
                     allInventory.push({ 
                         upc: data.items[i].item_upc_code,
-                        quantity: data.items[i].item_total_quanity_on_hand,
+                        quantity: data.items[i].item_location_quantity_available,
                         isinactive: data.items[i].isinactive,
                         internal_id: data.items[i].item_internal_id,
                         location: data.items[i].item_location_name
