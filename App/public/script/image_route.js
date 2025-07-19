@@ -100,12 +100,14 @@ function update_hats(authorized = false) {
                         let quantity = '';
                         if (upc) {
                             // Try both possible property names for compatibility
-                            let invItem = inventory.find(
+                            let invItem = inventory.filter(
                                 inv => inv.upc === upc && inv.location !== "Jaden"
                             );
-                            if (invItem) {
-                                quantity = invItem.quantity;
+                            var tmp = 0;
+                            for (let i = 0; i < invItem.length; i++) {
+                                tmp += invItem[i].quantity;
                             }
+                            quantity = tmp;
                         }
 
                         // Add stock number badge
