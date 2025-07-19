@@ -105,7 +105,7 @@ function update_hats(authorized = false) {
                             );
                             var tmp = 0;
                             for (let i = 0; i < invItem.length; i++) {
-                                tmp += invItem[i].quantity;
+                                tmp += parseInt(invItem[i].quantity, 10);
                             }
                             quantity = tmp;
                         }
