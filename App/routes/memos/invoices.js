@@ -44,13 +44,18 @@ router.get('/', async (req, res) => {
   let invoices = JSON.parse(invoicesCache).items;
   
   // If user is not an employee, filter invoices by related customers
-  if (!req.session.isEmployee && req.session.relatedCustomers) {
+ if (!req.session.isEmployee && req.session.relatedCustomers) {
     const relatedCustomerIds = req.session.relatedCustomers.map(customer => customer.id);
-    invoices = invoices.filter(invoice => 
-      relatedCustomerIds.includes(invoice.customer_id) || 
-      relatedCustomerIds.includes(invoice.customerId) ||
-      relatedCustomerIds.includes(invoice.customer)
+    console.log('Filtering sales orders for related customers:', relatedCustomerIds);
+    salesOrders = salesOrders.filter(order => 
+      relatedCustomerIds.includes(order.sales_order_customer_internal_id) ||
+      req.session.customer_id === order.sales_order_customer_internal_id
     );
+  }else if(!req.session.isEmployee) {
+    salesOrders = salesOrders.filter(order => 
+      req.session.customer_id === order.sales_order_customer_internal_id
+    );
+    console.log('No related customers found for non-employee user.');
   }
   
   res.json({
