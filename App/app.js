@@ -117,7 +117,7 @@ async function getItemNameByUPC(upc) {
             if (inventory[i].item_upc_code == upc && inventory[i].item_inactive == "F") {
                 return inventory[i];
             }
-            console.log(inventory[i].item_upc_code, inventory[i].item_inactive);
+            console.log(inventory[i].item_upc_code, inventory[i]);
         }
         if (inventory.length < 1000){
             break;
