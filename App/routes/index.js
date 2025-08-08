@@ -58,6 +58,15 @@ router.post('/auth/email-login', async function (req, res, next) {
             console.log()
             const customerExists = customers.some(customer => customer.customer_email && customer.customer_email.toLowerCase() === email.toLowerCase());
 
+            /*log that customer logged in for first time in file*/
+            if (!customerExists) {
+                fs.appendFile('customer_log.txt', `New customer logged in: ${email}\n`, (err) => {
+                    if (err) throw err;
+                    console.log('Customer login recorded.');
+                });
+            }
+            /*log that customer logged in for first time in file*/
+
             
             if (customerExists) {
                 const matchedCustomer = customers.find(customer => customer.customer_email && customer.customer_email.toLowerCase() === email.toLowerCase());
