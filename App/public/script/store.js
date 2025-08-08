@@ -26,6 +26,7 @@ function addToCart(button) {
                             found_inventory = false;
                         }else{
                             found_inventory = true;
+                            break;
                         }
                     }
                 }
