@@ -413,6 +413,60 @@ function readAllCustomers() {
     return JSON.parse(data);
 }
 
+// Function to generate random alphanumeric password
+function generateRandomPassword(length = 10) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+// Function to sync customers with password file
+async function syncCustomersWithPasswordFile() {
+    try {
+        const customers = readAllCustomers();
+        const csvPath = path.join(__dirname, '../../users.csv');
+        
+        // Read existing users from CSV
+        const existingUsers = [];
+        if (fs.existsSync(csvPath)) {
+            const data = fs.readFileSync(csvPath, 'utf8');
+            const lines = data.split('\n').filter(line => line.trim());
+            lines.forEach(line => {
+                const [email] = line.split(',');
+                if (email && email.trim()) {
+                    existingUsers.push(email.trim().toLowerCase());
+                }
+            });
+        }
+        
+        // Find customers not in password file
+        const missingCustomers = customers.filter(customer => 
+            customer.customer_email && 
+            !existingUsers.includes(customer.customer_email.toLowerCase())
+        );
+        
+        if (missingCustomers.length > 0) {
+            console.log(`Adding ${missingCustomers.length} missing customers to password file`);
+            
+            // Append missing customers with new passwords
+            const newEntries = missingCustomers.map(customer => {
+                const password = generateRandomPassword();
+                return `${customer.customer_email},${password}`;
+            }).join('\n');
+            
+            fs.appendFileSync(csvPath, '\n' + newEntries, 'utf8');
+            console.log('Successfully added missing customers to password file');
+        } else {
+            console.log('All customers already exist in password file');
+        }
+    } catch (error) {
+        console.error('Error syncing customers with password file:', error);
+    }
+}
+
 // Function to validate email and password from CSV
 function validateEmailPassword(email, password) {
     return new Promise((resolve, reject) => {
@@ -452,6 +506,13 @@ setInterval(() => {
     fetchAndStoreAllCustomers()
         .then(() => console.log('Customer list updated and stored in customers.json'))
         .catch(err => console.error('Error updating customer list:', err));
+}, 5 * 60 * 1000); // 5 min in milliseconds
+
+// Run syncCustomersWithPasswordFile every 5 minutes
+setInterval(() => {
+    syncCustomersWithPasswordFile()
+        .then(() => console.log('Customer password sync completed'))
+        .catch(err => console.error('Error syncing customers with password file:', err));
 }, 5 * 60 * 1000); // 5 min in milliseconds
 
 module.exports = router;
