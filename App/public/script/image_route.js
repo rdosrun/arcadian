@@ -65,6 +65,7 @@ function update_hats(authorized = false) {
                     const newItem = document.createElement('button');
                     newItem.className = 'item';
                     newItem.id = i + 1;
+                    newItem.style.aspectRatio = '1 / 1'; // Maintain square aspect ratio
 
                     // Add click event to enlarge item and show details
                     if(authorized) {
