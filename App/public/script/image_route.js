@@ -132,7 +132,7 @@ function update_hats(authorized = false) {
                         const slide = document.createElement('div');
                         slide.className = 'slide';
                         slide.style.display = index === 0 ? 'block' : 'none'; // Show the first image by default
-                        slide.innerHTML = `<img src="${src}" alt="Product Image width=342">`;
+                        slide.innerHTML = `<img src="${src}" alt="Product Image width=342 height=342">`;
                         slideshowContainer.appendChild(slide);
                     });
 
