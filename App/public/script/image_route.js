@@ -84,6 +84,7 @@ function update_hats(authorized = false) {
                     const slideshowContainer = document.createElement('div');
                     slideshowContainer.className = 'slideshow-container';
                     slideshowContainer.id = `slideshow-${newItem.id}`;
+                    
 
                     // Get UPC for this item (assume first image's UPC is representative)
                     let upc = null;
@@ -131,7 +132,7 @@ function update_hats(authorized = false) {
                         const slide = document.createElement('div');
                         slide.className = 'slide';
                         slide.style.display = index === 0 ? 'block' : 'none'; // Show the first image by default
-                        slide.innerHTML = `<img src="${src}" alt="Product Image">`;
+                        slide.innerHTML = `<img src="${src}" alt="Product Image width=342">`;
                         slideshowContainer.appendChild(slide);
                     });
 
