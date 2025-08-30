@@ -60,7 +60,11 @@ router.post('/auth/email-login', async function (req, res, next) {
 
             /*log that customer logged in for first time in file*/
             if (!customerExists) {
-                fs.appendFile('customer_log.txt', `New customer logged in: ${email}\n`, (err) => {
+                const logPath = path.join(__dirname, '../../customer_log.txt');
+                if (!fs.existsSync(logPath)) {
+                    fs.writeFileSync(logPath, '', 'utf8');
+                }
+                fs.appendFile(logPath, `New customer logged in: ${email}\n`, (err) => {
                     if (err) throw err;
                     console.log('Customer login recorded.');
                 });
