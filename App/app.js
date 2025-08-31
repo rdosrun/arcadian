@@ -201,6 +201,10 @@ app.post('/submit-order', async (req, res) => {
     const year = date.getFullYear();
     const formattedDate = `${month}/${day}/${year}`;
 
+    //marker 
+
+
+
     console.log()
     const payload = {
         customerId: customer.customer_internal_id,
@@ -212,14 +216,18 @@ app.post('/submit-order', async (req, res) => {
         memo: "Thank you for your business!",
         billToSelected: null,
         shipToSelected: null,
-        items: cart.map(item => ({
-            //itemName: item.name,
-            itemUPC: item.ID,
-            quantity: 8, // Adjust quantity as needed
-            priceLevel: null, //grab price level from netsuite for each customer
-            rate: null,
-            location: null, // grab location from netsuite for each customer
-            itemInternalId: item.interal_ID
+        items: await Promise.all(cart.map(async item => {
+            const inventoryItem = await getItemNameByUPC(item.ID);
+            const quantity = inventoryItem && inventoryItem.item_class_name && inventoryItem.item_class_name.toLowerCase().includes('hat') ? 8 : 6;
+            return {
+                itemName: item.name,
+                itemUPC: item.ID,
+                quantity: quantity,
+                priceLevel: null, //grab price level from netsuite for each customer
+                rate: null,
+                location: null, // grab location from netsuite for each customer
+                itemInternalId: item.interal_ID
+            };
         }))
     };
     console.log(payload);
