@@ -113,7 +113,7 @@ async function getItemNameByUPC(upc) {
     while(true){
         var temp = await netsuite.Inventory(j*1000); // Assume Inventory() returns an array of items
         inventory = JSON.parse(temp).items;
-        for (var i = 0; i < inventory.length; i++) {
+        for (var i = 0; inventory.length && i < inventory.length; i++) {
             if (inventory[i].item_upc_code == upc && inventory[i].isinactive === "F") {
                 return inventory[i];
             }
