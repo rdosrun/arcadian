@@ -107,28 +107,63 @@ app.get('/item/:upc', async function (req, res) {
     }
 });
 
-// Mock function to simulate fetching item name by UPC
-async function getItemNameByUPC(upc) {
-    var j =0;
-    while(true){
-        var temp = await netsuite.Inventory(j*1000); // Assume Inventory() returns an array of items
-        inventory = JSON.parse(temp).items;
-        if(!inventory || inventory.length === 0){
-            break;
-        }
-        for (var i = 0; i < inventory.length; i++) {
-            if (inventory[i].item_upc_code == upc && inventory[i].isinactive === "F") {
-                return inventory[i];
+// Function to fetch and cache all inventory
+async function fetchAndCacheInventory() {
+    try {
+        console.log('Fetching inventory from NetSuite...');
+        let allInventory = [];
+        let offset = 0;
+        
+        while (true) {
+            const temp = await netsuite.Inventory(offset);
+            const inventory = JSON.parse(temp).items;
+            
+            if (!inventory || inventory.length === 0) {
+                break;
             }
+            
+            allInventory = allInventory.concat(inventory);
+            
+            if (inventory.length < 1000) {
+                break;
+            }
+            offset += 1000;
         }
-        if (inventory.length < 1000){
-            break;
-        }
-            j++;
+        
+        const inventoryPath = path.join(__dirname, 'inventory_cache.json');
+        fs.writeFileSync(inventoryPath, JSON.stringify(allInventory, null, 2), 'utf8');
+        console.log(`Cached ${allInventory.length} inventory items`);
+    } catch (error) {
+        console.error('Error caching inventory:', error);
     }
+}
 
+// Function to read cached inventory
+function readCachedInventory() {
+    const inventoryPath = path.join(__dirname, 'inventory_cache.json');
+    if (!fs.existsSync(inventoryPath)) {
+        return [];
+    }
+    try {
+        const data = fs.readFileSync(inventoryPath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error reading cached inventory:', error);
+        return [];
+    }
+}
+
+// Modified function to get item by UPC from cached inventory
+async function getItemNameByUPC(upc) {
+    const inventory = readCachedInventory();
+    
+    for (let i = 0; i < inventory.length; i++) {
+        if (inventory[i].item_upc_code == upc && inventory[i].isinactive === "F") {
+            return inventory[i];
+        }
+    }
+    
     return null;
-    //return inventory.find(item => item.item_upc_code === upc) || null;
 }
 
 // Serve images or list files in a directory
@@ -274,7 +309,6 @@ app.post('/submit-order', async (req, res) => {
     }
 });
 
-
 // Add endpoint for sales_order_lines
 app.get('/api/sales-order-lines/:id', async (req, res) => {
     const salesOrderId = req.params.id;
@@ -309,12 +343,6 @@ app.get('/api/Invoices/:id', async (req, res) => {
     }
 });
 
-
-
-
-
-
-
 // Run get_token every hour
 setInterval(() => {
     try {
@@ -324,6 +352,16 @@ setInterval(() => {
         console.error("Error refreshing token:", err);
     }
 }, 3600000); // 3600000 milliseconds = 1 hour
+
+// Cache inventory every 5 minutes
+setInterval(() => {
+    fetchAndCacheInventory()
+        .then(() => console.log('Inventory cache updated'))
+        .catch(err => console.error('Error updating inventory cache:', err));
+}, 5 * 60 * 1000); // 5 minutes
+
+// Initial inventory cache on startup
+fetchAndCacheInventory();
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
